@@ -1,0 +1,337 @@
+/* Short Story Style - Literary, elegant, readable */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inconsolata:wght@400;500&display=swap');
+
+/* CSS Custom Properties for Theming */
+:root {
+    /* Colors */
+    --primary-color: var(--theme-primary, #8b4513);
+    --secondary-color: var(--theme-secondary, #2c2c2c);
+    --text-color: var(--theme-text, #2c2c2c);
+    --text-light: var(--theme-text-light, #4a4a4a);
+    --background: var(--theme-background, #fefefe);
+    --surface: var(--theme-surface, #f8f8f8);
+    --surface-alt: var(--theme-surface-alt, #fafafa);
+    --border: var(--theme-border, #e0e0e0);
+    --code-text: var(--theme-code-text, #8b0000);
+    --code-bg: var(--theme-code-bg, #f0f0f0);
+    
+    /* Typography */
+    --font-body: 'Crimson Text', Georgia, serif;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-code: 'Inconsolata', 'Courier New', monospace;
+    
+    /* Layout */
+    --max-width: 650px;
+    --base-font-size: 18px;
+    --line-height: 1.8;
+    --padding: 60px 40px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: var(--line-height);
+    color: var(--text-color);
+    background: var(--background);
+    font-size: var(--base-font-size);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--padding);
+}
+
+/* Headings */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 3em;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 2em 0 0.75em 0;
+    text-align: center;
+    letter-spacing: -0.01em;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 2.2em;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin: 2em 0 1em 0;
+    text-align: center;
+    font-style: italic;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-size: 1.6em;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin: 1.8em 0 0.8em 0;
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-size: 1.3em;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin: 1.5em 0 0.6em 0;
+    page-break-after: avoid;
+}
+
+/* Text */
+p {
+    margin: 1.2em 0;
+    text-align: justify;
+    text-indent: 2em;
+    hyphens: auto;
+}
+
+p:first-of-type {
+    text-indent: 0;
+}
+
+/* No first-line indent immediately after headings */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    text-indent: 0;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid #d2691e;
+}
+
+strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+em {
+    font-style: italic;
+    color: var(--text-light);
+}
+
+/* Lists */
+ul, ol {
+    margin: 1.2em 0;
+    padding-left: 0;
+    text-align: left;
+}
+
+li {
+    margin: 0.6em 0;
+    text-align: left;
+}
+
+/* Indent only nested lists */
+ul ul, ul ol, ol ul, ol ol {
+    padding-left: 3em;
+}
+
+/* Prevent justification/indent inside list item paragraphs */
+li p {
+    text-align: left !important;
+    text-indent: 0 !important;
+}
+
+/* Code */
+.codehilite {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5em;
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5em;
+    margin: 1.5em 0;
+    font-family: var(--font-code);
+    font-size: 15px;
+    line-height: 1.6;
+    page-break-inside: avoid;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+code {
+    font-family: var(--font-code);
+    background: var(--code-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--code-text);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: var(--code-text);
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid var(--primary-color);
+    background: var(--surface-alt);
+    padding: 1.5em 2em;
+    margin: 1.5em 0;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 1.1em;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.95em;
+    page-break-inside: avoid;
+    border: none;
+}
+
+th, td {
+    padding: 1.1em 1.3em;
+    text-align: left;
+    border-bottom: 1px solid #d1d5db !important;
+    border-right: 1px solid #d1d5db !important;
+    vertical-align: top;
+}
+
+th {
+    background: var(--primary-color);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border: none !important;
+}
+
+
+
+td {
+    background: var(--background);
+    color: var(--text-color);
+    border-left: 1px solid #d1d5db !important;
+    border-top: 1px solid #d1d5db !important;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:first-child td {
+    border-top: none;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+tr:nth-child(even) td {
+    background: var(--surface);
+}
+
+tr:nth-child(odd) td {
+    background: var(--background);
+}
+
+tr:hover td {
+    background: var(--surface-alt);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Bold text styling - only affect font weight */
+strong, b {
+    font-weight: 700;
+}
+
+/* Ensure bold text in tables inherits cell color */
+td strong, td b {
+    color: inherit !important;
+}
+
+/* Fix emoji font issues in PDF */
+/* Use system fonts that work better with PDF generation */
+body {
+    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Ensure emojis use a fallback font that PDF can handle */
+* {
+    font-family: inherit;
+}
+
+/* Other elements */
+hr {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 3em 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ensure emoji images stay inline with text */
+img.emoji {
+    display: inline !important;
+    vertical-align: -0.15em !important;
+    margin: 0 0.05em !important;
+}
+
+/* Lists: ensure no justification and consistent spacing */
+ul, ol, li {
+    text-align: left !important;
+}
+
+/* Page layout */
+@page {
+    size: A4;
+    margin: 3cm;
+    @top-center {
+        content: string(chapter);
+        font-family: var(--font-heading);
+        font-size: 12px;
+        color: var(--primary-color);
+    }
+    @bottom-center {
+        content: counter(page);
+        font-family: var(--font-heading);
+        font-size: 12px;
+        color: var(--primary-color);
+    }
+}
+
+/* Page breaks */
+h1, h2, h3 {
+    page-break-after: avoid;
+}
+
+pre, blockquote, table {
+    page-break-inside: avoid;
+}

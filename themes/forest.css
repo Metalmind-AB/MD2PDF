@@ -1,0 +1,36 @@
+/* Forest Theme - Refined Nature */
+/* Sophisticated sage and charcoal palette with natural elegance */
+:root {
+    --theme-primary: #374151;
+    --theme-secondary: #4b5563;
+    --theme-text: #1f2937;
+    --theme-text-light: #6b7280;
+    --theme-background: #f9fafb;
+    --theme-surface: #f3f4f6;
+    --theme-surface-alt: #e5e7eb;
+    --theme-border: #d1d5db;
+    --theme-code-text: #1f2937;
+    --theme-code-bg: #f3f4f6;
+}
+
+/* Table styling for forest theme */
+th {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-bottom-color: #374151 !important;
+}
+
+tr:nth-child(even) td {
+    background: #f3f4f6 !important;
+    color: #1f2937 !important;
+}
+
+tr:nth-child(odd) td {
+    background: #f9fafb !important;
+    color: #1f2937 !important;
+}
+
+tr:hover td {
+    background: #e5e7eb !important;
+    color: #1f2937 !important;
+}

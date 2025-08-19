@@ -1,0 +1,54 @@
+/* Sepia Theme - Refined Heritage */
+/* Sophisticated taupe and charcoal palette with timeless elegance */
+:root {
+    --theme-primary: #57534e;
+    --theme-secondary: #78716c;
+    --theme-text: #292524;
+    --theme-text-light: #78716c;
+    --theme-background: #fafaf9;
+    --theme-surface: #f5f5f4;
+    --theme-surface-alt: #e7e5e4;
+    --theme-border: #d6d3d1;
+    --theme-code-text: #292524;
+    --theme-code-bg: #f5f5f4;
+}
+
+/* Improve code visibility and comment contrast */
+.codehilite { background: var(--theme-code-bg) !important; }
+pre { background: var(--theme-code-bg) !important; }
+code { background: var(--theme-surface-alt) !important; }
+
+/* Pygments comments */
+.c, .cm, .c1, .cs, .cp, .ch, .cd {
+    color: #78716c !important; /* stone-500 */
+    background: transparent !important;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Table styling for sepia theme */
+th {
+    background: #57534e !important;
+    color: #ffffff !important;
+    border-bottom-color: #57534e !important;
+}
+
+tr:nth-child(even) td {
+    background: #f5f5f4 !important;
+    color: #292524 !important;
+}
+
+tr:nth-child(odd) td {
+    background: #fafaf9 !important;
+    color: #292524 !important;
+}
+
+tr:hover td {
+    background: #e7e5e4 !important;
+    color: #292524 !important;
+}

@@ -1,0 +1,347 @@
+/* White Paper Style - Elegant, academic, authoritative */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Source+Sans+Pro:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* CSS Custom Properties for Theming */
+:root {
+    /* Colors */
+    --primary-color: var(--theme-primary, #34495e);
+    --secondary-color: var(--theme-secondary, #2c3e50);
+    --text-color: var(--theme-text, #1a1a1a);
+    --text-light: var(--theme-text-light, #2c3e50);
+    --background: var(--theme-background, #ffffff);
+    --surface: var(--theme-surface, #f8f9fa);
+    --surface-alt: var(--theme-surface-alt, #f8f9fa);
+    --border: var(--theme-border, #dee2e6);
+    --code-text: var(--theme-code-text, #d73a49);
+    --code-bg: var(--theme-code-bg, #f1f3f4);
+    
+    /* Typography */
+    --font-body: 'Source Serif Pro', Georgia, 'Times New Roman', serif;
+    --font-heading: 'Source Sans Pro', Arial, sans-serif;
+    --font-code: 'IBM Plex Mono', 'Courier New', monospace;
+    
+    /* Layout */
+    --max-width: 700px;
+    --base-font-size: 16px;
+    --line-height: 1.7;
+    --padding: 50px 30px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: var(--line-height);
+    color: var(--text-color);
+    background: var(--background);
+    font-size: var(--base-font-size);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--padding);
+}
+
+/* Headings */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.8em;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 2em 0 0.5em 0;
+    text-align: center;
+    letter-spacing: -0.02em;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8em;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin: 1.8em 0 0.8em 0;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.3em;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 1.5em 0 0.6em 0;
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 1.2em 0 0.5em 0;
+    page-break-after: avoid;
+}
+
+/* Text */
+p {
+    margin: 1em 0;
+    text-align: justify;
+    text-indent: 1.5em;
+    hyphens: auto;
+}
+
+a {
+    color: #2980b9;
+    text-decoration: none;
+    border-bottom: 1px solid #3498db;
+}
+
+strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+em {
+    font-style: italic;
+    color: var(--text-light);
+}
+
+/* Lists */
+ul, ol {
+    margin: 1em 0;
+    padding-left: 0;
+    text-align: left;
+}
+
+li {
+    margin: 0.5em 0;
+    text-align: left;
+}
+
+/* Indent only nested lists */
+ul ul, ul ol, ol ul, ol ol {
+    padding-left: 2.5em;
+}
+
+/* Code */
+.codehilite {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5em;
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5em;
+    margin: 1.5em 0;
+    font-family: var(--font-code);
+    font-size: 14px;
+    line-height: 1.6;
+    page-break-inside: avoid;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+code {
+    font-family: var(--font-code);
+    background: var(--code-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--code-text);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: var(--code-text);
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid var(--primary-color);
+    background: var(--surface);
+    padding: 1.5em 2em;
+    margin: 1.5em 0;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 1.1em;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.95em;
+    page-break-inside: avoid;
+    border: none;
+}
+
+th, td {
+    padding: 1.1em 1.3em;
+    text-align: left;
+    border-bottom: 1px solid #d1d5db !important;
+    border-right: 1px solid #d1d5db !important;
+    vertical-align: top;
+}
+
+th {
+    background: var(--primary-color);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border: none !important;
+}
+
+
+
+td {
+    background: var(--background);
+    color: var(--text-color);
+    border-left: 1px solid #d1d5db !important;
+    border-top: 1px solid #d1d5db !important;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:first-child td {
+    border-top: none;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+tr:nth-child(even) td {
+    background: var(--surface);
+}
+
+tr:nth-child(odd) td {
+    background: var(--background);
+}
+
+tr:hover td {
+    background: var(--surface-alt);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Bold text styling - only affect font weight */
+strong, b {
+    font-weight: 700;
+}
+
+/* Ensure bold text in tables inherits cell color */
+td strong, td b {
+    color: inherit !important;
+}
+
+/* Fix emoji font issues in PDF */
+/* Force all elements to use fonts that work with PDF generation */
+body, * {
+    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Specifically target emoji characters and force them to use a compatible font */
+@font-face {
+    font-family: 'EmojiFallback';
+    src: local('Arial'), local('Helvetica'), local('Times New Roman');
+    unicode-range: U+1F600-1F64F, U+1F300-1F5FF, U+1F680-1F6FF, U+1F1E0-1F1FF, U+2600-26FF, U+2700-27BF;
+}
+
+/* Apply emoji fallback to all elements */
+* {
+    font-family: var(--font-body), 'EmojiFallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Keep emoji images inline, no line breaks after */
+img.emoji {
+    display: inline !important;
+    vertical-align: -0.15em !important;
+    margin: 0 0.05em !important;
+}
+
+/* Lists must be ragged-right (no justify) */
+ul, ol, li {
+    text-align: left !important;
+}
+
+/* Prevent justification/indent inside list item paragraphs */
+li p {
+    text-align: left !important;
+    text-indent: 0 !important;
+}
+
+/* No first-line indent immediately after headings */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    text-indent: 0;
+}
+
+/* Other elements */
+hr {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 3em 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ensure emoji images stay inline with text */
+img.emoji {
+    display: inline !important;
+    vertical-align: -0.15em !important;
+    margin: 0 0.05em !important;
+}
+
+/* Page layout */
+@page {
+    size: A4;
+    margin: 2.5cm;
+    @top-center {
+        content: string(chapter);
+        font-family: var(--font-heading);
+        font-size: 11px;
+        color: var(--text-light);
+    }
+    @bottom-center {
+        content: counter(page);
+        font-family: var(--font-heading);
+        font-size: 11px;
+        color: var(--text-light);
+    }
+}
+
+/* Page breaks */
+h1, h2, h3 {
+    page-break-after: avoid;
+}
+
+pre, blockquote, table {
+    page-break-inside: avoid;
+}

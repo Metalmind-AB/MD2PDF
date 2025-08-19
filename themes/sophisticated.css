@@ -1,0 +1,87 @@
+/* Sophisticated Theme - Refined Elegance */
+/* Sophisticated palette with deep charcoal and refined grey tones */
+:root {
+    --theme-primary: #1e293b;
+    --theme-secondary: #334155;
+    --theme-text: #0f172a;
+    --theme-text-light: #64748b;
+    --theme-background: #ffffff;
+    --theme-surface: #f8fafc;
+    --theme-surface-alt: #f1f5f9;
+    --theme-border: #cbd5e1;
+    --theme-code-text: #0f172a;
+    --theme-code-bg: #f1f5f9;
+}
+
+/* Explicit styling for sophisticated theme */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #0f172a !important;
+}
+
+p, li {
+    color: #0f172a !important;
+}
+
+blockquote {
+    background: #f8fafc !important;
+    color: #64748b !important;
+    border-left-color: #1e293b !important;
+}
+
+/* Inline code styling */
+code:not(pre code) {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 4px !important;
+    font-size: 0.9em !important;
+}
+
+.codehilite {
+    background: #f1f5f9 !important;
+}
+
+pre {
+    background: #f1f5f9 !important;
+}
+
+pre code {
+    color: #0f172a !important;
+    background: none !important;
+    border: none !important;
+}
+
+/* Table styling for sophisticated theme */
+th {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border-bottom-color: #1e293b !important;
+}
+
+tr:nth-child(even) td {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+tr:nth-child(odd) td {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+tr:hover td {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}

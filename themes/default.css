@@ -1,0 +1,54 @@
+/* Default Theme - Sophisticated Elegance */
+/* Refined, understated color palette with sophisticated grey tones */
+:root {
+    --theme-primary: #374151;
+    --theme-secondary: #4b5563;
+    --theme-text: #1f2937;
+    --theme-text-light: #6b7280;
+    --theme-background: #ffffff;
+    --theme-surface: #f9fafb;
+    --theme-surface-alt: #f3f4f6;
+    --theme-border: #d1d5db;
+    --theme-code-text: #1f2937;
+    --theme-code-bg: #f3f4f6;
+}
+
+/* Ensure inline and block code have a visible background */
+.codehilite { background: var(--theme-code-bg) !important; }
+pre { background: var(--theme-code-bg) !important; }
+code { background: var(--theme-surface-alt) !important; }
+
+/* Pygments comments */
+.c, .cm, .c1, .cs, .cp, .ch, .cd {
+    color: #6b7280 !important; /* gray-500 */
+    background: transparent !important;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Table styling for default theme */
+th {
+    background: #374151 !important;
+    color: #ffffff !important;
+    border-bottom-color: #374151 !important;
+}
+
+tr:nth-child(even) td {
+    background: #f9fafb !important;
+    color: #1f2937 !important;
+}
+
+tr:nth-child(odd) td {
+    background: #ffffff !important;
+    color: #1f2937 !important;
+}
+
+tr:hover td {
+    background: #f3f4f6 !important;
+    color: #1f2937 !important;
+}
