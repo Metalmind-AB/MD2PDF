@@ -1,5 +1,54 @@
 /* Technical Documentation Style - Clean, professional, code-friendly */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Local Font Definitions */
+@font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/sans-serif/Inter/Inter-variant0.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/sans-serif/Inter/Inter-variant1.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/sans-serif/Inter/Inter-variant2.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/sans-serif/Inter/Inter-variant3.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('assets/fonts/sans-serif/Inter/Inter-variant4.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('assets/fonts/monospace/JetBrains_Mono/JetBrains_Mono-variant0.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('assets/fonts/monospace/JetBrains_Mono/JetBrains_Mono-variant1.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
 
 /* CSS Custom Properties for Theming */
 :root {
@@ -334,4 +383,11 @@ h1, h2, h3 {
 
 pre, blockquote, table {
     page-break-inside: avoid;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
 }

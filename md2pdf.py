@@ -10,23 +10,26 @@ import os
 import sys
 import shutil
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Tuple
 import markdown
 from weasyprint import HTML
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, TextLexer
 from pygments.formatters import HtmlFormatter
 import re
+import base64
+from datetime import datetime
 from style_loader import style_loader
 
 class MD2PDFConverter:
     """Main converter class for transforming Markdown to beautiful PDFs."""
     
-    def __init__(self, input_file: str, output_file: Optional[str] = None, style: str = 'technical', theme: str = 'default'):
+    def __init__(self, input_file: str, output_file: Optional[str] = None, style: str = 'technical', theme: str = 'default', include_header: bool = False):
         self.input_file = Path(input_file)
         self.output_file = Path(output_file) if output_file else self._generate_output_path()
         self.style_name = style
         self.theme_name = theme
+        self.include_header = include_header
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
         # Include Pygments CSS so class-based highlighting renders consistently across themes
         try:
@@ -178,8 +181,166 @@ class MD2PDFConverter:
         
         return html
     
+    def _process_header_content(self) -> Tuple[Optional[str], Optional[str]]:
+        """Process header folder for logo and text content."""
+        header_dir = Path('header')
+        logo_html = None
+        text_html = None
+        
+        if not header_dir.exists():
+            return None, None
+        
+        # Check for logo image
+        logo_extensions = ['.png', '.jpg', '.jpeg', '.svg', '.gif']
+        for ext in logo_extensions:
+            logo_files = list(header_dir.glob(f'*{ext}'))
+            if logo_files:
+                logo_file = logo_files[0]  # Use first found logo
+                # Convert to base64 for embedding
+                with open(logo_file, 'rb') as f:
+                    logo_data = f.read()
+                    mime_type = {
+                        '.png': 'image/png',
+                        '.jpg': 'image/jpeg',
+                        '.jpeg': 'image/jpeg',
+                        '.svg': 'image/svg+xml',
+                        '.gif': 'image/gif'
+                    }[logo_file.suffix.lower()]
+                    logo_base64 = base64.b64encode(logo_data).decode('utf-8')
+                    logo_html = f'<img src="data:{mime_type};base64,{logo_base64}" class="header-logo" alt="Logo">'
+                break
+        
+        # Check for text content
+        text_files = list(header_dir.glob('*.md'))
+        if text_files:
+            text_file = text_files[0]  # Use first found markdown file
+            with open(text_file, 'r', encoding='utf-8') as f:
+                text_content = f.read()
+                # Replace #date# placeholder with current date
+                today = datetime.now().strftime('%d %b %Y')
+                text_content = text_content.replace('#date#', today)
+                # Convert markdown to HTML
+                text_html = markdown.markdown(text_content)
+        
+        return logo_html, text_html
+    
+    def _generate_header_css(self) -> str:
+        """Generate CSS for header positioning and styling."""
+        return """
+        /* Adjust page setup for header - increase top margin */
+        @page {
+            margin-top: 3.5cm !important;  /* Increase from 2.5cm to make room for header */
+        }
+        
+        /* Header wrapper that becomes a running element */
+        .header-wrapper {
+            position: running(header);
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Place the running header in the top margin area */
+        @page {
+            @top-left-corner {
+                content: none;
+            }
+            @top-left {
+                content: element(header);
+                width: 100%;
+                vertical-align: middle;
+                margin: 0;
+                padding: 0;
+            }
+            @top-center {
+                content: none;  /* Override any existing top-center content */
+            }
+            @top-right {
+                content: none;
+            }
+            @top-right-corner {
+                content: none;
+            }
+        }
+        
+        /* Header container - no margins needed as it's in the margin box */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            height: auto;
+        }
+        
+        .header-text {
+            flex: 1;
+            font-size: 10pt;
+            line-height: 1.3;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+            padding-right: 15pt;
+        }
+        
+        .header-text p {
+            margin: 0 0 2pt 0;
+            padding: 0;
+            text-indent: 0 !important;
+            text-align: left !important;
+        }
+        
+        .header-text h1, .header-text h2, .header-text h3 {
+            font-size: 11pt;
+            margin: 0 0 2pt 0;
+            font-weight: 600;
+        }
+        
+        .header-text strong {
+            font-weight: 600;
+        }
+        
+        .header-logo-wrapper {
+            flex-shrink: 0;
+        }
+        
+        .header-logo {
+            max-height: 35pt;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+        
+        /* Reset body/content margins */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .content {
+            margin: 0;
+            padding: 0;
+        }
+        """
+    
     def _create_html_document(self, html_content: str) -> str:
         """Create a complete HTML document with proper structure."""
+        header_html = ""
+        header_css = ""
+        
+        if self.include_header:
+            logo_html, text_html = self._process_header_content()
+            if logo_html or text_html:
+                header_css = self._generate_header_css()
+                # Wrap header in a container that respects margins
+                header_html = '<div class="header-wrapper"><div class="header-container">'
+                if text_html:
+                    header_html += f'<div class="header-text">{text_html}</div>'
+                if logo_html:
+                    header_html += f'<div class="header-logo-wrapper">{logo_html}</div>'
+                header_html += '</div></div>'
+        
         return f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -190,9 +351,11 @@ class MD2PDFConverter:
             <style>
                 {self.css_styles}
                 {self.pygments_css}
+                {header_css}
             </style>
         </head>
         <body>
+            {header_html}
             <div class="content">
                 {html_content}
             </div>
@@ -221,7 +384,9 @@ class MD2PDFConverter:
             
             # Convert HTML to PDF directly
             print(f"Generating PDF: {self.output_file}")
-            html = HTML(string=html_document, base_url=str(Path('.').resolve()))
+            # Set base_url to project root so both font and asset paths resolve correctly
+            base_url = str(Path('.').resolve()) + '/'
+            html = HTML(string=html_document, base_url=base_url)
             html.write_pdf(str(self.output_file))
             
             print(f"✅ Successfully created PDF: {self.output_file}")
@@ -250,7 +415,7 @@ def get_unique_filename(file_path: Path, target_dir: Path) -> Path:
     
     return new_path
 
-def process_input_folder(style: str, theme: str) -> int:
+def process_input_folder(style: str, theme: str, include_header: bool = False) -> int:
     """Process all markdown files in the input folder."""
     input_folder = Path('input')
     output_folder = Path('output')
@@ -266,6 +431,8 @@ def process_input_folder(style: str, theme: str) -> int:
     print(f"Found {len(markdown_files)} markdown file(s) in input/ folder")
     print(f"Style: {style}")
     print(f"Theme: {theme}")
+    if include_header:
+        print(f"Header: Enabled")
     print("=" * 60)
     
     success_count = 0
@@ -282,7 +449,7 @@ def process_input_folder(style: str, theme: str) -> int:
             output_path = get_unique_filename(output_path, output_folder)
         
         # Convert the file
-        converter = MD2PDFConverter(str(input_file), str(output_path), style, theme)
+        converter = MD2PDFConverter(str(input_file), str(output_path), style, theme, include_header)
         if converter.convert():
             success_count += 1
             
@@ -340,6 +507,13 @@ Examples:
     )
     
     parser.add_argument(
+        '--header',
+        choices=['yes', 'no'],
+        default='no',
+        help='Include header with logo and text from header/ folder (default: no)'
+    )
+    
+    parser.add_argument(
         '--list-styles',
         action='store_true',
         help='List all available style templates'
@@ -389,12 +563,15 @@ Examples:
     # Ensure folders exist for workflow
     ensure_folders_exist()
     
+    # Parse header argument
+    include_header = args.header == 'yes'
+    
     # Check if input is provided
     if not args.input:
         # Default workflow: process all files in input folder
         print("🚀 Starting default workflow...")
         print("Processing all markdown files in input/ folder")
-        success_count = process_input_folder(args.style, args.theme)
+        success_count = process_input_folder(args.style, args.theme, include_header)
         if success_count == 0:
             sys.exit(1)
         return
@@ -422,9 +599,11 @@ Examples:
         print(f"Processing: {input_file}")
         print(f"Style: {args.style}")
         print(f"Theme: {args.theme}")
+        if include_header:
+            print(f"Header: Enabled")
         print(f"{'='*60}")
         
-        converter = MD2PDFConverter(str(input_file), args.output, args.style, args.theme)
+        converter = MD2PDFConverter(str(input_file), args.output, args.style, args.theme, include_header)
         if converter.convert():
             success_count += 1
     

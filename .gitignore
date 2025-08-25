@@ -239,3 +239,13 @@ $RECYCLE.BIN/
 input/*
 output/*
 processed/*
+
+# Header folder - ignore contents but keep folder
+header/*
+
+# Claude
+.claude/
+CLAUDE.md
+
+# Temporary files
+temp_scripts/
