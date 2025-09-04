@@ -236,12 +236,12 @@ $RECYCLE.BIN/
 .nfs*
 
 # MD2PDF specific
-input/*
-output/*
-processed/*
+data/input/*
+data/output/*
+data/processed/*
 
 # Header folder - ignore contents but keep folder
-header/*
+data/header/*
 
 # Claude
 .claude/

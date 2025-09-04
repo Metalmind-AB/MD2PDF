@@ -38,20 +38,20 @@ else
 fi
 
 # Ensure workflow folders exist
-mkdir -p input output processed
+mkdir -p data/input data/output data/processed
 
 echo ""
-echo "📂 Place your .md files in the 'input/' folder."
+echo "📂 Place your .md files in the 'data/input/' folder."
 echo "   Running standard workflow with style='${STYLE}' theme='${THEME}'."
 
-# Check for markdown files in input/
+# Check for markdown files in data/input/
 shopt -s nullglob
-md_files=(input/*.md)
+md_files=(data/input/*.md)
 shopt -u nullglob
 
 if [ ${#md_files[@]} -eq 0 ]; then
-    echo "📝 No markdown files found in input/. Examples:"
-    echo "   cp README.md input/"
+    echo "📝 No markdown files found in data/input/. Examples:"
+    echo "   cp README.md data/input/"
     echo "   python md2pdf.py --list-styles   # discover styles"
     echo "   python md2pdf.py --list-themes   # discover themes"
     echo ""
@@ -59,10 +59,10 @@ if [ ${#md_files[@]} -eq 0 ]; then
     exit 0
 fi
 
-# Run default workflow (processes all input/*.md → output/, moves originals to processed/)
+# Run default workflow (processes all data/input/*.md → data/output/, moves originals to data/processed/)
 python md2pdf.py --style "${STYLE}" --theme "${THEME}"
 
 echo ""
-echo "✅ Done! PDFs in 'output/', originals moved to 'processed/'."
+echo "✅ Done! PDFs in 'data/output/', originals moved to 'data/processed/'."
 echo "   Change style/theme by passing args: bash quick_start.sh modern sophisticated"
 echo "   Or render a single file: python md2pdf.py README.md --style story --theme sepia"

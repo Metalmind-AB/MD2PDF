@@ -12,8 +12,10 @@ class StyleLoader:
     """Dynamic loader for styles and themes."""
     
     def __init__(self, styles_dir: str = "styles", themes_dir: str = "themes"):
-        self.styles_dir = Path(styles_dir)
-        self.themes_dir = Path(themes_dir)
+        # Get the project root directory (2 levels up from this file)
+        project_root = Path(__file__).parent.parent.parent
+        self.styles_dir = project_root / styles_dir
+        self.themes_dir = project_root / themes_dir
         self._styles_cache = None
         self._themes_cache = None
     

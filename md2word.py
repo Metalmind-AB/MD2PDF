@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-MD2PDF Entry Point
-Calls the main md2pdf script from the src/main directory.
+MD2Word Entry Point
+Calls the main md2word script from the src/main directory.
 """
 
 import sys
@@ -12,7 +12,7 @@ src_path = Path(__file__).parent / 'src'
 sys.path.insert(0, str(src_path))
 
 # Import and run the main function
-from main.md2pdf import main
+from main.md2word import main
 
 if __name__ == "__main__":
     main()

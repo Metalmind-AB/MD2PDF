@@ -42,6 +42,12 @@ A comprehensive Python tool that converts Markdown files to impeccably beautiful
 
 ### Basic Usage
 
+**Quick start with batch processing:**
+```bash
+bash quick_start.sh                    # Uses technical/default style
+bash quick_start.sh modern sophisticated
+```
+
 **Single file conversion:**
 ```bash
 python md2pdf.py document.md
@@ -51,7 +57,7 @@ python md2pdf.py document.md -o custom_output.pdf
 
 **Batch processing (default workflow):**
 ```bash
-# Process all files in input/ folder
+# Process all files in data/input/ folder
 python md2pdf.py --style modern --theme sophisticated
 python md2pdf.py --style technical --theme dark
 ```
@@ -66,32 +72,61 @@ python md2pdf.py "docs/*.md" --style story --theme sepia
 
 ```
 MD2PDF/
-├── md2pdf.py              # Main converter script
-├── style_loader.py        # Dynamic style/theme loader
+├── md2pdf.py              # PDF converter entry point
+├── md2word.py             # Word converter entry point
 ├── requirements.txt       # Python dependencies
-├── example.py            # Usage examples
 ├── quick_start.sh        # Quick setup script
 ├── README.md             # This file
 ├── .gitignore            # Git ignore rules
-├── input/                # Source markdown files (workflow)
-├── output/               # Generated PDFs (workflow)
-├── processed/            # Processed files (workflow)
-├── styles/               # Style templates (CSS)
-│   ├── technical.css     # Technical documentation
-│   ├── modern.css        # Modern, sophisticated
-│   ├── whitepaper.css    # Academic, authoritative
-│   ├── story.css         # Literary, elegant
-│   └── academic.css      # Formal, scholarly
-└── themes/               # Color themes (CSS)
-    ├── default.css       # Clean and professional
-    ├── minimal.css       # Sophisticated, timeless
-    ├── sophisticated.css # Refined light design
-    ├── elegant.css       # Sophisticated dark design
-    ├── dark.css          # Dark containers
-    ├── midnight.css      # Dark containers with contrast
-    ├── oceanic.css       # Cool, calming blue tones
-    ├── forest.css        # Natural, earthy green palette
-    └── sepia.css         # Warm, vintage colors
+├── 
+├── src/                   # Source code
+│   ├── converters/        # Document converters
+│   │   ├── base_converter.py
+│   │   ├── pdf_converter.py
+│   │   └── word_converter.py
+│   ├── processors/        # Processing modules
+│   │   ├── markdown_processor.py
+│   │   ├── header_processor.py
+│   │   └── workflow_processor.py
+│   ├── utils/             # Utilities
+│   │   └── style_loader.py
+│   └── main/              # Main entry points
+│       ├── md2pdf.py
+│       └── md2word.py
+├── 
+├── data/                  # Data directories
+│   ├── input/             # Source markdown files (workflow)
+│   ├── output/            # Generated documents (workflow)
+│   ├── processed/         # Processed files (workflow)
+│   └── header/            # Header assets
+├── 
+├── assets/                # Static assets (fonts, emojis)
+├── styles/                # Style templates (CSS)
+│   ├── technical.css      # Technical documentation
+│   ├── modern.css         # Modern, sophisticated
+│   ├── whitepaper.css     # Academic, authoritative
+│   ├── story.css          # Literary, elegant
+│   └── academic.css       # Formal, scholarly
+├── themes/                # Color themes (CSS)
+│   ├── default.css        # Clean and professional
+│   ├── minimal.css        # Sophisticated, timeless
+│   ├── sophisticated.css  # Refined light design
+│   ├── elegant.css        # Sophisticated dark design
+│   ├── dark.css           # Dark containers
+│   ├── midnight.css       # Dark containers with contrast
+│   ├── oceanic.css        # Cool, calming blue tones
+│   ├── forest.css         # Natural, earthy green palette
+│   └── sepia.css          # Warm, vintage colors
+├── 
+├── scripts/               # Utility scripts
+│   ├── example.py         # Usage examples
+│   └── temp_scripts/      # Temporary/debug scripts
+├── 
+├── docs/                  # Documentation
+│   ├── CLAUDE.md
+│   └── samples/           # Sample outputs
+└── 
+└── venv/                  # Virtual environment
 ```
 
 ## 🎨 Style Templates
