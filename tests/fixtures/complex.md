@@ -20,11 +20,11 @@ def fibonacci(n):
         return [0]
     elif n == 2:
         return [0, 1]
-    
+
     sequence = [0, 1]
     for i in range(2, n):
         sequence.append(sequence[i-1] + sequence[i-2])
-    
+
     return sequence
 
 # Example usage
@@ -37,17 +37,17 @@ class Calculator {
     constructor() {
         this.result = 0;
     }
-    
+
     add(value) {
         this.result += value;
         return this;
     }
-    
+
     multiply(value) {
         this.result *= value;
         return this;
     }
-    
+
     getResult() {
         return this.result;
     }
@@ -61,7 +61,7 @@ console.log(`Result: ${result}`); // Output: 17
 
 ```sql
 -- Complex SQL query with joins and subqueries
-SELECT 
+SELECT
     u.username,
     u.email,
     COUNT(o.id) as order_count,
@@ -163,12 +163,12 @@ This text has a footnote[^1]. Here's another sentence with a different footnote[
 ## Nested Blockquotes with Code
 
 > This is a complex blockquote that contains code:
-> 
+>
 > ```python
 > def example():
 >     return "This is code inside a blockquote"
 > ```
-> 
+>
 > > And this is a nested blockquote inside the original blockquote.
 > > It should maintain proper indentation.
 
@@ -204,13 +204,13 @@ echo "Hidden content revealed!"
    - Final sub-point
 
 2. **Second major point**
-   
+
    This paragraph is part of the second list item. It should maintain proper indentation.
-   
+
    | Column 1 | Column 2 |
    |----------|----------|
    | Data 1   | Data 2   |
-   
+
    - Nested list within the major point
    - Another nested item
 

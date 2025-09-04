@@ -26,7 +26,7 @@ File Utilities
 
       # Find all markdown files
       md_files = find_markdown_files('docs/', recursive=True)
-      
+
       # Ensure output directory exists
       ensure_directory_exists('output/pdfs/')
 
@@ -51,7 +51,7 @@ String Utilities
 
       # Create URL-friendly slug
       slug = slugify("My Document Title!")  # returns "my-document-title"
-      
+
       # Extract title from markdown content
       title = extract_title_from_markdown("# My Title\n\nContent here")
 
@@ -97,7 +97,7 @@ Color Utilities
 
       # Convert hex to RGB
       r, g, b = hex_to_rgb("#3366cc")
-      
+
       # Create lighter version of color
       light_color = lighten_color("#3366cc", 0.2)  # 20% lighter
 
@@ -122,7 +122,7 @@ CSS Utilities
 
       # Parse CSS variables from stylesheet
       variables = parse_css_variables(css_content)
-      
+
       # Minify CSS for production
       minified = minify_css(css_content)
 
@@ -147,7 +147,7 @@ HTML Utilities
 
       # Clean up HTML content
       clean_content = clean_html(html_content)
-      
+
       # Add table of contents
       html_with_toc = add_table_of_contents(html_content)
 
@@ -172,7 +172,7 @@ Markdown Utilities
 
       # Extract YAML frontmatter
       frontmatter, content = extract_frontmatter(markdown_text)
-      
+
       # Estimate reading time
       minutes = estimate_reading_time(content)
       print(f"Estimated reading time: {minutes} minutes")
@@ -198,7 +198,7 @@ Path Utilities
 
       # Resolve relative path
       full_path = resolve_path('docs/README.md')
-      
+
       # Get project root directory
       root = get_project_root()
 
@@ -224,7 +224,7 @@ Validation Utilities
       # Validate color format
       if is_valid_hex_color("#3366cc"):
           print("Valid color!")
-      
+
       # Validate file path
       is_valid, error = validate_file_path("document.md")
 
@@ -252,7 +252,7 @@ System Utilities
       # Get system information
       info = get_system_info()
       print(f"OS: {info['os']}, Python: {info['python_version']}")
-      
+
       # Check available memory
       memory_gb = get_available_memory() / (1024**3)
       print(f"Available memory: {memory_gb:.1f} GB")
@@ -276,7 +276,7 @@ Configuration Utilities
 
       # Load configuration file
       config = load_yaml_config('.md2pdf.yml')
-      
+
       # Merge with default config
       final_config = merge_configs(default_config, user_config)
 

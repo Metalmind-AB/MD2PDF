@@ -5,11 +5,11 @@ This directory contains utility scripts for MD2PDF maintenance and setup.
 ## Scripts to Keep
 
 ### setup_assets.py
-**Purpose**: Downloads optional Twemoji assets for offline emoji rendering  
+**Purpose**: Downloads optional Twemoji assets for offline emoji rendering
 **Usage**: Run during initial setup or to update emoji assets
 **Keep**: YES - Essential for user setup
 
-### example.py  
+### example.py
 **Purpose**: Demonstrates usage of the MD2PDF converter with different styles
 **Usage**: Reference for developers and users
 **Keep**: YES - Useful documentation/example

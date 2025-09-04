@@ -8,14 +8,14 @@ body:
     attributes:
       value: |
         Thanks for taking the time to suggest a new feature!
-        
+
   - type: textarea
     id: problem
     attributes:
       label: Is your feature request related to a problem?
       description: A clear and concise description of what the problem is.
       placeholder: I'm always frustrated when...
-      
+
   - type: textarea
     id: solution
     attributes:
@@ -23,13 +23,13 @@ body:
       description: A clear and concise description of what you want to happen.
     validations:
       required: true
-      
+
   - type: textarea
     id: alternatives
     attributes:
       label: Describe alternatives you've considered
       description: A clear and concise description of any alternative solutions or features you've considered.
-      
+
   - type: textarea
     id: use-case
     attributes:
@@ -37,7 +37,7 @@ body:
       description: Describe the use case for this feature. How would you use it? What problem does it solve?
     validations:
       required: true
-      
+
   - type: dropdown
     id: priority
     attributes:
@@ -49,7 +49,7 @@ body:
         - Critical
     validations:
       required: true
-      
+
   - type: dropdown
     id: contribution
     attributes:
@@ -62,7 +62,7 @@ body:
         - "No"
     validations:
       required: true
-      
+
   - type: textarea
     id: examples
     attributes:
@@ -71,13 +71,13 @@ body:
         If applicable, provide code examples or mockups of how this feature would work.
         This will be automatically formatted as code.
       render: python
-      
+
   - type: textarea
     id: additional
     attributes:
       label: Additional Context
       description: Add any other context, screenshots, or information about the feature request here.
-      
+
   - type: checkboxes
     id: terms
     attributes:

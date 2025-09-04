@@ -12,8 +12,7 @@ Manages input/output/processed folders and batch file processing.
 
 import shutil
 from pathlib import Path
-from typing import Callable
-from typing import List
+from typing import Callable, List
 
 
 class WorkflowProcessor:

@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 # Add the project root to the path so we can import md2pdf
-project_root = Path(__file__).parent.parent.parent / 'src'
+project_root = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(project_root))
 
 from md2pdf import MD2PDFConverter, StyleManager
@@ -29,7 +29,7 @@ This section shows how different heading levels appear in the **{style}** style.
 ### Level 3 Heading
 Content under level 3 heading with *italic emphasis* and **bold text**.
 
-#### Level 4 Heading  
+#### Level 4 Heading
 Content under level 4 heading with `inline code` formatting.
 
 ##### Level 5 Heading
@@ -86,7 +86,7 @@ async function convertMarkdown(inputPath, outputPath) {{
         theme: 'default',
         verbose: true
     }};
-    
+
     try {{
         await md2pdf.convert(inputPath, outputPath, options);
         console.log(`✅ PDF generated successfully with {{options.style}} style`);
@@ -139,14 +139,14 @@ The **{style}** style handles different list types elegantly:
 
 1. First numbered item with detailed explanation
 2. Second numbered item with multiple paragraphs
-   
+
    This is a continuation of the second item with additional details
    that span multiple lines and demonstrate proper formatting.
 
 3. Third numbered item with nested elements:
    - Nested bullet point
    - Another nested point with **emphasis**
-   
+
 4. Fourth numbered item with code example:
    ```python
    print("This is nested code in a list")
@@ -157,7 +157,7 @@ The **{style}** style handles different list types elegantly:
 1. Numbered item with bullet subitems:
    - Bullet subitem A
    - Bullet subitem B with `inline code`
-   
+
 2. Another numbered item with more bullets:
    - Complex bullet with **bold** and *italic* text
    - Bullet with [external link](https://github.com)
@@ -190,17 +190,17 @@ The **{style}** style renders blockquotes with distinctive formatting:
 > This is a blockquote demonstrating how the **{style}** style handles quoted content. Blockquotes are perfect for highlighting important information, testimonials, or citations.
 
 > **Multi-paragraph blockquote:**
-> 
+>
 > This blockquote spans multiple paragraphs to show how the **{style}** style maintains consistent formatting across longer quoted sections.
-> 
+>
 > The second paragraph continues the quote with proper spacing and typography that matches the overall document aesthetic.
 
 ### Nested Blockquotes
 
 > This is a parent blockquote that contains nested content:
-> 
+>
 > > This is a nested blockquote within the parent quote, showing how the **{style}** style handles quote hierarchies.
-> 
+>
 > Back to the parent quote level with additional content.
 
 ## Images and Media
@@ -226,12 +226,12 @@ Content after a horizontal rule continues with proper spacing.
 Term 1
 : Definition for term 1 with detailed explanation
 
-Term 2  
+Term 2
 : Definition for term 2 with **bold text**
 
 Complex Term
 : Definition with multiple paragraphs
-  
+
   This definition continues with additional information
   and demonstrates proper formatting.
 
@@ -269,63 +269,67 @@ def main():
     """Generate style showcase PDFs for all available styles."""
     print("MD2PDF Style Showcase")
     print("=" * 40)
-    
+
     # Initialize style manager
     style_manager = StyleManager()
-    
+
     try:
         # Get all available styles
         styles = style_manager.list_styles()
         print(f"Found {len(styles)} available styles")
-        
+
         # Create output directory
-        output_dir = Path('style_showcase_output')
+        output_dir = Path("style_showcase_output")
         output_dir.mkdir(exist_ok=True)
-        
+
         # Generate PDFs for each style
         for i, style in enumerate(styles, 1):
-            print(f"\n[{i}/{len(styles)}] Generating showcase for '{style.name}' style...")
-            
+            print(
+                f"\n[{i}/{len(styles)}] Generating showcase for '{style.name}' style..."
+            )
+
             # Create content with style name inserted
             content = create_sample_content().format(style=style.name.title())
-            
+
             # Create temporary markdown file
             temp_md = output_dir / f"temp_{style.name}_showcase.md"
             temp_md.write_text(content)
-            
+
             # Convert to PDF
-            converter = MD2PDFConverter(style=style.name, theme='default')
+            converter = MD2PDFConverter(style=style.name, theme="default")
             output_pdf = output_dir / f"{style.name}_style_showcase.pdf"
-            
+
             try:
                 converter.convert(str(temp_md), str(output_pdf))
                 print(f"✅ Generated: {output_pdf}")
-                
+
                 # Clean up temp file
                 temp_md.unlink()
-                
+
             except Exception as e:
                 print(f"❌ Failed to generate {style.name} style: {e}")
                 # Clean up temp file even on error
                 if temp_md.exists():
                     temp_md.unlink()
-        
+
         print(f"\n🎉 Style showcase complete!")
         print(f"📁 Output directory: {output_dir.absolute()}")
-        print(f"📄 Generated {len(list(output_dir.glob('*_style_showcase.pdf')))} PDF files")
-        
+        print(
+            f"📄 Generated {len(list(output_dir.glob('*_style_showcase.pdf')))} PDF files"
+        )
+
         # List generated files
-        pdf_files = list(output_dir.glob('*_style_showcase.pdf'))
+        pdf_files = list(output_dir.glob("*_style_showcase.pdf"))
         if pdf_files:
             print("\nGenerated files:")
             for pdf_file in sorted(pdf_files):
                 size_kb = pdf_file.stat().st_size / 1024
                 print(f"  📄 {pdf_file.name} ({size_kb:.1f} KB)")
-        
+
     except Exception as e:
         print(f"❌ Error during style showcase generation: {e}")
         return 1
-    
+
     return 0
 
 

@@ -21,7 +21,7 @@ concurrency:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
         cd docs
         make clean
         make html
-        
+
     - name: Check for broken links
       run: |
         cd docs
@@ -103,7 +103,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build-docs
-    
+
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
@@ -111,7 +111,7 @@ jobs:
 
   validate-examples:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -142,7 +142,7 @@ jobs:
     - name: Validate documentation examples
       run: |
         echo "🔍 Validating documentation examples..."
-        
+
         # Run all example scripts
         if [ -d "examples" ]; then
           find examples -name "*.py" -type f | while read example; do
@@ -153,7 +153,7 @@ jobs:
             }
           done
         fi
-        
+
         # Test README examples if they exist
         if [ -f "README.md" ]; then
           echo "📖 Testing README examples..."
@@ -162,7 +162,7 @@ jobs:
 import re
 with open('README.md', 'r') as f:
     content = f.read()
-    
+
 # Find Python code blocks
 python_blocks = re.findall(r'```python\n(.*?)\n```', content, re.DOTALL)
 
@@ -178,7 +178,7 @@ for i, block in enumerate(python_blocks):
         print(f'⚠️  README Python block {i+1} had issues: {e}')
 "
         fi
-        
+
         echo "✅ Documentation examples validated"
 
     - name: Upload example outputs
@@ -193,7 +193,7 @@ for i, block in enumerate(python_blocks):
 
   spell-check:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -206,7 +206,7 @@ for i, block in enumerate(python_blocks):
     - name: Spell check documentation
       run: |
         echo "🔍 Spell checking documentation..."
-        
+
         # Create personal dictionary for technical terms
         cat > .aspell.en.pws << 'EOF'
 personal_ws-1.1 en 50
@@ -241,37 +241,37 @@ pyproject
 setuptools
 hatchling
 EOF
-        
+
         # Check documentation files
         find docs -name "*.rst" -o -name "*.md" | while read file; do
           echo "Checking: $file"
           aspell --personal=.aspell.en.pws --mode=sgml --lang=en --encoding=utf-8 list < "$file" | sort -u > spell_errors.tmp
-          
+
           if [ -s spell_errors.tmp ]; then
             echo "⚠️  Potential spelling errors in $file:"
             cat spell_errors.tmp
             # Don't fail the build on spelling errors, just warn
           fi
         done
-        
+
         # Check README
         if [ -f "README.md" ]; then
           echo "Checking: README.md"
           aspell --personal=.aspell.en.pws --mode=sgml --lang=en --encoding=utf-8 list < "README.md" | sort -u > readme_spell_errors.tmp
-          
+
           if [ -s readme_spell_errors.tmp ]; then
             echo "⚠️  Potential spelling errors in README.md:"
             cat readme_spell_errors.tmp
           fi
         fi
-        
+
         echo "✅ Spell check completed"
 
   docs-summary:
     runs-on: ubuntu-latest
     needs: [build-docs, validate-examples, spell-check]
     if: always()
-    
+
     steps:
     - name: Documentation Summary
       run: |
@@ -281,7 +281,7 @@ EOF
         echo "| Build Docs | ${{ needs.build-docs.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Validate Examples | ${{ needs.validate-examples.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
         echo "| Spell Check | ${{ needs.spell-check.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
-        
+
         # Add deployment info if main branch
         if [[ "${{ github.ref }}" == "refs/heads/main" && "${{ github.event_name }}" == "push" ]]; then
           echo "| Pages Deploy | ${{ needs.deploy-docs.result == 'success' && '✅ Deployed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY

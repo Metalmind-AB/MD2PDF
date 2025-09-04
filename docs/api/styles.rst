@@ -18,7 +18,7 @@ Style Manager
       from md2pdf import StyleManager
 
       style_manager = StyleManager()
-      
+
       # List available styles
       styles = style_manager.list_styles()
       for style in styles:
@@ -42,7 +42,7 @@ Theme Manager
       from md2pdf import ThemeManager
 
       theme_manager = ThemeManager()
-      
+
       # List available themes
       themes = theme_manager.list_themes()
       for theme in themes:
@@ -76,10 +76,10 @@ Style Loader
       from md2pdf.core.styles import StyleLoader
 
       loader = StyleLoader()
-      
+
       # Load custom style from file
       loader.load_custom_style('/path/to/custom.css')
-      
+
       # Load custom theme
       loader.load_custom_theme('/path/to/custom_theme.css')
 
@@ -98,7 +98,7 @@ CSS Processor
       from md2pdf.core.styles import CSSProcessor
 
       processor = CSSProcessor()
-      
+
       # Process and combine CSS
       combined_css = processor.combine_css(
           style_css=style_css,
@@ -121,10 +121,10 @@ Style Discovery
 
       # Discover built-in styles
       styles = discover_styles()
-      
+
       # Discover custom styles in directory
       custom_styles = discover_styles('/path/to/custom/styles/')
-      
+
       # Discover themes
       themes = discover_themes()
 
@@ -167,17 +167,17 @@ Constants
 --------
 
 .. autodata:: md2pdf.core.styles.DEFAULT_STYLE
-   
+
    Default style name used when no style is specified.
 
 .. autodata:: md2pdf.core.styles.DEFAULT_THEME
-   
+
    Default theme name used when no theme is specified.
 
 .. autodata:: md2pdf.core.styles.BUILT_IN_STYLES
-   
+
    List of built-in style names.
 
 .. autodata:: md2pdf.core.styles.BUILT_IN_THEMES
-   
+
    List of built-in theme names.

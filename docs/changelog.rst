@@ -17,7 +17,7 @@ Added
 - Dynamic style system with 7 built-in styles:
 
   - **Technical**: Clean, professional, code-friendly
-  - **Modern**: Sophisticated, elegant, contemporary  
+  - **Modern**: Sophisticated, elegant, contemporary
   - **Whitepaper**: Academic, authoritative
   - **Story**: Literary, elegant, readable
   - **Academic**: Formal, scholarly, citation-friendly
@@ -31,7 +31,7 @@ Added
   - **Sophisticated**: Refined light design with subtle accents
   - **Elegant**: Sophisticated dark design
   - **Dark**: Light theme with dark containers
-  - **Midnight**: High-contrast dark containers  
+  - **Midnight**: High-contrast dark containers
   - **Oceanic**: Cool, calming blue tones
   - **Forest**: Natural, earthy green palette
   - **Sepia**: Warm, vintage book-like colors

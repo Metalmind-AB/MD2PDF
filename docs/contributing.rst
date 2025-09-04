@@ -23,7 +23,7 @@ Development Setup
    # Create virtual environment
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
-   
+
    # Install in development mode with all dependencies
    pip install -e ".[dev,docs,test]"
 
@@ -118,13 +118,13 @@ Making Changes
 
    # Run full test suite
    pytest
-   
+
    # Run specific tests
    pytest tests/test_converter.py
-   
+
    # Test code quality
    pre-commit run --all-files
-   
+
    # Test documentation
    cd docs && make html
 
@@ -134,10 +134,10 @@ Making Changes
 
    git add .
    git commit -m "feat: add new feature description"
-   
+
    # Use conventional commit format:
    # feat: new features
-   # fix: bug fixes  
+   # fix: bug fixes
    # docs: documentation changes
    # style: formatting, no code change
    # refactor: code change that neither fixes bug nor adds feature
@@ -161,7 +161,7 @@ Python Code Style
 We follow PEP 8 and use these tools:
 
 - **Black** for code formatting
-- **isort** for import sorting  
+- **isort** for import sorting
 - **flake8** for linting
 - **mypy** for type checking
 
@@ -169,13 +169,13 @@ We follow PEP 8 and use these tools:
 
    # Format code
    black src/ tests/
-   
+
    # Sort imports
    isort src/ tests/
-   
+
    # Check linting
    flake8 src/ tests/
-   
+
    # Type checking
    mypy src/
 
@@ -188,7 +188,7 @@ Use type hints for all public functions:
 
    from typing import Optional, Dict, List
    from pathlib import Path
-   
+
    def convert_file(
        input_path: Path,
        output_path: Optional[Path] = None,
@@ -196,16 +196,16 @@ Use type hints for all public functions:
        theme: str = "default"
    ) -> Dict[str, str]:
        """Convert a markdown file to PDF.
-       
+
        Args:
            input_path: Path to input markdown file
            output_path: Path for output PDF (optional)
            style: Style template name
            theme: Theme name
-           
+
        Returns:
            Dictionary with conversion results
-           
+
        Raises:
            ConversionError: If conversion fails
        """
@@ -219,14 +219,14 @@ Use Google-style docstrings:
 
    def example_function(param1: str, param2: int) -> bool:
        """Example function with types documented in the docstring.
-       
+
        Args:
            param1: The first parameter.
            param2: The second parameter.
-           
+
        Returns:
            The return value. True for success, False otherwise.
-           
+
        Raises:
            ValueError: If param1 is empty.
        """
@@ -249,16 +249,16 @@ Running Tests
 
    # Run all tests
    pytest
-   
+
    # Run with coverage
    pytest --cov=md2pdf --cov-report=html
-   
+
    # Run specific test file
    pytest tests/test_converter.py
-   
+
    # Run tests matching pattern
    pytest -k "test_conversion"
-   
+
    # Run tests with verbose output
    pytest -v
 
@@ -270,29 +270,29 @@ Test Structure
    import pytest
    from pathlib import Path
    from md2pdf import MD2PDFConverter
-   
-   
+
+
    class TestConverter:
        def test_basic_conversion(self, tmp_path):
            """Test basic markdown to PDF conversion."""
            # Setup
            input_file = tmp_path / "test.md"
            input_file.write_text("# Test Document\n\nThis is a test.")
-           
+
            output_file = tmp_path / "test.pdf"
-           
+
            # Execute
            converter = MD2PDFConverter()
            converter.convert(str(input_file), str(output_file))
-           
+
            # Assert
            assert output_file.exists()
            assert output_file.stat().st_size > 0
-       
+
        def test_invalid_input(self):
            """Test error handling for invalid input."""
            converter = MD2PDFConverter()
-           
+
            with pytest.raises(FileNotFoundError):
                converter.convert("nonexistent.md", "output.pdf")
 
@@ -314,9 +314,9 @@ Creating New Styles
 .. code-block:: css
 
    /* My Custom Style - Brief description of the style */
-   
+
    @import url('https://fonts.googleapis.com/css2?family=YourFont:wght@400;700&display=swap');
-   
+
    :root {
        --font-body: 'YourFont', sans-serif;
        --font-heading: 'YourFont', sans-serif;
@@ -353,7 +353,7 @@ Creating New Themes
 .. code-block:: css
 
    /* My Custom Theme - Brief description */
-   
+
    :root {
        --theme-primary: #your-primary-color;
        --theme-secondary: #your-secondary-color;
@@ -379,7 +379,7 @@ Building Documentation
 
    cd docs
    make html
-   
+
    # View documentation
    open _build/html/index.html  # macOS
    xdg-open _build/html/index.html  # Linux
@@ -422,22 +422,22 @@ PR Template
 
    ## Description
    Brief description of changes made.
-   
+
    ## Type of Change
    - [ ] Bug fix (non-breaking change which fixes an issue)
    - [ ] New feature (non-breaking change which adds functionality)
    - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
    - [ ] Documentation update
-   
+
    ## Testing
    - [ ] Tests pass locally
    - [ ] New tests added for new functionality
    - [ ] Manual testing completed
-   
+
    ## Documentation
    - [ ] Documentation updated
    - [ ] Examples updated
-   
+
    ## Checklist
    - [ ] Code follows project style guidelines
    - [ ] Self-review of code completed
@@ -529,7 +529,7 @@ Thank you for contributing to MD2PDF! Your contributions help make document conv
 For questions about contributing, please:
 
 - Open a GitHub issue
-- Start a GitHub discussion  
+- Start a GitHub discussion
 - Email the maintainers
 
 We appreciate your time and effort in making MD2PDF better!

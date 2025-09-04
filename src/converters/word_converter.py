@@ -80,9 +80,7 @@ class WordConverter(BaseConverter):
             if element.name in ["h1", "h2", "h3", "h4", "h5", "h6", "p"]:
                 paragraph = doc.add_paragraph()
                 paragraph.text = element.get_text()
-                self._apply_style_to_paragraph(
-                    paragraph, element, element.name
-                )
+                self._apply_style_to_paragraph(paragraph, element, element.name)
 
             elif element.name in ["ul", "ol"]:
                 for li in element.find_all("li", recursive=False):

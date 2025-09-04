@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -134,7 +134,7 @@ jobs:
         echo "# Test Document" > test.md
         echo "This is a test." >> test.md
         md2pdf test.md test.pdf
-        
+
         # Verify PDF was created
         if [ -f "test.pdf" ]; then
           echo "✓ PDF generation successful"

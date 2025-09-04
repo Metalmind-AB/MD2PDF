@@ -20,7 +20,7 @@ Features
 
 ✨ **Dynamic Style System**: Multiple beautiful typography templates with automatic discovery
 
-🌈 **Color Theme Engine**: Sophisticated color themes with CSS custom properties  
+🌈 **Color Theme Engine**: Sophisticated color themes with CSS custom properties
 
 📝 **Advanced Markdown Support**: Full syntax highlighting, tables, TOC, footnotes
 
@@ -49,10 +49,10 @@ Quick Start
 
    # Convert a single file
    md2pdf document.md
-   
+
    # With custom styling
    md2pdf document.md --style modern --theme elegant
-   
+
    # Batch processing
    md2pdf *.md --style technical --theme dark
 
@@ -61,7 +61,7 @@ Quick Start
 .. code-block:: python
 
    from md2pdf import MD2PDFConverter
-   
+
    converter = MD2PDFConverter(style='modern', theme='elegant')
    converter.convert('document.md', 'output.pdf')
 

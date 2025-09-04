@@ -23,12 +23,12 @@
     --border: var(--theme-border, #717B87);                /* Stone Grey */
     --code-text: var(--theme-code-text, #ffffff);
     --code-bg: var(--theme-code-bg, #003C71);              /* Midnight Sky Blue for code blocks */
-    
+
     /* Typography - Professional Fonts */
     --font-body: 'Open Sans', 'Calibri', sans-serif;  /* Clean sans-serif body text */
     --font-heading: 'Palatino', 'Playfair Display', serif;  /* Elegant serif headings */
     --font-code: 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
-    
+
     /* Layout - Professional consulting document format */
     --max-width: 950px;
     --base-font-size: 16px;

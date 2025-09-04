@@ -41,7 +41,7 @@ CentOS/RHEL/Fedora
    # CentOS/RHEL
    sudo yum install gcc python3-devel python3-pip \
      cairo-devel pango-devel gdk-pixbuf2-devel libffi-devel
-   
+
    # Fedora
    sudo dnf install gcc python3-devel python3-pip \
      cairo-devel pango-devel gdk-pixbuf2-devel libffi-devel
@@ -96,13 +96,13 @@ It's recommended to use a virtual environment:
 .. code-block:: bash
 
    python -m venv md2pdf-env
-   
+
    # On Windows
    md2pdf-env\Scripts\activate
-   
+
    # On macOS/Linux
    source md2pdf-env/bin/activate
-   
+
    pip install md2pdf
 
 Verifying Installation
@@ -122,7 +122,7 @@ Create a test markdown file and convert it:
 
    echo "# Test Document\n\nThis is a **test**." > test.md
    md2pdf test.md
-   
+
 The command should generate ``test.pdf`` in the current directory.
 
 Troubleshooting

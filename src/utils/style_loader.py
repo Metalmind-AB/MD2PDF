@@ -11,9 +11,7 @@ Automatically discovers styles and themes from their respective folders.
 
 import re
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Tuple
+from typing import Dict, List, Tuple
 
 
 class StyleLoader:

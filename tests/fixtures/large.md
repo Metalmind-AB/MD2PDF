@@ -112,7 +112,7 @@ class PerformanceAnalyzer:
     def __init__(self, data):
         self.data = pd.DataFrame(data)
         self.results = {}
-    
+
     def calculate_descriptive_stats(self):
         """Calculate basic descriptive statistics."""
         return {
@@ -124,25 +124,25 @@ class PerformanceAnalyzer:
             'q25': self.data.quantile(0.25),
             'q75': self.data.quantile(0.75)
         }
-    
+
     def perform_correlation_analysis(self):
         """Analyze correlations between variables."""
         correlation_matrix = self.data.corr()
         return correlation_matrix
-    
+
     def regression_analysis(self, dependent_var, independent_vars):
         """Perform multiple regression analysis."""
         from sklearn.linear_model import LinearRegression
         from sklearn.metrics import r2_score, mean_squared_error
-        
+
         X = self.data[independent_vars]
         y = self.data[dependent_var]
-        
+
         model = LinearRegression()
         model.fit(X, y)
-        
+
         predictions = model.predict(X)
-        
+
         return {
             'coefficients': model.coef_,
             'intercept': model.intercept_,
@@ -150,28 +150,28 @@ class PerformanceAnalyzer:
             'mse': mean_squared_error(y, predictions),
             'feature_names': independent_vars
         }
-    
+
     def generate_performance_report(self):
         """Generate comprehensive performance report."""
         descriptive = self.calculate_descriptive_stats()
         correlations = self.perform_correlation_analysis()
-        
+
         report = f"""
         Performance Analysis Report
         ===========================
-        
+
         Descriptive Statistics:
         {descriptive}
-        
+
         Correlation Matrix:
         {correlations}
-        
+
         Key Findings:
         - Average conversion time: {descriptive['mean']['conversion_time']:.2f}ms
         - Memory usage range: {descriptive['min']['memory_mb']:.1f} - {descriptive['max']['memory_mb']:.1f} MB
         - Success rate: {(1 - descriptive['mean']['error_rate']) * 100:.1f}%
         """
-        
+
         return report
 ```
 
@@ -206,7 +206,7 @@ class MemoryTracker {
         this.peak_usage = 0;
         this.baseline = this.getCurrentMemoryUsage();
     }
-    
+
     startTracking() {
         this.interval = setInterval(() => {
             const current = this.getCurrentMemoryUsage();
@@ -214,13 +214,13 @@ class MemoryTracker {
                 timestamp: Date.now(),
                 usage: current - this.baseline
             });
-            
+
             if (current > this.peak_usage) {
                 this.peak_usage = current;
             }
         }, 100);
     }
-    
+
     stopTracking() {
         clearInterval(this.interval);
         return {
@@ -229,14 +229,14 @@ class MemoryTracker {
             measurements: this.measurements
         };
     }
-    
+
     getCurrentMemoryUsage() {
         // Implementation would depend on environment
         // In Node.js: process.memoryUsage().heapUsed
         // In browser: performance.memory?.usedJSHeapSize || 0
         return performance.memory?.usedJSHeapSize || 0;
     }
-    
+
     calculateAverage() {
         const sum = this.measurements.reduce((acc, m) => acc + m.usage, 0);
         return sum / this.measurements.length;
@@ -373,23 +373,23 @@ class DocumentProcessor {
 private:
     std::unique_ptr<MemoryPool> memory_pool_;
     size_t max_memory_usage_;
-    
+
 public:
     DocumentProcessor(size_t max_memory = 512 * 1024 * 1024) // 512MB default
         : max_memory_usage_(max_memory) {
         memory_pool_ = std::make_unique<MemoryPool>(max_memory);
     }
-    
+
     ProcessResult processDocument(const std::string& markdown) {
         MemoryGuard guard(memory_pool_.get(), max_memory_usage_);
-        
+
         // Process document with memory monitoring
         auto result = parseAndConvert(markdown);
-        
+
         if (guard.exceedsLimit()) {
             return ProcessResult::error("Memory limit exceeded");
         }
-        
+
         return result;
     }
 };
@@ -405,7 +405,7 @@ The MD2PDF conversion system employs a modular architecture designed for scalabi
 
 1. **Markdown Parser**: Responsible for lexical analysis and syntax tree generation
 2. **Style Engine**: Handles CSS processing and style application
-3. **Layout Engine**: Manages page layout, pagination, and element positioning  
+3. **Layout Engine**: Manages page layout, pagination, and element positioning
 4. **Rendering Engine**: Converts the styled document tree to PDF format
 5. **Resource Manager**: Handles external resources like images and fonts
 
@@ -420,23 +420,23 @@ class MarkdownParser:
         self.tokens = []
         self.current_token = 0
         self.ast = None
-        
+
     def parse(self, markdown_text):
         """Parse markdown text and return AST."""
         # Tokenization phase
         self.tokens = self.tokenize(markdown_text)
-        
+
         # Parsing phase
         self.current_token = 0
         self.ast = self.parse_document()
-        
+
         return self.ast
-    
+
     def tokenize(self, text):
         """Convert markdown text to tokens."""
         tokens = []
         lines = text.split('\n')
-        
+
         for line_num, line in enumerate(lines):
             if self.is_header(line):
                 tokens.append(self.create_header_token(line, line_num))
@@ -448,24 +448,24 @@ class MarkdownParser:
                 tokens.append(self.create_table_token(line, line_num))
             else:
                 tokens.append(self.create_paragraph_token(line, line_num))
-        
+
         return tokens
-    
+
     def parse_document(self):
         """Parse document structure."""
         document = DocumentNode()
-        
+
         while not self.is_end_of_tokens():
             element = self.parse_block_element()
             if element:
                 document.add_child(element)
-        
+
         return document
-    
+
     def parse_block_element(self):
         """Parse block-level elements."""
         token = self.current_token_value()
-        
+
         if token.type == 'header':
             return self.parse_header()
         elif token.type == 'list':
@@ -479,7 +479,7 @@ class MarkdownParser:
         else:
             self.advance()
             return None
-    
+
     def parse_inline_elements(self, text):
         """Parse inline formatting elements."""
         inline_parser = InlineParser(text)
@@ -490,12 +490,12 @@ class InlineParser:
         self.text = text
         self.position = 0
         self.length = len(text)
-    
+
     def parse(self):
         """Parse inline elements like bold, italic, links."""
         elements = []
         current_text = ""
-        
+
         while self.position < self.length:
             if self.peek() == '*':
                 if current_text:
@@ -514,10 +514,10 @@ class InlineParser:
                 elements.append(self.parse_code())
             else:
                 current_text += self.advance()
-        
+
         if current_text:
             elements.append(TextNode(current_text))
-        
+
         return elements
 ```
 
@@ -530,13 +530,13 @@ The style engine processes CSS and applies styling rules to the document tree:
 @page {
     size: A4;
     margin: 2cm;
-    
+
     @top-center {
         content: "Document Title";
         font-family: Arial, sans-serif;
         font-size: 10pt;
     }
-    
+
     @bottom-right {
         content: "Page " counter(page);
         font-family: Arial, sans-serif;
@@ -622,31 +622,31 @@ public class LayoutEngine {
     private final PageDimensions pageDimensions;
     private final StyleResolver styleResolver;
     private final List<LayoutBox> layoutBoxes;
-    
+
     public LayoutEngine(PageDimensions dimensions, StyleResolver resolver) {
         this.pageDimensions = dimensions;
         this.styleResolver = resolver;
         this.layoutBoxes = new ArrayList<>();
     }
-    
+
     public LayoutResult layout(DocumentTree document) {
         LayoutContext context = new LayoutContext(pageDimensions);
-        
+
         for (Node node : document.getChildren()) {
             LayoutBox box = createLayoutBox(node, context);
             layoutBoxes.add(box);
         }
-        
+
         // Perform layout calculations
         calculatePositions(context);
         handlePageBreaks(context);
-        
+
         return new LayoutResult(layoutBoxes, context.getPageCount());
     }
-    
+
     private LayoutBox createLayoutBox(Node node, LayoutContext context) {
         Style style = styleResolver.resolve(node);
-        
+
         switch (node.getType()) {
             case HEADER:
                 return new HeaderBox((HeaderNode) node, style, context);
@@ -662,10 +662,10 @@ public class LayoutEngine {
                 return new GenericBox(node, style, context);
         }
     }
-    
+
     private void calculatePositions(LayoutContext context) {
         float currentY = context.getPageMargins().top;
-        
+
         for (LayoutBox box : layoutBoxes) {
             // Check if box fits on current page
             if (currentY + box.getHeight() > context.getPageHeight() - context.getPageMargins().bottom) {
@@ -673,19 +673,19 @@ public class LayoutEngine {
                 context.newPage();
                 currentY = context.getPageMargins().top;
             }
-            
+
             box.setPosition(context.getPageMargins().left, currentY);
             currentY += box.getHeight() + box.getMarginBottom();
         }
     }
-    
+
     private void handlePageBreaks(LayoutContext context) {
         // Handle explicit page breaks and orphan/widow control
         for (LayoutBox box : layoutBoxes) {
             if (box.hasPageBreakBefore()) {
                 insertPageBreak(box, context);
             }
-            
+
             if (box.isOrphanOrWidow()) {
                 adjustPageBreakForOrphanWidow(box, context);
             }
@@ -715,45 +715,45 @@ impl PdfRenderer {
             image_refs: HashMap::new(),
         }
     }
-    
+
     pub fn render_document(&mut self, layout: &LayoutResult) -> Vec<u8> {
         // Setup document structure
         let catalog_id = self.pdf.catalog();
         let pages_id = self.pdf.pages();
-        
+
         // Load fonts
         self.load_fonts();
-        
+
         // Render each page
         for (page_num, page_content) in layout.pages().enumerate() {
             let page_id = self.pdf.page();
             self.render_page(page_id, page_content);
-            
+
             // Add page to pages tree
             self.pdf.pages().kids([page_id]).count(1);
         }
-        
+
         // Finalize PDF
         self.pdf.finish()
     }
-    
+
     fn render_page(&mut self, page_id: Ref, content: &PageContent) {
         let mut page = self.pdf.page(page_id);
         page.media_box([0.0, 0.0, 595.0, 842.0]); // A4 dimensions
         page.parent(self.pdf.pages_ref());
-        
+
         // Create content stream
         let content_id = self.pdf.stream(content_id, &self.create_content_stream(content));
         page.contents(content_id);
-        
+
         // Add fonts and resources
         page.resources().fonts(self.get_font_dictionary());
         page.finish();
     }
-    
+
     fn create_content_stream(&self, content: &PageContent) -> Vec<u8> {
         let mut stream = Vec::new();
-        
+
         for element in content.elements() {
             match element {
                 LayoutElement::Text(text) => {
@@ -770,44 +770,44 @@ impl PdfRenderer {
                 }
             }
         }
-        
+
         stream
     }
-    
+
     fn render_text(&self, text: &TextElement) -> Vec<u8> {
         let mut commands = Vec::new();
-        
+
         // Set font and size
         commands.extend(format!("/{} {} Tf\n", text.font_name, text.font_size).bytes());
-        
+
         // Set position
         commands.extend(format!("{} {} Td\n", text.x, text.y).bytes());
-        
+
         // Set color
         commands.extend(format!("{} {} {} rg\n", text.color.r, text.color.g, text.color.b).bytes());
-        
+
         // Draw text
         commands.extend(format!("({}) Tj\n", self.escape_text(&text.content)).bytes());
-        
+
         commands
     }
-    
+
     fn render_image(&self, img: &ImageElement) -> Vec<u8> {
         let mut commands = Vec::new();
-        
+
         // Save graphics state
         commands.extend(b"q\n");
-        
+
         // Set transformation matrix
-        commands.extend(format!("{} 0 0 {} {} {} cm\n", 
+        commands.extend(format!("{} 0 0 {} {} {} cm\n",
             img.width, img.height, img.x, img.y).bytes());
-        
+
         // Draw image
         commands.extend(format!("/Im{} Do\n", img.id).bytes());
-        
+
         // Restore graphics state
         commands.extend(b"Q\n");
-        
+
         commands
     }
 }
@@ -870,7 +870,7 @@ def analyze_memory_efficiency():
     for content_type, profile in memory_profiles.items():
         peak_to_baseline = profile['peak_mb'] / profile['baseline_mb']
         memory_overhead = profile['peak_mb'] - profile['baseline_mb']
-        
+
         print(f"{content_type}:")
         print(f"  Peak/Baseline Ratio: {peak_to_baseline:.2f}x")
         print(f"  Memory Overhead: {memory_overhead:.1f} MB")
@@ -900,7 +900,7 @@ memory_usage[size_] := 0.34 * size^1.12 + 18.6
 ListPlot[{
   Table[{size, total_time[size]}, {size, 10, 1000, 10}],
   Table[{size, memory_usage[size]}, {size, 10, 1000, 10}]
-}, 
+},
 PlotLegends -> {"Processing Time (ms)", "Memory Usage (MB)"},
 AxesLabel -> {"Document Size (KB)", "Resource Usage"}]
 ```
@@ -933,24 +933,24 @@ class QualityAssessment:
             'image_quality': [],
             'color_accuracy': []
         }
-    
+
     def assess_document(self, original_md, rendered_pdf):
         """Comprehensive quality assessment."""
         # Convert PDF back to comparable format
         reference_image = self.md_to_image(original_md)
         pdf_image = self.pdf_to_image(rendered_pdf)
-        
+
         # Calculate similarity scores
         layout_score = self.compare_layout(reference_image, pdf_image)
         font_score = self.compare_fonts(reference_image, pdf_image)
         image_score = self.compare_images(reference_image, pdf_image)
         color_score = self.compare_colors(reference_image, pdf_image)
-        
+
         self.metrics['layout_accuracy'].append(layout_score)
         self.metrics['font_consistency'].append(font_score)
         self.metrics['image_quality'].append(image_score)
         self.metrics['color_accuracy'].append(color_score)
-        
+
         return {
             'overall_score': np.mean([layout_score, font_score, image_score, color_score]),
             'layout_accuracy': layout_score,
@@ -958,22 +958,22 @@ class QualityAssessment:
             'image_quality': image_score,
             'color_accuracy': color_score
         }
-    
+
     def compare_layout(self, img1, img2):
         """Compare structural layout elements."""
         # Extract structural features
         features1 = self.extract_layout_features(img1)
         features2 = self.extract_layout_features(img2)
-        
+
         # Calculate structural similarity
         similarity = self.calculate_structural_similarity(features1, features2)
         return similarity * 100  # Return as percentage
-    
+
     def generate_quality_report(self):
         """Generate comprehensive quality report."""
         report = {
             'average_scores': {
-                metric: np.mean(scores) 
+                metric: np.mean(scores)
                 for metric, scores in self.metrics.items()
             },
             'score_distributions': {
@@ -986,7 +986,7 @@ class QualityAssessment:
                 for metric, scores in self.metrics.items()
             }
         }
-        
+
         return report
 ```
 
@@ -1027,13 +1027,13 @@ class QualityAssessment:
 
 **Conversion Challenges:**
 1. Complex LaTeX mathematical expressions
-2. Bibliography formatting and cross-references  
+2. Bibliography formatting and cross-references
 3. High-resolution scientific figures
 4. Strict academic formatting requirements
 
 **Results:**
 - Processing time: 4,234 ms
-- Memory peak: 198.3 MB  
+- Memory peak: 198.3 MB
 - Quality score: 9.1/10
 - Success rate: 95.7%
 
@@ -1078,7 +1078,7 @@ class QualityAssessment:
 - **CPU**: Single core 1.5 GHz processor
 - **Platform**: Windows 7+, macOS 10.12+, Linux kernel 3.10+
 
-#### Recommended Requirements  
+#### Recommended Requirements
 - **Memory**: 2 GB RAM available
 - **Storage**: 500 MB free space
 - **CPU**: Multi-core 2.5 GHz+ processor
@@ -1104,19 +1104,19 @@ interface ConversionOptions {
     bottom: number;
     left: number;
   };
-  
+
   // Styling options
   theme?: string;
   customCSS?: string;
   fontFamily?: string;
   fontSize?: number;
-  
+
   // Processing options
   enableMath?: boolean;
   enableTables?: boolean;
   enableCodeHighlighting?: boolean;
   enableTOC?: boolean;
-  
+
   // Performance options
   maxMemory?: number;
   timeout?: number;
@@ -1137,18 +1137,18 @@ interface ConversionResult {
 
 class MD2PDFConverter {
   constructor(options?: ConversionOptions);
-  
+
   // Synchronous conversion
   convertSync(markdown: string, options?: ConversionOptions): ConversionResult;
-  
+
   // Asynchronous conversion
   convert(markdown: string, options?: ConversionOptions): Promise<ConversionResult>;
-  
+
   // Stream-based conversion for large documents
-  convertStream(inputStream: ReadableStream, 
+  convertStream(inputStream: ReadableStream,
                 outputStream: WritableStream,
                 options?: ConversionOptions): Promise<ConversionResult>;
-  
+
   // Batch conversion
   convertBatch(documents: Array<{
     markdown: string;
@@ -1203,7 +1203,7 @@ This comprehensive reference covers all supported markdown syntax elements and t
 #### Headers
 ```markdown
 # H1 Header
-## H2 Header  
+## H2 Header
 ### H3 Header
 #### H4 Header
 ##### H5 Header
@@ -1244,13 +1244,13 @@ Advanced CSS customization options for PDF output:
 @page {
   size: A4 portrait;
   margin: 2cm 1.5cm;
-  
+
   @top-left {
     content: "Document Title";
     font-size: 10pt;
     color: #666;
   }
-  
+
   @bottom-right {
     content: "Page " counter(page) " of " counter(pages);
     font-size: 10pt;
@@ -1263,15 +1263,15 @@ Advanced CSS customization options for PDF output:
   h1, h2, h3 {
     page-break-after: avoid;
   }
-  
+
   pre, blockquote {
     page-break-inside: avoid;
   }
-  
+
   table {
     page-break-inside: auto;
   }
-  
+
   tr {
     page-break-inside: avoid;
   }

@@ -5,7 +5,7 @@ This directory demonstrates MD2PDF's powerful styling capabilities, including bu
 ## Files in This Directory
 
 - `style_showcase.py` - Demonstrates all built-in styles
-- `theme_showcase.py` - Shows all color themes  
+- `theme_showcase.py` - Shows all color themes
 - `combination_demo.py` - Tests style + theme combinations
 - `custom_styling.py` - Custom CSS and styling examples
 - `comparison_generator.py` - Generate side-by-side style comparisons
@@ -21,7 +21,7 @@ MD2PDF includes 7 professional styles:
 - **Font**: Inter + JetBrains Mono
 - **Best with themes**: Default, Dark, Oceanic, Midnight
 
-### Modern  
+### Modern
 - **Purpose**: Premium documentation, presentations
 - **Features**: Sophisticated layout, contemporary design
 - **Font**: Source Serif Pro + JetBrains Mono
@@ -54,7 +54,7 @@ MD2PDF includes 7 professional styles:
 ### Futuristic
 - **Purpose**: Tech presentations, modern interfaces
 - **Features**: Cutting-edge typography, unique elements
-- **Font**: Orbitron + Fira Code  
+- **Font**: Orbitron + Fira Code
 - **Best with themes**: Midnight, Elegant, Dark
 
 ## Color Themes
@@ -66,7 +66,7 @@ MD2PDF provides 10 sophisticated color themes:
 - **Minimal**: Elegant, sophisticated, timeless design
 - **Sophisticated**: Refined with subtle accent colors
 - **Oceanic**: Cool, calming blue tones
-- **Forest**: Natural, earthy green palette  
+- **Forest**: Natural, earthy green palette
 - **Sepia**: Warm, vintage book-like colors
 - **Agile**: Modern, dynamic for development docs
 
@@ -109,7 +109,7 @@ Demonstrates how to add custom CSS and create custom styles.
 - Primary: `technical` + `oceanic`
 - Alternative: `technical` + `dark`
 
-**Business Reports**  
+**Business Reports**
 - Primary: `consultancy` + `sophisticated`
 - Alternative: `whitepaper` + `minimal`
 
@@ -139,7 +139,7 @@ Demonstrates how to add custom CSS and create custom styles.
 - `technical` + `oceanic`
 - `technical` + `dark`
 
-**Academics/Researchers**  
+**Academics/Researchers**
 - `academic` + `default`
 - `whitepaper` + `sophisticated`
 
@@ -161,13 +161,13 @@ h1 { color: #2c3e50; border-bottom: 3px solid #3498db; }
 h2 { color: #34495e; }
 
 /* Custom code block styling */
-.codehilite { 
+.codehilite {
     border-left: 4px solid #3498db;
     background: #f8f9fa;
 }
 
 /* Custom table styling */
-table { 
+table {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     border-radius: 8px;
 }
@@ -201,7 +201,7 @@ oceanic_variant_css = """
 
 **Fastest (Simple CSS)**
 1. Technical
-2. Academic  
+2. Academic
 3. Whitepaper
 
 **Medium (Moderate CSS)**
@@ -226,7 +226,7 @@ oceanic_variant_css = """
 3. **Test readability** with actual content
 4. **Check print quality** if PDFs will be printed
 
-### Theme Selection  
+### Theme Selection
 1. **Ensure sufficient contrast** for accessibility
 2. **Consider brand colors** when choosing themes
 3. **Test on different devices** and screen sizes
@@ -267,7 +267,7 @@ oceanic_variant_css = """
 For styling-related questions:
 
 1. Check the [Styles and Themes Documentation](../../docs/styles_themes.rst)
-2. Review built-in CSS files in `src/md2pdf/styles/`  
+2. Review built-in CSS files in `src/md2pdf/styles/`
 3. Open an issue for style bugs or requests
 4. Share custom styles in GitHub Discussions
 

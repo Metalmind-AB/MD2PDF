@@ -10,10 +10,10 @@ This document tests various edge cases and potential parsing issues that might b
 
 This paragraph follows multiple empty lines.
 
-### Trailing Spaces    
+### Trailing Spaces
 
-This line has trailing spaces.    
-This line also has trailing spaces.    
+This line has trailing spaces.
+This line also has trailing spaces.
 
 ### Leading Spaces
 
@@ -109,7 +109,7 @@ print("But this should be code")
 
 | Header 1 | Header 2 | Header 3 |
 |----------|----------|----------|
-| Too | Few | 
+| Too | Few |
 | Too | Many | Cells | Here | Extra |
 Completely malformed row without pipes
 | Normal | Row | Again |

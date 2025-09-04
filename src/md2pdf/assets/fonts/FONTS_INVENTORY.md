@@ -5,7 +5,7 @@ This directory contains only the essential fonts actually used by MD2PDF styles.
 ## Serif (25 files)
 
 - **Crimson Text** (3 files) - Used in story style
-- **Lora** (4 files) - Used in academic style  
+- **Lora** (4 files) - Used in academic style
 - **Merriweather** (4 files) - Used in academic style
 - **Playfair Display** (6 files) - Used in story style
 - **Source Serif 4** (8 files) - Used in whitepaper style

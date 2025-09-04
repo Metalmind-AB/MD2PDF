@@ -19,12 +19,12 @@
     --border: var(--theme-border, #e2e8f0);
     --code-text: var(--theme-code-text, #e53e3e);
     --code-bg: var(--theme-code-bg, #f1f5f9);
-    
+
     /* Typography */
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-code: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
-    
+
     /* Layout */
     --max-width: 800px;
     --base-font-size: 14px;

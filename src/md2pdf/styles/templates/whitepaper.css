@@ -20,12 +20,12 @@
     --border: var(--theme-border, #dee2e6);
     --code-text: var(--theme-code-text, #d73a49);
     --code-bg: var(--theme-code-bg, #f1f3f4);
-    
+
     /* Typography */
     --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
     --font-heading: 'Source Sans 3', Arial, sans-serif;
     --font-code: 'IBM Plex Mono', 'Courier New', monospace;
-    
+
     /* Layout */
     --max-width: 700px;
     --base-font-size: 16px;

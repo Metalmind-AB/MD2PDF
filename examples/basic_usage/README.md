@@ -86,7 +86,7 @@ After running these examples, you should see:
 These basic examples cover:
 
 1. **Single file conversion**: Converting one markdown file to PDF
-2. **Output customization**: Specifying custom output file names and locations  
+2. **Output customization**: Specifying custom output file names and locations
 3. **Style application**: Using different built-in styles and themes
 4. **Error handling**: Dealing with common conversion errors
 5. **CLI usage**: Using MD2PDF from the command line

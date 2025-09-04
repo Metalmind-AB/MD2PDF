@@ -20,12 +20,12 @@
     --border: var(--theme-border, #e0e0e0);
     --code-text: var(--theme-code-text, #8b0000);
     --code-bg: var(--theme-code-bg, #f0f0f0);
-    
+
     /* Typography */
     --font-body: 'Crimson Text', Georgia, serif;
     --font-heading: 'Playfair Display', Georgia, serif;
     --font-code: 'Inconsolata', 'Courier New', monospace;
-    
+
     /* Layout */
     --max-width: 650px;
     --base-font-size: 18px;

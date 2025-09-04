@@ -128,13 +128,13 @@ Progress Reporting
       from md2pdf.cli import ProgressReporter
 
       reporter = ProgressReporter(verbose=True)
-      
+
       reporter.start_batch(total_files=10)
-      
+
       for i in range(10):
           reporter.update_progress(i + 1)
           # ... conversion work ...
-      
+
       reporter.finish_batch()
 
 Configuration Loading

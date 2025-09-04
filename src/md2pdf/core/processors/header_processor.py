@@ -13,8 +13,7 @@ Processes logo and text content from the header folder.
 import base64
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
-from typing import Tuple
+from typing import Optional, Tuple
 
 import markdown
 

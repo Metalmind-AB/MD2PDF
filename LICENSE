@@ -28,7 +28,7 @@ This software includes or uses the following third-party components:
 
 This project includes fonts from Google Fonts (https://fonts.google.com):
 - Inter: Licensed under SIL Open Font License 1.1
-- JetBrains Mono: Licensed under SIL Open Font License 1.1  
+- JetBrains Mono: Licensed under SIL Open Font License 1.1
 - Source Serif 4: Licensed under SIL Open Font License 1.1
 - Source Sans 3: Licensed under SIL Open Font License 1.1
 - IBM Plex Mono: Licensed under SIL Open Font License 1.1
@@ -53,7 +53,7 @@ This project includes emoji graphics from Twemoji (https://twemoji.twitter.com):
 
 This project uses various Python packages, each with their own licenses:
 - markdown: Licensed under BSD-3-Clause License
-- weasyprint: Licensed under BSD-3-Clause License  
+- weasyprint: Licensed under BSD-3-Clause License
 - pygments: Licensed under BSD-2-Clause License
 - beautifulsoup4: Licensed under MIT License
 - click: Licensed under BSD-3-Clause License

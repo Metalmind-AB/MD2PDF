@@ -75,7 +75,7 @@ Here are some test links:
 ## Blockquotes
 
 > This is a blockquote. It should be properly indented and formatted differently from regular text.
-> 
+>
 > This is a continuation of the blockquote with another paragraph.
 
 > Nested blockquote:
@@ -93,7 +93,7 @@ And another one:
 
 ## Line Breaks
 
-This line ends with two spaces  
+This line ends with two spaces
 So this should be on a new line.
 
 This paragraph

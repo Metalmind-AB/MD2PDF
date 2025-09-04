@@ -57,7 +57,7 @@ Convert entire documentation sites to PDF format:
 md2pdf docs/**/*.md --style technical --output-dir dist/pdfs/
 ```
 
-### 2. Report Generation  
+### 2. Report Generation
 Generate multiple reports with consistent styling:
 
 ```bash
@@ -94,7 +94,7 @@ Shows how to process entire directory trees of markdown files.
 
 ### Pattern Matching
 ```bash
-python pattern_matching.py  
+python pattern_matching.py
 ```
 Demonstrates advanced file selection using glob patterns.
 
@@ -119,7 +119,7 @@ Example of automated batch processing workflows.
 - Use simple glob patterns
 - Single-threaded processing is sufficient
 
-**Medium Projects (50-500 files)**  
+**Medium Projects (50-500 files)**
 - Group by file type or directory
 - Use parallel processing
 - Monitor memory usage
@@ -166,24 +166,24 @@ def batch_convert_with_error_handling(pattern, **kwargs):
     \"\"\"Convert multiple files with comprehensive error handling.\"\"\"
     converter = MD2PDFConverter(**kwargs)
     files = glob.glob(pattern)
-    
+
     successful = []
     failed = []
-    
+
     for file_path in files:
         try:
             output_path = converter.convert(file_path)
             successful.append((file_path, output_path))
             logger.info(f"✅ Converted: {file_path}")
-            
+
         except ConversionError as e:
             failed.append((file_path, str(e)))
             logger.error(f"❌ Conversion failed for {file_path}: {e}")
-            
+
         except Exception as e:
             failed.append((file_path, f"Unexpected error: {e}"))
             logger.error(f"❌ Unexpected error for {file_path}: {e}")
-    
+
     return {
         'successful': successful,
         'failed': failed,
@@ -212,11 +212,11 @@ overrides:
     style: modern
     theme: elegant
     output: "README_special.pdf"
-  
+
   "docs/api/*.md":
     style: technical
     theme: dark
-  
+
   "guides/*.md":
     style: whitepaper
     theme: sophisticated
@@ -235,20 +235,20 @@ def load_batch_config(config_path='.md2pdf.yml'):
     config_file = Path(config_path)
     if not config_file.exists():
         return {}
-    
+
     with open(config_file) as f:
         return yaml.safe_load(f)
 
 def run_batch_with_config():
     \"\"\"Run batch processing using configuration file.\"\"\"
     config = load_batch_config()
-    
+
     # Default settings
     converter = MD2PDFConverter(
         style=config.get('default_style', 'technical'),
         theme=config.get('default_theme', 'default')
     )
-    
+
     # Process with overrides
     overrides = config.get('overrides', {})
     for pattern, settings in overrides.items():
@@ -296,29 +296,29 @@ on:
 jobs:
   generate-pdfs:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-          
+
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev
-          
+
       - name: Install MD2PDF
         run: pip install md2pdf
-        
+
       - name: Generate PDFs
         run: |
           md2pdf docs/**/*.md --style technical --output-dir dist/docs/
           md2pdf guides/*.md --style whitepaper --output-dir dist/guides/
           md2pdf README.md --style modern --output dist/README.pdf
-          
+
       - name: Upload PDFs
         uses: actions/upload-artifact@v2
         with:

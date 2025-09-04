@@ -7,7 +7,7 @@ Welcome to **MD2PDF**, the beautiful Markdown to PDF converter that transforms y
 MD2PDF is a comprehensive Python tool designed to convert Markdown files into impeccably beautiful PDFs. It features:
 
 - 🎨 **Dynamic Style System** with professional templates
-- 🌈 **Sophisticated Color Themes** for any occasion  
+- 🌈 **Sophisticated Color Themes** for any occasion
 - 📝 **Advanced Markdown Support** with syntax highlighting
 - 📄 **Professional Layout** optimized for print and digital
 - 🔄 **Batch Processing** for handling multiple files
@@ -66,7 +66,7 @@ converter.convert('document.md', 'styled_output.pdf')
 Choose from 10 beautiful color themes:
 
 - **Default**: Clean and professional
-- **Minimal**: Sophisticated, timeless  
+- **Minimal**: Sophisticated, timeless
 - **Sophisticated**: Refined with subtle accents
 - **Elegant**: Premium dark design
 - **Oceanic**: Cool blue tones
@@ -121,7 +121,7 @@ MD2PDF handles all standard Markdown formatting:
 
 **Ordered Lists:**
 1. First item with **bold text**
-2. Second item with *italic text*  
+2. Second item with *italic text*
 3. Third item with `inline code`
 4. Fourth item with [a link](https://github.com/mps-metalmind/md2pdf)
 

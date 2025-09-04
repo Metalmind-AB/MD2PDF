@@ -5,8 +5,7 @@
 Tests for MD2PDF converter core functionality.
 """
 
-from unittest.mock import Mock
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 

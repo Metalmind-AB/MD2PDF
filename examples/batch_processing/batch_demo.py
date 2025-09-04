@@ -6,13 +6,13 @@ This script demonstrates MD2PDF's batch processing capabilities
 with multiple files, different styles, and comprehensive error handling.
 """
 
+import glob
 import sys
 import time
-import glob
 from pathlib import Path
 
 # Add the project root to the path so we can import md2pdf
-project_root = Path(__file__).parent.parent.parent / 'src'
+project_root = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(project_root))
 
 from md2pdf import MD2PDFConverter
@@ -21,7 +21,7 @@ from md2pdf import MD2PDFConverter
 def create_sample_documents():
     """Create sample markdown documents for batch processing."""
     sample_docs = {
-        'technical_guide.md': """# Technical Integration Guide
+        "technical_guide.md": """# Technical Integration Guide
 
 This document explains how to integrate MD2PDF into your technical workflow.
 
@@ -55,8 +55,7 @@ converter = MD2PDFConverter(
 
 MD2PDF makes technical documentation beautiful and professional.
 """,
-
-        'business_report.md': """# Quarterly Business Report
+        "business_report.md": """# Quarterly Business Report
 
 ## Executive Summary
 
@@ -73,7 +72,7 @@ This quarter showed significant growth across all business metrics.
 ## Strategic Initiatives
 
 1. **Market Expansion**: Entered 3 new markets
-2. **Product Development**: Launched 2 new features  
+2. **Product Development**: Launched 2 new features
 3. **Team Growth**: Hired 15 new employees
 
 ## Financial Outlook
@@ -86,8 +85,7 @@ This quarter showed significant growth across all business metrics.
 - Invest in R&D
 - Optimize operations
 """,
-
-        'user_manual.md': """# User Manual - Getting Started
+        "user_manual.md": """# User Manual - Getting Started
 
 Welcome to our comprehensive user manual.
 
@@ -130,7 +128,7 @@ To create a new document:
 Use these keyboard shortcuts:
 
 - **Ctrl+B**: Bold text
-- **Ctrl+I**: Italic text  
+- **Ctrl+I**: Italic text
 - **Ctrl+U**: Underline text
 - **Ctrl+S**: Save document
 
@@ -165,8 +163,7 @@ Set up automated workflows:
 **Problem**: Documents won't save
 **Solution**: Verify file permissions and disk space
 """,
-
-        'creative_story.md': """# The Digital Garden
+        "creative_story.md": """# The Digital Garden
 
 ## Chapter 1: The Discovery
 
@@ -195,12 +192,12 @@ class DigitalSeed:
         self.code = code
         self.growth_rate = growth_rate
         self.maturity = 0
-    
+
     def grow(self, environment):
         # Simulate growth based on environmental conditions
         self.maturity += self.growth_rate * environment.fertility
         return self.mature_code()
-    
+
     def mature_code(self):
         if self.maturity >= 100:
             return self.code.optimize()
@@ -236,8 +233,7 @@ The garden continues to grow, tended by a community of passionate developers who
 
 **Author's Note**: This story explores themes of creativity, community, and the organic nature of software development. The digital garden metaphor reminds us that great software grows through nurturing, patience, and collaboration.
 """,
-
-        'academic_paper.md': """# The Impact of Automated Document Generation on Technical Communication
+        "academic_paper.md": """# The Impact of Automated Document Generation on Technical Communication
 
 ## Abstract
 
@@ -272,7 +268,7 @@ We conducted a mixed-methods study involving:
 Smith et al. (2019) identified key challenges in traditional documentation workflows:
 
 - **Version Control Issues**: Multiple contributors working on shared documents
-- **Formatting Inconsistencies**: Manual styling leading to visual discrepancies  
+- **Formatting Inconsistencies**: Manual styling leading to visual discrepancies
 - **Time Investment**: Significant overhead in document production
 - **Maintenance Burden**: Difficulty keeping documentation current
 
@@ -296,7 +292,7 @@ Recent developments in automated document generation have shown promising result
 
 ### 3.1 Technology Company Implementation
 
-**Organization**: Mid-size software company (200 employees)  
+**Organization**: Mid-size software company (200 employees)
 **Challenge**: Inconsistent API documentation across teams
 **Solution**: Implemented automated PDF generation from markdown sources
 
@@ -310,7 +306,7 @@ Recent developments in automated document generation have shown promising result
 
 ### 3.2 Academic Institution Implementation
 
-**Organization**: Large university computer science department  
+**Organization**: Large university computer science department
 **Challenge**: Standardizing research paper formatting
 **Solution**: Automated PDF generation with institutional styling
 
@@ -413,70 +409,74 @@ Smith, A., Brown, K., & Wilson, J. (2019). *Challenges in Technical Documentatio
 ---
 
 *Corresponding Author*: Dr. Sarah Mitchell, Department of Technical Communication, State University. Email: s.mitchell@university.edu
-"""
+""",
     }
-    
+
     return sample_docs
 
 
 def setup_sample_files(sample_dir):
     """Create sample files for batch processing demonstration."""
     print("Setting up sample documents...")
-    
+
     sample_dir = Path(sample_dir)
     sample_dir.mkdir(exist_ok=True)
-    
+
     sample_docs = create_sample_documents()
     created_files = []
-    
+
     for filename, content in sample_docs.items():
         file_path = sample_dir / filename
         file_path.write_text(content)
         created_files.append(file_path)
         print(f"  ✓ Created: {filename}")
-    
+
     return created_files
 
 
 def demonstrate_single_style_batch(sample_files, style, theme, output_dir):
     """Demonstrate batch processing with a single style and theme."""
-    print(f"\n--- Batch Processing with {style.title()} Style & {theme.title()} Theme ---")
-    
+    print(
+        f"\n--- Batch Processing with {style.title()} Style & {theme.title()} Theme ---"
+    )
+
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True)
-    
+
     converter = MD2PDFConverter(style=style, theme=theme, verbose=True)
-    
+
     successful = 0
     failed = 0
-    
+
     for file_path in sample_files:
         try:
             # Generate output filename
             output_filename = f"{file_path.stem}_{style}_{theme}.pdf"
             output_path = output_dir / output_filename
-            
+
             print(f"Converting: {file_path.name}")
             start_time = time.time()
-            
+
             converter.convert(str(file_path), str(output_path))
-            
+
             end_time = time.time()
             conversion_time = end_time - start_time
-            
+
             # Check output file
             if output_path.exists():
                 size_kb = output_path.stat().st_size / 1024
-                print(f"  ✅ Success: {output_filename} ({size_kb:.1f} KB, {conversion_time:.1f}s)")
+                print(
+                    f"  ✅ Success: {output_filename} ({size_kb:.1f} KB, {conversion_time:.1f}s)"
+                )
                 successful += 1
             else:
                 print(f"  ❌ Failed: Output file not created")
                 failed += 1
-                
+
         except Exception as e:
             print(f"  ❌ Error: {e}")
             failed += 1
-    
+
     print(f"\nBatch Summary: {successful} successful, {failed} failed")
     return successful, failed
 
@@ -484,143 +484,154 @@ def demonstrate_single_style_batch(sample_files, style, theme, output_dir):
 def demonstrate_multi_style_batch(sample_files, output_dir):
     """Demonstrate batch processing with different styles for different content types."""
     print(f"\n--- Smart Batch Processing (Content-Aware Styling) ---")
-    
+
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True)
-    
+
     # Define content-specific styling rules
     styling_rules = {
-        'technical_guide.md': {'style': 'technical', 'theme': 'oceanic'},
-        'business_report.md': {'style': 'consultancy', 'theme': 'sophisticated'},
-        'user_manual.md': {'style': 'whitepaper', 'theme': 'minimal'},
-        'creative_story.md': {'style': 'story', 'theme': 'sepia'},
-        'academic_paper.md': {'style': 'academic', 'theme': 'default'}
+        "technical_guide.md": {"style": "technical", "theme": "oceanic"},
+        "business_report.md": {"style": "consultancy", "theme": "sophisticated"},
+        "user_manual.md": {"style": "whitepaper", "theme": "minimal"},
+        "creative_story.md": {"style": "story", "theme": "sepia"},
+        "academic_paper.md": {"style": "academic", "theme": "default"},
     }
-    
+
     results = []
-    
+
     for file_path in sample_files:
         filename = file_path.name
-        
+
         if filename in styling_rules:
             rules = styling_rules[filename]
-            style = rules['style']
-            theme = rules['theme']
-            
+            style = rules["style"]
+            theme = rules["theme"]
+
             print(f"\nProcessing: {filename}")
             print(f"  Style: {style.title()}")
             print(f"  Theme: {theme.title()}")
-            
+
             try:
                 converter = MD2PDFConverter(style=style, theme=theme, verbose=False)
-                
+
                 output_filename = f"{file_path.stem}_smart_{style}_{theme}.pdf"
                 output_path = output_dir / output_filename
-                
+
                 start_time = time.time()
                 converter.convert(str(file_path), str(output_path))
                 end_time = time.time()
-                
+
                 if output_path.exists():
                     size_kb = output_path.stat().st_size / 1024
                     conversion_time = end_time - start_time
-                    
-                    results.append({
-                        'file': filename,
-                        'output': output_filename,
-                        'style': style,
-                        'theme': theme,
-                        'size_kb': size_kb,
-                        'time_s': conversion_time,
-                        'success': True
-                    })
-                    
-                    print(f"  ✅ Success: {output_filename} ({size_kb:.1f} KB, {conversion_time:.1f}s)")
+
+                    results.append(
+                        {
+                            "file": filename,
+                            "output": output_filename,
+                            "style": style,
+                            "theme": theme,
+                            "size_kb": size_kb,
+                            "time_s": conversion_time,
+                            "success": True,
+                        }
+                    )
+
+                    print(
+                        f"  ✅ Success: {output_filename} ({size_kb:.1f} KB, {conversion_time:.1f}s)"
+                    )
                 else:
-                    results.append({'file': filename, 'success': False, 'error': 'No output file'})
+                    results.append(
+                        {"file": filename, "success": False, "error": "No output file"}
+                    )
                     print(f"  ❌ Failed: Output file not created")
-                    
+
             except Exception as e:
-                results.append({'file': filename, 'success': False, 'error': str(e)})
+                results.append({"file": filename, "success": False, "error": str(e)})
                 print(f"  ❌ Error: {e}")
         else:
             print(f"Skipping: {filename} (no styling rule defined)")
-    
+
     # Summary
-    successful = sum(1 for r in results if r.get('success', False))
+    successful = sum(1 for r in results if r.get("success", False))
     total = len(results)
-    
+
     print(f"\nSmart Batch Summary:")
     print(f"  Total files: {total}")
     print(f"  Successful: {successful}")
     print(f"  Failed: {total - successful}")
-    
+
     if successful > 0:
-        avg_size = sum(r.get('size_kb', 0) for r in results if r.get('success')) / successful
-        avg_time = sum(r.get('time_s', 0) for r in results if r.get('success')) / successful
+        avg_size = (
+            sum(r.get("size_kb", 0) for r in results if r.get("success")) / successful
+        )
+        avg_time = (
+            sum(r.get("time_s", 0) for r in results if r.get("success")) / successful
+        )
         print(f"  Average size: {avg_size:.1f} KB")
         print(f"  Average time: {avg_time:.1f}s")
-    
+
     return results
 
 
 def demonstrate_error_handling(sample_dir, output_dir):
     """Demonstrate robust error handling in batch processing."""
     print(f"\n--- Error Handling Demonstration ---")
-    
+
     # Create problematic files for testing error handling
     problem_files = {
-        'empty_file.md': '',  # Empty file
-        'invalid_syntax.md': '# Title\n\n```python\n# Unclosed code block',  # Unclosed code block
-        'very_large.md': '# Large Document\n\n' + 'This is a test paragraph. ' * 1000,  # Large file
+        "empty_file.md": "",  # Empty file
+        "invalid_syntax.md": "# Title\n\n```python\n# Unclosed code block",  # Unclosed code block
+        "very_large.md": "# Large Document\n\n"
+        + "This is a test paragraph. " * 1000,  # Large file
     }
-    
+
     sample_dir = Path(sample_dir)
     problem_file_paths = []
-    
+
     print("Creating problematic test files:")
     for filename, content in problem_files.items():
         file_path = sample_dir / filename
         file_path.write_text(content)
         problem_file_paths.append(file_path)
         print(f"  ✓ Created: {filename}")
-    
+
     # Batch process with error handling
-    converter = MD2PDFConverter(style='technical', theme='default')
+    converter = MD2PDFConverter(style="technical", theme="default")
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True)
-    
+
     errors = []
     successful = []
-    
+
     for file_path in problem_file_paths:
         try:
             output_path = output_dir / f"{file_path.stem}_error_test.pdf"
             print(f"\nProcessing: {file_path.name}")
-            
+
             converter.convert(str(file_path), str(output_path))
-            
+
             if output_path.exists():
                 size_kb = output_path.stat().st_size / 1024
-                successful.append({'file': file_path.name, 'size': size_kb})
+                successful.append({"file": file_path.name, "size": size_kb})
                 print(f"  ✅ Unexpected success: {output_path.name} ({size_kb:.1f} KB)")
             else:
-                errors.append({'file': file_path.name, 'error': 'No output created'})
+                errors.append({"file": file_path.name, "error": "No output created"})
                 print(f"  ❌ Failed: No output file created")
-                
+
         except Exception as e:
-            errors.append({'file': file_path.name, 'error': str(e)})
+            errors.append({"file": file_path.name, "error": str(e)})
             print(f"  ❌ Expected error: {e}")
-    
+
     print(f"\nError Handling Summary:")
     print(f"  Test files processed: {len(problem_file_paths)}")
-    print(f"  Successful conversions: {len(successful)}")  
+    print(f"  Successful conversions: {len(successful)}")
     print(f"  Errors caught: {len(errors)}")
-    
+
     # Cleanup problem files
     for file_path in problem_file_paths:
         file_path.unlink()
-    
+
     return errors, successful
 
 
@@ -628,67 +639,71 @@ def main():
     """Run comprehensive batch processing demonstration."""
     print("MD2PDF Batch Processing Demonstration")
     print("=" * 50)
-    
+
     # Setup
-    sample_dir = Path('sample_docs')
-    output_dir = Path('batch_output')
-    
+    sample_dir = Path("sample_docs")
+    output_dir = Path("batch_output")
+
     try:
         # Create sample documents
         sample_files = setup_sample_files(sample_dir)
-        
+
         # Demonstration 1: Single style batch processing
         print("\n" + "=" * 50)
         print("DEMONSTRATION 1: Single Style Batch Processing")
         print("=" * 50)
-        
+
         demo1_success, demo1_failed = demonstrate_single_style_batch(
-            sample_files, 
-            style='technical', 
-            theme='oceanic',
-            output_dir=output_dir / 'single_style'
+            sample_files,
+            style="technical",
+            theme="oceanic",
+            output_dir=output_dir / "single_style",
         )
-        
+
         # Demonstration 2: Multi-style intelligent batch processing
         print("\n" + "=" * 50)
         print("DEMONSTRATION 2: Intelligent Multi-Style Processing")
         print("=" * 50)
-        
+
         demo2_results = demonstrate_multi_style_batch(
-            sample_files, 
-            output_dir=output_dir / 'multi_style'
+            sample_files, output_dir=output_dir / "multi_style"
         )
-        
+
         # Demonstration 3: Error handling
         print("\n" + "=" * 50)
         print("DEMONSTRATION 3: Error Handling")
         print("=" * 50)
-        
+
         demo3_errors, demo3_success = demonstrate_error_handling(
-            sample_dir,
-            output_dir=output_dir / 'error_tests'
+            sample_dir, output_dir=output_dir / "error_tests"
         )
-        
+
         # Final summary
         print("\n" + "=" * 50)
         print("FINAL SUMMARY")
         print("=" * 50)
-        
+
         print(f"📁 Sample documents created: {len(sample_files)}")
-        print(f"📄 Single-style conversions: {demo1_success} successful, {demo1_failed} failed")
-        print(f"🎨 Multi-style conversions: {sum(1 for r in demo2_results if r.get('success', False))} successful")
-        print(f"⚠️  Error handling tests: {len(demo3_errors)} errors caught, {len(demo3_success)} unexpected successes")
-        
+        print(
+            f"📄 Single-style conversions: {demo1_success} successful, {demo1_failed} failed"
+        )
+        print(
+            f"🎨 Multi-style conversions: {sum(1 for r in demo2_results if r.get('success', False))} successful"
+        )
+        print(
+            f"⚠️  Error handling tests: {len(demo3_errors)} errors caught, {len(demo3_success)} unexpected successes"
+        )
+
         # Show output directory structure
         print(f"\n📂 Output directory: {output_dir.absolute()}")
-        
+
         if output_dir.exists():
-            pdf_files = list(output_dir.glob('**/*.pdf'))
+            pdf_files = list(output_dir.glob("**/*.pdf"))
             if pdf_files:
                 total_size_kb = sum(f.stat().st_size / 1024 for f in pdf_files)
                 print(f"📄 Total PDFs generated: {len(pdf_files)}")
                 print(f"📊 Total size: {total_size_kb:.1f} KB")
-                
+
                 print("\nGenerated files:")
                 for pdf_file in sorted(pdf_files):
                     relative_path = pdf_file.relative_to(output_dir)
@@ -696,17 +711,17 @@ def main():
                     print(f"  📄 {relative_path} ({size_kb:.1f} KB)")
             else:
                 print("⚠️  No PDF files were generated")
-        
+
         print(f"\n🎉 Batch processing demonstration complete!")
         print(f"\nNext steps:")
         print(f"  - Review generated PDFs in {output_dir}")
         print(f"  - Try your own batch processing with: md2pdf *.md")
         print(f"  - Explore advanced examples in other directories")
-        
+
     except Exception as e:
         print(f"❌ Demonstration failed: {e}")
         return 1
-    
+
     return 0
 
 

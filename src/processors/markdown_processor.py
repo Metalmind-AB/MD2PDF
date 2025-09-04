@@ -16,8 +16,7 @@ from pathlib import Path
 import markdown
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
-from pygments.lexers import TextLexer
-from pygments.lexers import get_lexer_by_name
+from pygments.lexers import TextLexer, get_lexer_by_name
 
 
 class MarkdownProcessor:

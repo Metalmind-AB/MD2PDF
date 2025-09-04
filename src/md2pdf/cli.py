@@ -10,10 +10,7 @@ from pathlib import Path
 
 import click
 from rich.console import Console
-from rich.progress import BarColumn
-from rich.progress import Progress
-from rich.progress import SpinnerColumn
-from rich.progress import TextColumn
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
 from md2pdf import __version__

@@ -334,7 +334,7 @@ def greet_world():
         'arabic': 'مرحبا بالعالم!',
         'hebrew': 'שלום, עולם!'
     }
-    
+
     for language, greeting in greetings.items():
         print(f"{language.capitalize()}: {greeting}")
 

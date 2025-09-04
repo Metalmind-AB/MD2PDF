@@ -6,8 +6,7 @@ Tests for MD2PDF command-line interface.
 """
 
 from pathlib import Path
-from unittest.mock import Mock
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 from click.testing import CliRunner

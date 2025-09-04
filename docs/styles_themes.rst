@@ -9,7 +9,7 @@ Understanding Styles vs Themes
 **Styles** define the overall layout, typography, spacing, and structural elements:
 
 - Font families and sizes
-- Page layout and margins  
+- Page layout and margins
 - Heading hierarchy
 - Code block formatting
 - Table styling
@@ -258,10 +258,10 @@ Business and Professional
 
    # Executive documents
    md2pdf report.md --style consultancy --theme sophisticated
-   
+
    # Technical documentation
    md2pdf api-docs.md --style technical --theme oceanic
-   
+
    # Business proposals
    md2pdf proposal.md --style whitepaper --theme minimal
 
@@ -272,10 +272,10 @@ Academic and Research
 
    # Research papers
    md2pdf paper.md --style academic --theme default
-   
+
    # Thesis documents
    md2pdf thesis.md --style whitepaper --theme sophisticated
-   
+
    # Literature reviews
    md2pdf review.md --style story --theme sepia
 
@@ -286,10 +286,10 @@ Creative and Design
 
    # Creative portfolios
    md2pdf portfolio.md --style modern --theme elegant
-   
+
    # Design documentation
    md2pdf design-system.md --style futuristic --theme midnight
-   
+
    # Storytelling
    md2pdf story.md --style story --theme sepia
 
@@ -300,10 +300,10 @@ Technical and Development
 
    # API documentation
    md2pdf api.md --style technical --theme dark
-   
+
    # User guides
    md2pdf guide.md --style modern --theme oceanic
-   
+
    # Code documentation
    md2pdf code-docs.md --style technical --theme midnight
 
@@ -321,9 +321,9 @@ You can create custom styles by adding CSS files to the styles directory:
 .. code-block:: css
 
    /* Custom Business Style - Professional corporate styling */
-   
+
    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-   
+
    :root {
        --font-body: 'Inter', sans-serif;
        --font-heading: 'Inter', sans-serif;
@@ -332,7 +332,7 @@ You can create custom styles by adding CSS files to the styles directory:
        --line-height-base: 1.6;
        /* ... other variables */
    }
-   
+
    /* Your custom styles here */
 
 3. The style will be automatically discovered and available
@@ -348,7 +348,7 @@ Create custom themes by adding CSS files to the themes directory:
 .. code-block:: css
 
    /* Corporate Blue Theme - Professional blue color scheme */
-   
+
    :root {
        --theme-primary: #1e40af;
        --theme-secondary: #3b82f6;
@@ -408,12 +408,12 @@ MD2PDF supports print-specific CSS for fine-tuning PDF output:
            size: A4;
            margin: 2cm;
        }
-       
+
        /* Avoid page breaks inside elements */
        h1, h2, h3, h4, h5, h6 {
            page-break-after: avoid;
        }
-       
+
        /* Force page breaks */
        .page-break {
            page-break-before: always;
@@ -442,10 +442,10 @@ Test your custom styles:
 
    # Test with a sample document
    md2pdf test.md --style your-custom-style --theme your-custom-theme
-   
+
    # List your custom styles
    md2pdf --list-styles
-   
+
    # List your custom themes
    md2pdf --list-themes
 

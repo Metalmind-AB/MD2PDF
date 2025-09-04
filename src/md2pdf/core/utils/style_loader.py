@@ -165,7 +165,7 @@ class StyleLoader:
         return sorted(list(styles.keys()))
 
     def list_available_themes(self) -> List[str]:
-        """List all available color themes.""" 
+        """List all available color themes."""
         themes = self.discover_themes()
         return sorted(list(themes.keys()))
 

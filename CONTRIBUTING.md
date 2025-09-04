@@ -105,7 +105,7 @@ Unsure where to begin? Look for issues labeled:
 
 1. **Branch naming**: Use descriptive names like `feature/add-latex-support` or `fix/unicode-handling`
 
-2. **Commits**: 
+2. **Commits**:
    - Write clear, concise commit messages
    - Use conventional commits format when possible: `type(scope): description`
    - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
@@ -123,12 +123,12 @@ Unsure where to begin? Look for issues labeled:
    # Format code
    black src/ tests/
    isort src/ tests/
-   
+
    # Run linters
    flake8 src/ tests/
    mypy src/
    bandit -r src/
-   
+
    # Run tests
    pytest --cov=md2pdf
    ```
@@ -204,7 +204,7 @@ def test_pdf_conversion_with_custom_style(tmp_path):
     # Arrange
     input_file = tmp_path / "test.md"
     input_file.write_text("# Test Document")
-    
+
     # Act
     converter = MD2PDFConverter(
         input_path=str(input_file),
@@ -212,7 +212,7 @@ def test_pdf_conversion_with_custom_style(tmp_path):
         theme="github"
     )
     output = converter.convert()
-    
+
     # Assert
     assert output.exists()
     assert output.suffix == ".pdf"
@@ -227,14 +227,14 @@ We use Google-style docstrings:
 ```python
 def convert_markdown(input_path: str, style: str = "default") -> Path:
     """Convert a Markdown file to PDF.
-    
+
     Args:
         input_path: Path to the input Markdown file.
         style: Name of the style template to use.
-    
+
     Returns:
         Path to the generated PDF file.
-    
+
     Raises:
         FileNotFoundError: If the input file doesn't exist.
         ValueError: If the style is not recognized.

@@ -20,12 +20,12 @@
     --border: var(--theme-border, #ddd);
     --code-text: var(--theme-code-text, #c7254e);
     --code-bg: var(--theme-code-bg, #f0f0f0);
-    
+
     /* Typography */
     --font-body: 'Lora', Georgia, serif;
     --font-heading: 'Merriweather', Georgia, serif;
     --font-code: 'Roboto Mono', 'Courier New', monospace;
-    
+
     /* Layout */
     --max-width: 750px;
     --base-font-size: 16px;

@@ -51,7 +51,7 @@ Configuration Management
 
       loader = ConfigLoader()
       config = loader.load_from_file('.md2pdf.yml')
-      
+
       # Access configuration values
       style = config.get('style', 'technical')
       theme = config.get('theme', 'default')
@@ -78,10 +78,10 @@ File Management
 
       # Create file manager
       file_manager = FileManager()
-      
+
       # Ensure output directory exists
       ensure_directory('output/pdfs/')
-      
+
       # Get list of markdown files
       md_files = file_manager.find_files('docs/', '*.md')
 
@@ -105,7 +105,7 @@ Template Engine
       from md2pdf.core.template import TemplateEngine
 
       engine = TemplateEngine()
-      
+
       # Render HTML template with content
       html = engine.render_template(
           'document.html',
@@ -134,10 +134,10 @@ Asset Management
       from md2pdf.core.assets import AssetManager
 
       asset_manager = AssetManager()
-      
+
       # Get path to built-in font
       font_path = asset_manager.get_font_path('inter.woff2')
-      
+
       # Process images in markdown
       processed_html = asset_manager.process_images(html_content)
 
@@ -161,7 +161,7 @@ Logging and Debugging
 
       # Setup logging
       setup_logging(level='DEBUG', verbose=True)
-      
+
       # Get logger for module
       logger = get_logger(__name__)
       logger.info('Starting conversion process')
@@ -209,11 +209,11 @@ Performance Monitoring
       from md2pdf.core.performance import PerformanceMonitor
 
       monitor = PerformanceMonitor()
-      
+
       with monitor.measure('conversion'):
           # ... conversion code ...
           pass
-      
+
       # Get performance stats
       stats = monitor.get_stats()
       print(f"Conversion took: {stats['conversion']['duration']:.2f}s")
@@ -235,7 +235,7 @@ Cache Management
       from md2pdf.core.cache import CacheManager
 
       cache = CacheManager()
-      
+
       # Check if conversion is cached
       cache_key = cache.get_cache_key('document.md', 'modern', 'elegant')
       if cache.has_cached_result(cache_key):
@@ -265,10 +265,10 @@ Plugin System
       from md2pdf.core.plugins import PluginManager
 
       plugin_manager = PluginManager()
-      
+
       # Load plugins from directory
       plugin_manager.load_plugins('plugins/')
-      
+
       # Get available plugins
       plugins = plugin_manager.get_available_plugins()
       for plugin in plugins:
