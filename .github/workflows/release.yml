@@ -104,8 +104,9 @@ jobs:
       run: |
         echo "# Test Release" > release_test.md
         echo "Testing release build..." >> release_test.md
-        md2pdf release_test.md release_test.pdf
+        md2pdf convert release_test.md -o release_test.pdf
         ls -la release_test.pdf
+        echo "✅ CLI conversion test successful"
 
   build-package:
     runs-on: ubuntu-latest
