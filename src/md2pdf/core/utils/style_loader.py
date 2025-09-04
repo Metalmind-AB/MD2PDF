@@ -168,13 +168,30 @@ class StyleLoader:
         """List all available color themes."""
         themes = self.discover_themes()
         return sorted(list(themes.keys()))
+    
+    def list_styles(self) -> List[str]:
+        """Legacy alias for list_available_styles()."""
+        return self.list_available_styles()
+    
+    def list_themes(self) -> List[str]:
+        """Legacy alias for list_available_themes()."""
+        return self.list_available_themes()
 
-    def get_css(self, style_name: str, theme_name: str = "default") -> str:
+    def get_css(self, style: str = "technical", theme: str = "default") -> str:
         """Get combined CSS content for style and theme (legacy compatibility)."""
-        style_css = self.get_style_css(style_name)
         try:
-            theme_css = self.get_theme_css(theme_name)
-            return f"{style_css}\n\n/* Theme: {theme_name} */\n{theme_css}"
+            style_css = self.get_style_css(style)
+        except ValueError:
+            # If style not found, try first available style
+            available_styles = self.list_available_styles()
+            if available_styles:
+                style_css = self.get_style_css(available_styles[0])
+            else:
+                return "/* No styles available */"
+                
+        try:
+            theme_css = self.get_theme_css(theme)
+            return f"{style_css}\n\n/* Theme: {theme} */\n{theme_css}"
         except ValueError:
             # If theme not found, just return style CSS
             return style_css
