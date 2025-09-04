@@ -169,6 +169,16 @@ class StyleLoader:
         themes = self.discover_themes()
         return sorted(list(themes.keys()))
 
+    def get_css(self, style_name: str, theme_name: str = "default") -> str:
+        """Get combined CSS content for style and theme (legacy compatibility)."""
+        style_css = self.get_style_css(style_name)
+        try:
+            theme_css = self.get_theme_css(theme_name)
+            return f"{style_css}\n\n/* Theme: {theme_name} */\n{theme_css}"
+        except ValueError:
+            # If theme not found, just return style CSS
+            return style_css
+
     def combine_style_and_theme(self, style_name: str, theme_name: str) -> str:
         """Combine a style with a theme to create the final CSS."""
         style_css = self.get_style_css(style_name)
