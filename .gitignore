@@ -36,6 +36,11 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+# MD2PDF specific
+archived_scripts/
+assets_full_archive/
+assets/twemoji/  # Downloaded separately via setup_assets.py
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -246,6 +251,9 @@ data/header/*
 # Claude
 .claude/
 CLAUDE.md
+
+# Specifications
+spec/
 
 # Temporary files
 temp_scripts/

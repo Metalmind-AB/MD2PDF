@@ -1,0 +1,81 @@
+/* Elegant Theme - Refined Darkness */
+/* Sophisticated dark palette with deep charcoal and refined contrast */
+:root {
+    --theme-primary: #f8fafc;
+    --theme-secondary: #e2e8f0;
+    --theme-text: #f8fafc;
+    --theme-text-light: #cbd5e1;
+    --theme-background: #0f172a;
+    --theme-surface: #1e293b;
+    --theme-surface-alt: #334155;
+    --theme-border: #475569;
+    --theme-code-text: #f8fafc;
+    --theme-code-bg: #1e293b;
+}
+
+/* Explicit styling for elegant dark theme */
+body {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #f8fafc !important;
+}
+
+p, li {
+    color: #f8fafc !important;
+}
+
+blockquote {
+    background: #1e293b !important;
+    color: #cbd5e1 !important;
+    border-left-color: #f8fafc !important;
+}
+
+.codehilite {
+    background: #1e293b !important;
+    border: 1px solid #475569 !important;
+}
+
+pre {
+    background: #1e293b !important;
+    border: 1px solid #475569 !important;
+}
+
+code {
+    color: #f8fafc !important;
+}
+
+pre code {
+    color: #f8fafc !important;
+}
+
+/* Table styling for elegant theme */
+th {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    border-bottom-color: #f8fafc !important;
+}
+
+tr:nth-child(even) td {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+tr:nth-child(odd) td {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+tr:hover td {
+    background: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}

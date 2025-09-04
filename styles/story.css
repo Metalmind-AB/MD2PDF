@@ -1,68 +1,11 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
+
 /* Short Story Style - Literary, elegant, readable */
 
 /* Local Font Definitions */
-@font-face {
-    font-family: 'Crimson Text';
-    src: url('assets/fonts/serif/Crimson_Text/Crimson_Text-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Crimson Text';
-    src: url('assets/fonts/serif/Crimson_Text/Crimson_Text-variant1.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Crimson Text';
-    src: url('assets/fonts/serif/Crimson_Text/Crimson_Text-variant2.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Playfair Display';
-    src: url('assets/fonts/serif/Playfair_Display/Playfair_Display-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Playfair Display';
-    src: url('assets/fonts/serif/Playfair_Display/Playfair_Display-variant1.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Playfair Display';
-    src: url('assets/fonts/serif/Playfair_Display/Playfair_Display-variant2.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Playfair Display';
-    src: url('assets/fonts/serif/Playfair_Display/Playfair_Display-variant3.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inconsolata';
-    src: url('assets/fonts/monospace/Inconsolata/Inconsolata-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inconsolata';
-    src: url('assets/fonts/monospace/Inconsolata/Inconsolata-variant1.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
 
 /* CSS Custom Properties for Theming */
 :root {
@@ -77,12 +20,12 @@
     --border: var(--theme-border, #e0e0e0);
     --code-text: var(--theme-code-text, #8b0000);
     --code-bg: var(--theme-code-bg, #f0f0f0);
-    
+
     /* Typography */
     --font-body: 'Crimson Text', Georgia, serif;
     --font-heading: 'Playfair Display', Georgia, serif;
     --font-code: 'Inconsolata', 'Courier New', monospace;
-    
+
     /* Layout */
     --max-width: 650px;
     --base-font-size: 18px;
@@ -285,8 +228,6 @@ th {
     letter-spacing: 0.07em;
     border: none !important;
 }
-
-
 
 td {
     background: var(--background);

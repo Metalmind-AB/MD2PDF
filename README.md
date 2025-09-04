@@ -2,20 +2,22 @@
 
 A comprehensive Python tool that converts Markdown files to impeccably beautiful PDFs with professional styling, syntax highlighting, and responsive layout. Features a dynamic style and theme system with automatic discovery and a powerful workflow for batch processing.
 
+> 🔒 **Team Access Only**: This package is distributed privately via GitHub releases for MPS Metalmind AB team members.
+
 ## ✨ Features
 
-🎨 **Dynamic Style System**: 5 beautiful typography templates with automatic discovery  
-🌈 **Color Theme Engine**: 9 sophisticated color themes with CSS custom properties  
-📝 **Advanced Markdown Support**: Full syntax highlighting, tables, TOC, footnotes  
-📄 **Professional Layout**: Optimized for A4 paper with proper margins and page breaks  
-🔄 **Batch Processing**: Default workflow for processing entire folders  
-🎯 **Code Block Management**: Proper wrapping and syntax highlighting  
-📊 **Table Support**: Beautifully formatted tables with alternating row colors  
-🔗 **Link Styling**: Elegant link formatting with hover effects  
-📋 **List Formatting**: Properly styled ordered and unordered lists  
-💬 **Blockquotes**: Distinguished quote styling with left border  
-🖼️ **Image Support**: Responsive image handling with rounded corners  
-📖 **Table of Contents**: Automatic TOC generation for better navigation  
+🎨 **Dynamic Style System**: 5 beautiful typography templates with automatic discovery
+🌈 **Color Theme Engine**: 9 sophisticated color themes with CSS custom properties
+📝 **Advanced Markdown Support**: Full syntax highlighting, tables, TOC, footnotes
+📄 **Professional Layout**: Optimized for A4 paper with proper margins and page breaks
+🔄 **Batch Processing**: Default workflow for processing entire folders
+🎯 **Code Block Management**: Proper wrapping and syntax highlighting
+📊 **Table Support**: Beautifully formatted tables with alternating row colors
+🔗 **Link Styling**: Elegant link formatting with hover effects
+📋 **List Formatting**: Properly styled ordered and unordered lists
+💬 **Blockquotes**: Distinguished quote styling with left border
+🖼️ **Image Support**: Responsive image handling with rounded corners
+📖 **Table of Contents**: Automatic TOC generation for better navigation
 🫠 **Emoji-Safe Rendering**: Twemoji SVG replacement for robust PDF output (local assets preferred, CDN fallback)
 🖍️ **Reliable Syntax Highlighting**: Embedded Pygments CSS, improved comment contrast per theme, and neutralized error tokens to avoid red boxes around ASCII art
 
@@ -23,49 +25,90 @@ A comprehensive Python tool that converts Markdown files to impeccably beautiful
 
 ### Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd MD2PDF
-   ```
+**From GitHub Release (Team Access):**
+```bash
+# Install the latest release wheel directly
+pip install https://github.com/mps-metalmind/md2pdf/releases/latest/download/md2pdf-1.0.0-py3-none-any.whl
 
-2. **Create virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+# Or install from a specific version
+pip install https://github.com/mps-metalmind/md2pdf/releases/download/v1.0.0/md2pdf-1.0.0-py3-none-any.whl
+```
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+**From Repository (Development):**
+```bash
+# Install directly from the repository
+pip install git+https://github.com/mps-metalmind/md2pdf.git
+
+# Or install a specific version/tag
+pip install git+https://github.com/mps-metalmind/md2pdf.git@v1.0.0
+```
+
+**Local Development Installation:**
+```bash
+git clone https://github.com/mps-metalmind/md2pdf.git
+cd md2pdf
+pip install -e ".[dev,docs,test]"
+```
+
+### System Dependencies
+
+MD2PDF requires some system libraries for PDF generation:
+
+**macOS:**
+```bash
+brew install cairo pango gdk-pixbuf libffi
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install build-essential python3-dev python3-pip \
+  python3-setuptools python3-wheel python3-cffi libcairo2 \
+  libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 \
+  libffi-dev shared-mime-info
+```
+
+**Windows:**
+```bash
+# Install Visual Studio Build Tools
+# WeasyPrint will handle most dependencies automatically
+```
 
 ### Basic Usage
 
-**Quick start with batch processing:**
+**Command Line Interface:**
 ```bash
-bash quick_start.sh                    # Uses technical/default style
-bash quick_start.sh modern sophisticated
+# Single file conversion
+md2pdf document.md
+md2pdf document.md --style modern --theme elegant
+md2pdf document.md --output custom_output.pdf
+
+# Batch processing
+md2pdf *.md --style technical --theme dark
+md2pdf "docs/*.md" --style story --theme sepia
+
+# List available options
+md2pdf --list-styles
+md2pdf --list-themes
+md2pdf --list-combinations
 ```
 
-**Single file conversion:**
-```bash
-python md2pdf.py document.md
-python md2pdf.py document.md --style modern --theme elegant
-python md2pdf.py document.md -o custom_output.pdf
-```
+**Python API:**
+```python
+from md2pdf import MD2PDFConverter
 
-**Batch processing (default workflow):**
-```bash
-# Process all files in data/input/ folder
-python md2pdf.py --style modern --theme sophisticated
-python md2pdf.py --style technical --theme dark
-```
+# Simple conversion
+converter = MD2PDFConverter()
+converter.convert('document.md', 'output.pdf')
 
-**Glob patterns:**
-```bash
-python md2pdf.py "*.md" --style whitepaper
-python md2pdf.py "docs/*.md" --style story --theme sepia
+# With custom styling
+converter = MD2PDFConverter(
+    style='modern',
+    theme='elegant'
+)
+converter.convert('document.md', 'styled_output.pdf')
+
+# Batch processing
+converter.convert_batch('*.md', output_dir='pdfs/')
 ```
 
 ## 📁 Project Structure
@@ -78,7 +121,7 @@ MD2PDF/
 ├── quick_start.sh        # Quick setup script
 ├── README.md             # This file
 ├── .gitignore            # Git ignore rules
-├── 
+├──
 ├── src/                   # Source code
 │   ├── converters/        # Document converters
 │   │   ├── base_converter.py
@@ -93,13 +136,13 @@ MD2PDF/
 │   └── main/              # Main entry points
 │       ├── md2pdf.py
 │       └── md2word.py
-├── 
+├──
 ├── data/                  # Data directories
 │   ├── input/             # Source markdown files (workflow)
 │   ├── output/            # Generated documents (workflow)
 │   ├── processed/         # Processed files (workflow)
 │   └── header/            # Header assets
-├── 
+├──
 ├── assets/                # Static assets (fonts, emojis)
 ├── styles/                # Style templates (CSS)
 │   ├── technical.css      # Technical documentation
@@ -117,15 +160,15 @@ MD2PDF/
 │   ├── oceanic.css        # Cool, calming blue tones
 │   ├── forest.css         # Natural, earthy green palette
 │   └── sepia.css          # Warm, vintage colors
-├── 
+├──
 ├── scripts/               # Utility scripts
 │   ├── example.py         # Usage examples
 │   └── temp_scripts/      # Temporary/debug scripts
-├── 
+├──
 ├── docs/                  # Documentation
 │   ├── CLAUDE.md
 │   └── samples/           # Sample outputs
-└── 
+└──
 └── venv/                  # Virtual environment
 ```
 
@@ -209,51 +252,77 @@ ls processed/       # Original files
 ### Command Line Options
 
 ```bash
-python md2pdf.py [input_file] [options]
+md2pdf [INPUT] [OPTIONS]
+
+Arguments:
+  INPUT                   Input markdown file or glob pattern
 
 Options:
-  input_file              Input markdown file or glob pattern (optional for workflow)
-  -o, --output OUTPUT     Output PDF file path
+  -o, --output PATH       Output PDF file or directory
   -s, --style STYLE       Style template (default: technical)
   -t, --theme THEME       Color theme (default: default)
+  --output-dir PATH       Output directory for batch processing
   --list-styles          List all available style templates
   --list-themes          List all available color themes
   --list-combinations    List all style + theme combinations
+  --verbose              Enable verbose output
+  --help                 Show help message
 ```
 
-### Programmatic Usage
+### Python API Reference
 
 ```python
-from md2pdf import MD2PDFConverter
+from md2pdf import MD2PDFConverter, StyleManager
 
-# Single file conversion
-converter = MD2PDFConverter('document.md', style='modern', theme='elegant')
-converter.convert()
+# Initialize converter
+converter = MD2PDFConverter(
+    style='modern',           # Style template
+    theme='elegant',          # Color theme
+    output_dir='pdfs/',      # Output directory
+    verbose=True             # Enable logging
+)
 
-# Custom output path
-converter = MD2PDFConverter('document.md', 'custom_output.pdf', 'story', 'sepia')
-converter.convert()
+# Convert single file
+converter.convert(
+    input_path='document.md',
+    output_path='document.pdf'  # Optional
+)
+
+# Convert multiple files
+converter.convert_batch(
+    pattern='*.md',
+    output_dir='output/'
+)
+
+# Get conversion metadata
+metadata = converter.get_metadata('document.md')
+print(f"Title: {metadata['title']}")
+print(f"Pages: {metadata['page_count']}")
 ```
 
-### Style and Theme Discovery
+### Style and Theme Management
 
 ```python
-from style_loader import style_loader
+from md2pdf import StyleManager
 
-# List available styles
-styles = style_loader.list_styles()
-for name, style_name, description in styles:
-    print(f"{name}: {description}")
+style_manager = StyleManager()
 
-# List available themes
-themes = style_loader.list_themes()
-for name, theme_name, description in themes:
-    print(f"{name}: {description}")
+# List available options
+styles = style_manager.list_styles()
+for style in styles:
+    print(f"{style.name}: {style.description}")
 
-# Get all combinations
-combinations = style_loader.get_available_combinations()
+themes = style_manager.list_themes()
+for theme in themes:
+    print(f"{theme.name}: {theme.description}")
+
+# Get all valid combinations
+combinations = style_manager.get_combinations()
 for style, theme in combinations:
     print(f"{style} + {theme}")
+
+# Load custom styles
+style_manager.load_custom_style('path/to/custom.css')
 ```
 
 ## 🛠️ Customization
@@ -304,12 +373,18 @@ Example:
 
 ## 📋 Requirements
 
-- **Python**: 3.7+
-- **Dependencies**: See `requirements.txt`
-  - `markdown==3.5.1` - Markdown processing
-  - `weasyprint==60.2` - PDF generation
-  - `pygments==2.17.2` - Syntax highlighting
-  - `pydyf==0.8.0` - PDF backend
+- **Python**: 3.8+
+- **System Dependencies**: Cairo, Pango, GDK-Pixbuf (see installation instructions)
+- **Python Dependencies**:
+  - `markdown>=3.5.0` - Markdown processing with extensions
+  - `weasyprint>=58.0` - High-quality PDF generation
+  - `pygments>=2.15.0` - Syntax highlighting
+  - `beautifulsoup4>=4.12.0` - HTML processing
+  - `click>=8.0.0` - Command-line interface
+  - `rich>=13.0.0` - Rich terminal output
+  - `pydantic>=2.0.0` - Data validation
+  - `PyYAML>=6.0` - YAML configuration
+  - `Pillow>=10.0.0` - Image processing
 
 ## 🧪 Aesthetic Considerations
 
@@ -389,19 +464,37 @@ print(html_content)  # Inspect the HTML output
 
 ## 📄 License
 
-[Add your license information here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+### Quick Contributing Steps:
+
 1. Fork the repository
-2. Create a feature branch
-3. Add your styles/themes to the respective folders
-4. Test your changes
-5. Submit a pull request
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Install development dependencies: `pip install -e ".[dev,test]"`
+4. Make your changes and add tests
+5. Run the test suite: `pytest`
+6. Run code quality checks: `pre-commit run --all-files`
+7. Commit your changes: `git commit -m 'Add amazing feature'`
+8. Push to your branch: `git push origin feature/amazing-feature`
+9. Submit a pull request
+
+### Adding Custom Styles and Themes
+
+- **Styles**: Add CSS files to `src/md2pdf/styles/templates/`
+- **Themes**: Add CSS files to `src/md2pdf/styles/themes/`
+- Follow the existing naming conventions and documentation standards
+- Include descriptive comments at the top of each file
 
 ## 📞 Support
 
-For issues, questions, or contributions, please open an issue on GitHub.
+- **Documentation**: [https://md2pdf.readthedocs.io](https://md2pdf.readthedocs.io)
+- **Issues**: [GitHub Issues](https://github.com/mps-metalmind/md2pdf/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/mps-metalmind/md2pdf/discussions)
+- **Email**: info@metalmind.se
 
 ---
 

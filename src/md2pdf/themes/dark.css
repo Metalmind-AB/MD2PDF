@@ -1,0 +1,53 @@
+/* Dark Theme - Sophisticated Contrast */
+/* Refined dark containers with elegant grey tones and sophisticated contrast */
+:root {
+    --theme-primary: #475569;
+    --theme-secondary: #334155;
+    --theme-text: #1e293b;
+    --theme-text-light: #64748b;
+    --theme-background: #ffffff;
+    --theme-surface: #475569;
+    --theme-surface-alt: #334155;
+    --theme-border: #64748b;
+    --theme-code-text: #1e293b;
+    --theme-code-bg: #f1f5f9;
+}
+
+/* Explicit code styling for dark theme */
+.codehilite {
+    background: #f1f5f9 !important;
+}
+
+pre {
+    background: #f1f5f9 !important;
+}
+
+code {
+    color: #1e293b !important;
+}
+
+pre code {
+    color: #1e293b !important;
+}
+
+/* Table styling for dark theme */
+th {
+    background: #475569 !important;
+    color: #ffffff !important;
+    border-bottom-color: #475569 !important;
+}
+
+tr:nth-child(even) td {
+    background: #e2e8f0 !important;
+    color: #1e293b !important;
+}
+
+tr:nth-child(odd) td {
+    background: #ffffff !important;
+    color: #1e293b !important;
+}
+
+tr:hover td {
+    background: #334155 !important;
+    color: #ffffff !important;
+}

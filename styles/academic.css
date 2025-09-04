@@ -1,75 +1,11 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
 /* Academic Paper Style - Formal, scholarly, citation-friendly */
 
 /* Local Font Definitions */
-@font-face {
-    font-family: 'Lora';
-    src: url('assets/fonts/serif/Lora/Lora-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Lora';
-    src: url('assets/fonts/serif/Lora/Lora-variant1.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Lora';
-    src: url('assets/fonts/serif/Lora/Lora-variant2.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Lora';
-    src: url('assets/fonts/serif/Lora/Lora-variant3.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Merriweather';
-    src: url('assets/fonts/serif/Merriweather/Merriweather-variant0.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Merriweather';
-    src: url('assets/fonts/serif/Merriweather/Merriweather-variant1.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Merriweather';
-    src: url('assets/fonts/serif/Merriweather/Merriweather-variant2.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Merriweather';
-    src: url('assets/fonts/serif/Merriweather/Merriweather-variant3.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Mono';
-    src: url('assets/fonts/monospace/Roboto_Mono/Roboto_Mono-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Mono';
-    src: url('assets/fonts/monospace/Roboto_Mono/Roboto_Mono-variant1.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
 
 /* CSS Custom Properties for Theming */
 :root {
@@ -84,12 +20,12 @@
     --border: var(--theme-border, #ddd);
     --code-text: var(--theme-code-text, #c7254e);
     --code-bg: var(--theme-code-bg, #f0f0f0);
-    
+
     /* Typography */
     --font-body: 'Lora', Georgia, serif;
     --font-heading: 'Merriweather', Georgia, serif;
     --font-code: 'Roboto Mono', 'Courier New', monospace;
-    
+
     /* Layout */
     --max-width: 750px;
     --base-font-size: 16px;
@@ -280,8 +216,6 @@ th {
     letter-spacing: 0.06em;
     border: none !important;
 }
-
-
 
 td {
     background: var(--background);

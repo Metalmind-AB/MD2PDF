@@ -1,0 +1,54 @@
+/* Oceanic Theme - Refined Depth */
+/* Sophisticated slate and steel palette with maritime elegance */
+:root {
+    --theme-primary: #475569;
+    --theme-secondary: #64748b;
+    --theme-text: #1e293b;
+    --theme-text-light: #64748b;
+    --theme-background: #f8fafc;
+    --theme-surface: #f1f5f9;
+    --theme-surface-alt: #e2e8f0;
+    --theme-border: #cbd5e1;
+    --theme-code-text: #1e293b;
+    --theme-code-bg: #f1f5f9;
+}
+
+/* Improve code visibility and comment contrast */
+.codehilite { background: var(--theme-code-bg) !important; }
+pre { background: var(--theme-code-bg) !important; }
+code { background: var(--theme-surface-alt) !important; }
+
+/* Pygments comment tokens often use muted grays; ensure sufficient contrast */
+.c, .cm, .c1, .cs, .cp, .ch, .cd {
+    color: #475569 !important; /* slate-600 for stronger contrast */
+    background: transparent !important;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Table styling for oceanic theme */
+th {
+    background: #475569 !important;
+    color: #ffffff !important;
+    border-bottom-color: #475569 !important;
+}
+
+tr:nth-child(even) td {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+}
+
+tr:nth-child(odd) td {
+    background: #f8fafc !important;
+    color: #1e293b !important;
+}
+
+tr:hover td {
+    background: #e2e8f0 !important;
+    color: #1e293b !important;
+}

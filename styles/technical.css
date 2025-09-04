@@ -1,54 +1,10 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 /* Technical Documentation Style - Clean, professional, code-friendly */
 
 /* Local Font Definitions */
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter/Inter-variant0.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter/Inter-variant1.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter/Inter-variant2.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter/Inter-variant3.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter/Inter-variant4.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('assets/fonts/monospace/JetBrains_Mono/JetBrains_Mono-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('assets/fonts/monospace/JetBrains_Mono/JetBrains_Mono-variant1.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
 
 /* CSS Custom Properties for Theming */
 :root {
@@ -63,12 +19,12 @@
     --border: var(--theme-border, #e2e8f0);
     --code-text: var(--theme-code-text, #e53e3e);
     --code-bg: var(--theme-code-bg, #f1f5f9);
-    
+
     /* Typography */
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-code: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
-    
+
     /* Layout */
     --max-width: 800px;
     --base-font-size: 14px;
@@ -279,8 +235,6 @@ th:last-child {
     border-top-right-radius: 8px;
 }
 
-
-
 td {
     background: var(--background);
     color: var(--text-color);
@@ -333,11 +287,6 @@ body, * {
 }
 
 /* Specifically target emoji characters and force them to use a compatible font */
-@font-face {
-    font-family: 'EmojiFallback';
-    src: local('Arial'), local('Helvetica'), local('Times New Roman');
-    unicode-range: U+1F600-1F64F, U+1F300-1F5FF, U+1F680-1F6FF, U+1F1E0-1F1FF, U+2600-26FF, U+2700-27BF;
-}
 
 /* Apply emoji fallback to all elements */
 * {

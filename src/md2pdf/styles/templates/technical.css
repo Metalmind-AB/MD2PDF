@@ -1,0 +1,342 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* Technical Documentation Style - Clean, professional, code-friendly */
+
+/* Local Font Definitions */
+
+/* CSS Custom Properties for Theming */
+:root {
+    /* Colors */
+    --primary-color: var(--theme-primary, #3182ce);
+    --secondary-color: var(--theme-secondary, #2d3748);
+    --text-color: var(--theme-text, #2d3748);
+    --text-light: var(--theme-text-light, #4a5568);
+    --background: var(--theme-background, #ffffff);
+    --surface: var(--theme-surface, #f7fafc);
+    --surface-alt: var(--theme-surface-alt, #f9fafb);
+    --border: var(--theme-border, #e2e8f0);
+    --code-text: var(--theme-code-text, #e53e3e);
+    --code-bg: var(--theme-code-bg, #f1f5f9);
+    
+    /* Typography */
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-code: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+    
+    /* Layout */
+    --max-width: 800px;
+    --base-font-size: 14px;
+    --line-height: 1.6;
+    --padding: 40px 20px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: var(--line-height);
+    color: var(--text-color);
+    background: var(--background);
+    font-size: var(--base-font-size);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--padding);
+}
+
+/* Headings */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5em;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 1.5em 0 0.4em 0;
+    padding-bottom: 0.3em;
+    border-bottom: 3px solid var(--primary-color);
+    page-break-after: avoid;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 2em;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin: 1.3em 0 0.6em 0;
+    padding-bottom: 0.2em;
+    border-bottom: 2px solid var(--border);
+    page-break-after: avoid;
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--text-light);
+    margin: 1.2em 0 0.5em 0;
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-size: 1.25em;
+    font-weight: 500;
+    color: var(--text-light);
+    margin: 1em 0 0.4em 0;
+    page-break-after: avoid;
+}
+
+/* Text */
+p {
+    margin: 0.8em 0;
+    text-align: justify;
+    hyphens: auto;
+}
+
+/* No first-line indent immediately after headings (technical uses no indent by default,
+   but ensure future changes or Markdown quirks don't add one) */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    text-indent: 0;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+em {
+    font-style: italic;
+    color: var(--text-light);
+}
+
+/* Lists */
+ul, ol {
+    margin: 0.8em 0;
+    padding-left: 0;
+    text-align: left;
+}
+
+li {
+    margin: 0.3em 0;
+    text-align: left;
+}
+
+/* Indent only nested lists */
+ul ul, ul ol, ol ul, ol ol {
+    padding-left: 2em;
+}
+
+/* Prevent justification/indent inside list item paragraphs */
+li p {
+    text-align: left !important;
+    text-indent: 0 !important;
+}
+
+/* Code */
+.codehilite {
+    background: var(--code-bg, #1e293b);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2em;
+    margin: 1em 0;
+    page-break-inside: avoid;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2em;
+    margin: 1em 0;
+    font-family: var(--font-code);
+    font-size: 13px;
+    line-height: 1.5;
+    page-break-inside: avoid;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+code {
+    font-family: var(--font-code);
+    background: var(--code-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--code-text);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: var(--code-text);
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid var(--primary-color);
+    background: var(--surface);
+    padding: 1em 1.5em;
+    margin: 1em 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--text-light);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 0.9em;
+    page-break-inside: avoid;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: none;
+}
+
+th, td {
+    padding: 0.9em 1em;
+    text-align: left;
+    border-bottom: 1px solid #d1d5db !important;
+    border-right: 1px solid #d1d5db !important;
+    vertical-align: top;
+}
+
+th {
+    background: var(--primary-color);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: none !important;
+}
+
+th:first-child {
+    border-top-left-radius: 8px;
+}
+
+th:last-child {
+    border-top-right-radius: 8px;
+}
+
+td {
+    background: var(--background);
+    color: var(--text-color);
+    border-left: 1px solid #d1d5db !important;
+    border-top: 1px solid #d1d5db !important;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:first-child td {
+    border-top: none;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+tr:nth-child(even) td {
+    background: var(--surface);
+}
+
+tr:nth-child(odd) td {
+    background: var(--background);
+}
+
+tr:hover td {
+    background: var(--surface-alt);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Bold text styling - only affect font weight */
+strong, b {
+    font-weight: 700;
+}
+
+/* Ensure bold text in tables inherits cell color */
+td strong, td b {
+    color: inherit !important;
+}
+
+/* Fix emoji font issues in PDF */
+/* Force all elements to use fonts that work with PDF generation */
+body, * {
+    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Specifically target emoji characters and force them to use a compatible font */
+
+/* Apply emoji fallback to all elements */
+* {
+    font-family: var(--font-body), 'EmojiFallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Other elements */
+hr {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 2em 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1em 0;
+}
+
+/* Page layout */
+@page {
+    size: A4;
+    margin: 2cm;
+    @top-center {
+        content: string(chapter);
+        font-family: var(--font-heading);
+        font-size: 10px;
+        color: var(--text-light);
+    }
+    @bottom-center {
+        content: counter(page);
+        font-family: var(--font-heading);
+        font-size: 10px;
+        color: var(--text-light);
+    }
+}
+
+/* Page breaks */
+h1, h2, h3 {
+    page-break-after: avoid;
+}
+
+pre, blockquote, table {
+    page-break-inside: avoid;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}

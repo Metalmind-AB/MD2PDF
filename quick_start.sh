@@ -40,6 +40,20 @@ fi
 # Ensure workflow folders exist
 mkdir -p data/input data/output data/processed
 
+# Check and offer to download emoji assets if not present
+if [ ! -d "assets/twemoji/svg" ] || [ $(find assets/twemoji/svg -name "*.svg" 2>/dev/null | wc -l) -eq 0 ]; then
+    echo ""
+    echo "📥 Emoji assets not found. Would you like to download them?"
+    echo "   (Emojis will fallback to CDN if not downloaded)"
+    read -p "Download emoji pack? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        python scripts/setup_assets.py
+    else
+        echo "ℹ️  Skipping emoji download. Using CDN fallback."
+    fi
+fi
+
 echo ""
 echo "📂 Place your .md files in the 'data/input/' folder."
 echo "   Running standard workflow with style='${STYLE}' theme='${THEME}'."

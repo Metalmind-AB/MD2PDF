@@ -1,53 +1,10 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 /* Futuristic Style - Clean, spacious, modern technical documentation */
 
 /* Local Font Definitions */
-@font-face {
-    font-family: 'Jetlab Variable';
-    src: url('assets/fonts/display/JetLab/JetLab-Variable.otf') format('opentype');
-    font-weight: 300 900;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter_Light/Inter-300-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter_Light/Inter-400-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter_Light/Inter-500-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter_Light/Inter-600-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Inter';
-    src: url('assets/fonts/sans-serif/Inter_Light/Inter-700-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('assets/fonts/monospace/JetBrains_Mono/JetBrains_Mono-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
 
 /* CSS Custom Properties for Theming */
 :root {
@@ -63,12 +20,12 @@
     --border: var(--theme-border, #e0e0e0);
     --code-text: var(--theme-code-text, #333333);
     --code-bg: var(--theme-code-bg, #f8f8f8);
-    
+
     /* Typography - Using JetLab for futuristic headings */
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-heading: 'Jetlab Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Inter', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-code: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
-    
+
     /* Layout */
     --max-width: 850px;
     --base-font-size: 15px;

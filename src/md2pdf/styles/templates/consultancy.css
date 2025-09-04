@@ -1,0 +1,519 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* Consultancy Style - Professional biotech consulting layout and typography */
+
+/* Font Definitions - Professional Typography */
+/* Open Sans - Clean body typography */
+
+/* Palatino - Professional serif headings */
+
+/* CSS Custom Properties - Professional Color Palette */
+:root {
+    /* Professional Colors */
+    --primary-color: var(--theme-primary, #003C71);        /* Midnight Sky Blue */
+    --secondary-color: var(--theme-secondary, #009CCF);    /* Ocean Blue */
+    --accent-color: var(--theme-accent, #F2A900);          /* Sunrise Sky Yellow */
+    --text-color: var(--theme-text, #000000);              /* Pitch Black at 85% opacity */
+    --text-light: var(--theme-text-light, #717B87);        /* Stone Grey */
+    --background: var(--theme-background, #ffffff);
+    --surface: var(--theme-surface, #D6D2C4);              /* Sand Beige */
+    --surface-alt: var(--theme-surface-alt, #6EBCB0);      /* Northern Lights Turquoise */
+    --border: var(--theme-border, #717B87);                /* Stone Grey */
+    --code-text: var(--theme-code-text, #ffffff);
+    --code-bg: var(--theme-code-bg, #003C71);              /* Midnight Sky Blue for code blocks */
+    
+    /* Typography - Professional Fonts */
+    --font-body: 'Open Sans', 'Calibri', sans-serif;  /* Clean sans-serif body text */
+    --font-heading: 'Palatino', 'Playfair Display', serif;  /* Elegant serif headings */
+    --font-code: 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
+    
+    /* Layout - Professional consulting document format */
+    --max-width: 950px;
+    --base-font-size: 16px;
+    --line-height: 1.65;
+    --padding: 20px 15px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: var(--line-height);
+    color: rgba(0, 0, 0, 0.85);  /* Black at 85% opacity for professional look */
+    background: var(--background);
+    font-size: var(--base-font-size);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--padding);
+    font-weight: 100;  /* Public Sans Thin for body copy */
+    letter-spacing: 0.01em;
+}
+
+/* Professional content container */
+.content {
+    background: var(--background);
+    padding: 20px 20px 30px 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+/* Reduce top padding when header is present */
+.content.has-header {
+    padding-top: 5px;
+}
+
+/* Headings - Professional Typography Guidelines */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 3.2em;
+    font-weight: 700;  /* Rotis Bold */
+    color: var(--primary-color);  /* Midnight Sky Blue */
+    margin: 0 0 1em 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    border-bottom: 3px solid var(--accent-color);
+    padding-bottom: 0.3em;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 2.4em;
+    font-weight: 700;  /* Rotis Bold */
+    color: var(--primary-color);  /* Midnight Sky Blue */
+    margin: 1.5em 0 0.3em 0 !important;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 0.2em;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-size: 1.8em;
+    font-weight: 700;  /* Rotis Bold */
+    color: var(--primary-color);  /* Midnight Sky Blue */
+    margin: 1.2em 0 0.2em 0 !important;
+    line-height: 1.2;
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-family: var(--font-body);
+    font-size: 1.4em;
+    font-weight: 700;  /* Public Sans Bold */
+    color: var(--primary-color);
+    margin: 1.8em 0 0.8em 0;
+    page-break-after: avoid;
+}
+
+/* Text - Public Sans Thin for body copy */
+p {
+    margin: 0.8em 0;
+    text-align: left;
+    hyphens: auto;
+    font-weight: 100;  /* Public Sans Thin */
+    line-height: 1.65;
+}
+
+/* Reduce margin for paragraphs after headings - high specificity */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    text-indent: 0;
+    margin-top: 0.1em !important;
+}
+
+/* Reduce top margin for first heading in content - high specificity */
+.content > h1:first-child,
+.content > h2:first-child,
+.content > h3:first-child,
+.content > h4:first-child,
+.content > h5:first-child,
+.content > h6:first-child {
+    margin-top: 0.5em !important;
+}
+
+/* Preambles - Bold emphasis for professional documents */
+.preamble, .executive-summary {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.1em;
+    margin: 2em 0;
+    padding: 1.5em;
+    background: rgba(0, 60, 113, 0.05);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 8px 8px 0;
+}
+
+a {
+    color: var(--secondary-color);  /* Ocean Blue for links */
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s ease;
+    font-weight: 400;
+}
+
+a:hover {
+    border-bottom-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+strong {
+    font-weight: 700;  /* Public Sans Bold */
+    color: var(--text-color);
+}
+
+em {
+    font-style: italic;
+    color: var(--text-color);
+}
+
+/* Lists - Professional spacing and alignment */
+ul, ol {
+    margin: 1.3em 0;
+    padding-left: 0;
+    text-align: left;
+}
+
+li {
+    margin: 0.6em 0;
+    line-height: 1.6;
+    text-align: left;
+    font-weight: 100;  /* Maintain thin body weight */
+}
+
+/* Indent only nested lists */
+ul ul, ul ol, ol ul, ol ol {
+    padding-left: 2.8em;
+}
+
+/* Prevent justification inside list items */
+li p {
+    text-align: left !important;
+    text-indent: 0 !important;
+}
+
+/* Professional bullet styling */
+ul > li {
+    list-style: none;
+    position: relative;
+    padding-left: 1.5em;
+}
+
+ul > li::before {
+    content: '▪';
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Code blocks - Remove double padding */
+.codehilite {
+    background: var(--code-bg);
+    border: none;
+    border-radius: 6px;
+    padding: 1.2em;
+    margin: 1.8em 0;
+    page-break-inside: avoid;
+    box-shadow: 0 2px 12px rgba(0, 60, 113, 0.15);
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* Remove padding from pre when inside codehilite to avoid double padding */
+.codehilite pre {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    font-family: var(--font-code);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+/* Standalone pre blocks (not inside codehilite) */
+pre:not(.codehilite pre) {
+    background: var(--code-bg);
+    border: none;
+    border-radius: 6px;
+    padding: 1.2em;
+    margin: 1.8em 0;
+    font-family: var(--font-code);
+    font-size: 14px;
+    line-height: 1.6;
+    page-break-inside: avoid;
+    box-shadow: 0 2px 12px rgba(0, 60, 113, 0.15);
+    overflow-x: auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+code {
+    font-family: var(--font-code);
+    background: var(--surface);
+    padding: 0.25em 0.5em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--text-color);
+    border: 1px solid var(--border);
+}
+
+/* Remove styling from emoji images */
+img.emoji {
+    background: none !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    display: inline !important;
+    vertical-align: baseline !important;
+    width: 1.2em !important;
+    height: 1.2em !important;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: var(--code-text);
+    border: none;
+}
+
+/* Blockquotes - Professional callout style */
+blockquote {
+    border-left: 4px solid var(--accent-color);  /* Sunrise Sky Yellow */
+    background: rgba(242, 169, 0, 0.05);
+    padding: 1.8em 2.5em;
+    margin: 2.5em 0;
+    border-radius: 0 8px 8px 0;
+    font-family: var(--font-heading);
+    font-weight: 700;  /* Bold weight for professional emphasis */
+    color: var(--primary-color);
+    font-size: 1.1em;
+    line-height: 1.6;
+    position: relative;
+}
+
+blockquote::before {
+    content: '"';
+    font-size: 4em;
+    color: var(--accent-color);
+    position: absolute;
+    left: 0.5em;
+    top: 0.2em;
+    font-family: var(--font-heading);
+    opacity: 0.3;
+}
+
+/* Tables - Clean professional styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2.5em 0;
+    font-size: 0.95em;
+    page-break-inside: avoid;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 60, 113, 0.1);
+    border: none;
+}
+
+th, td {
+    padding: 1.3em 1.8em;
+    text-align: left;
+    border-bottom: 1px solid rgba(113, 123, 135, 0.2);
+    border-right: 1px solid rgba(113, 123, 135, 0.2);
+    vertical-align: top;
+}
+
+th {
+    background: var(--primary-color);  /* Midnight Sky Blue */
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-weight: 700;  /* Public Sans Bold */
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: none;
+}
+
+th:first-child {
+    border-top-left-radius: 8px;
+}
+
+th:last-child {
+    border-top-right-radius: 8px;
+}
+
+td {
+    background: var(--background);
+    color: var(--text-color);
+    font-weight: 400;  /* Public Sans Regular */
+    border-left: 1px solid rgba(113, 123, 135, 0.2);
+    border-top: 1px solid rgba(113, 123, 135, 0.2);
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr:first-child td {
+    border-top: none;
+}
+
+td:first-child {
+    border-left: none;
+}
+
+tr:nth-child(even) td {
+    background: rgba(214, 210, 196, 0.3);  /* Sand Beige tint */
+}
+
+tr:nth-child(odd) td {
+    background: var(--background);
+}
+
+tr:hover td {
+    background: rgba(110, 188, 176, 0.1);  /* Northern Lights Turquoise tint */
+    transition: background-color 0.2s ease;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Bold text styling */
+strong, b {
+    font-weight: 700;  /* Public Sans Bold */
+}
+
+/* Ensure bold text in tables inherits cell color */
+td strong, td b {
+    color: inherit;
+}
+
+/* Horizontal rules */
+hr {
+    border: none;
+    border-top: 2px solid var(--secondary-color);  /* Ocean Blue */
+    margin: 3.5em 0;
+    opacity: 0.6;
+}
+
+/* Images - Professional presentation */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2.5em 0;
+    box-shadow: 0 4px 16px rgba(0, 60, 113, 0.15);
+    border: 1px solid rgba(113, 123, 135, 0.2);
+}
+
+/* Professional page layout */
+@page {
+    size: A4;
+    margin: 2.8cm 1.5cm 2.8cm 1.5cm;
+    @top-center {
+        content: string(chapter);
+        font-family: var(--font-body);
+        font-size: 10px;
+        color: var(--text-light);
+        font-weight: 400;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+    @bottom-center {
+        content: counter(page);
+        font-family: var(--font-body);
+        font-size: 11px;
+        color: var(--text-light);
+        font-weight: 500;
+    }
+}
+
+/* Consistent top margins for professional look */
+@page :left {
+    margin-top: 2.8cm;
+}
+@page :right {
+    margin-top: 2.8cm;
+}
+
+/* Page breaks - Maintain readability */
+h1, h2, h3 {
+    page-break-after: avoid;
+}
+
+pre, blockquote, table {
+    page-break-inside: avoid;
+}
+
+/* Professional callout boxes */
+.callout, .insight {
+    background: rgba(0, 156, 207, 0.05);  /* Ocean Blue tint */
+    border: 1px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 1.8em 2.2em;
+    margin: 2em 0;
+    font-family: var(--font-body);
+    font-weight: 400;
+}
+
+.callout h3, .insight h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    font-family: var(--font-heading);
+    font-weight: 700;
+}
+
+/* Key metrics and data presentation */
+.metric {
+    background: rgba(242, 169, 0, 0.1);  /* Sunrise Sky Yellow tint */
+    border-left: 4px solid var(--accent-color);
+    padding: 1.5em 2em;
+    margin: 2em 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.metric .value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 2.5em;
+    color: var(--primary-color);
+    line-height: 1;
+    margin-bottom: 0.2em;
+}
+
+.metric .label {
+    font-family: var(--font-body);
+    font-weight: 500;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9em;
+}
+
+/* Neutralize error token styling (avoids red boxes around ASCII art) */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}

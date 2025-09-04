@@ -1,0 +1,290 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+# Set permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install WeasyPrint dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libcairo2-dev \
+          libpango1.0-dev \
+          libgdk-pixbuf2.0-dev \
+          libffi-dev \
+          shared-mime-info \
+          fonts-liberation \
+          fonts-dejavu-core \
+          fontconfig
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ubuntu-docs-pip-${{ hashFiles('**/pyproject.toml') }}
+        restore-keys: |
+          ubuntu-docs-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[docs,dev]
+
+    - name: Build documentation
+      run: |
+        cd docs
+        make clean
+        make html
+        
+    - name: Check for broken links
+      run: |
+        cd docs
+        make linkcheck || {
+          echo "⚠️  Broken links found in documentation"
+          exit 1
+        }
+
+    - name: Check documentation coverage
+      run: |
+        cd docs
+        sphinx-build -b coverage . _build/coverage
+        if [ -f "_build/coverage/python.txt" ]; then
+          echo "📊 Documentation coverage report:"
+          cat _build/coverage/python.txt
+        fi
+
+    - name: Upload documentation artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: docs/_build/html/
+
+    - name: Setup Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/configure-pages@v3
+
+    - name: Upload to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: docs/_build/html/
+
+  deploy-docs:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-docs
+    
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+
+  validate-examples:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install WeasyPrint dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libcairo2-dev \
+          libpango1.0-dev \
+          libgdk-pixbuf2.0-dev \
+          libffi-dev \
+          shared-mime-info \
+          fonts-liberation \
+          fonts-dejavu-core \
+          fontconfig
+
+    - name: Install package
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+
+    - name: Validate documentation examples
+      run: |
+        echo "🔍 Validating documentation examples..."
+        
+        # Run all example scripts
+        if [ -d "examples" ]; then
+          find examples -name "*.py" -type f | while read example; do
+            echo "Running example: $example"
+            python "$example" || {
+              echo "❌ Example failed: $example"
+              exit 1
+            }
+          done
+        fi
+        
+        # Test README examples if they exist
+        if [ -f "README.md" ]; then
+          echo "📖 Testing README examples..."
+          # Extract Python code blocks and test them
+          python -c "
+import re
+with open('README.md', 'r') as f:
+    content = f.read()
+    
+# Find Python code blocks
+python_blocks = re.findall(r'```python\n(.*?)\n```', content, re.DOTALL)
+
+for i, block in enumerate(python_blocks):
+    print(f'Testing README Python block {i+1}...')
+    try:
+        # Skip blocks that are just imports or don't contain actual runnable code
+        if 'import' in block and not any(x in block for x in ['print', '=', 'md2pdf']):
+            continue
+        exec(block)
+        print(f'✅ README Python block {i+1} executed successfully')
+    except Exception as e:
+        print(f'⚠️  README Python block {i+1} had issues: {e}')
+"
+        fi
+        
+        echo "✅ Documentation examples validated"
+
+    - name: Upload example outputs
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: example-outputs
+        path: |
+          examples/**/*.pdf
+          examples/**/*.html
+          *.pdf
+
+  spell-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install aspell
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y aspell aspell-en
+
+    - name: Spell check documentation
+      run: |
+        echo "🔍 Spell checking documentation..."
+        
+        # Create personal dictionary for technical terms
+        cat > .aspell.en.pws << 'EOF'
+personal_ws-1.1 en 50
+md2pdf
+WeasyPrint
+Markdown
+PDF
+PyPI
+CLI
+API
+CSS
+HTML
+docstring
+docstrings
+GitHub
+workflow
+workflows
+Ubuntu
+macOS
+Windows
+pytest
+Sphinx
+RTD
+autodoc
+napoleon
+intersphinx
+autosummary
+favicon
+LaTeX
+Texinfo
+pyproject
+setuptools
+hatchling
+EOF
+        
+        # Check documentation files
+        find docs -name "*.rst" -o -name "*.md" | while read file; do
+          echo "Checking: $file"
+          aspell --personal=.aspell.en.pws --mode=sgml --lang=en --encoding=utf-8 list < "$file" | sort -u > spell_errors.tmp
+          
+          if [ -s spell_errors.tmp ]; then
+            echo "⚠️  Potential spelling errors in $file:"
+            cat spell_errors.tmp
+            # Don't fail the build on spelling errors, just warn
+          fi
+        done
+        
+        # Check README
+        if [ -f "README.md" ]; then
+          echo "Checking: README.md"
+          aspell --personal=.aspell.en.pws --mode=sgml --lang=en --encoding=utf-8 list < "README.md" | sort -u > readme_spell_errors.tmp
+          
+          if [ -s readme_spell_errors.tmp ]; then
+            echo "⚠️  Potential spelling errors in README.md:"
+            cat readme_spell_errors.tmp
+          fi
+        fi
+        
+        echo "✅ Spell check completed"
+
+  docs-summary:
+    runs-on: ubuntu-latest
+    needs: [build-docs, validate-examples, spell-check]
+    if: always()
+    
+    steps:
+    - name: Documentation Summary
+      run: |
+        echo "## Documentation Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "| Task | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Build Docs | ${{ needs.build-docs.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Validate Examples | ${{ needs.validate-examples.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        echo "| Spell Check | ${{ needs.spell-check.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+        
+        # Add deployment info if main branch
+        if [[ "${{ github.ref }}" == "refs/heads/main" && "${{ github.event_name }}" == "push" ]]; then
+          echo "| Pages Deploy | ${{ needs.deploy-docs.result == 'success' && '✅ Deployed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📚 Documentation will be available at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> $GITHUB_STEP_SUMMARY
+        fi

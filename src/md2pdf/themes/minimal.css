@@ -1,0 +1,80 @@
+/* Minimal Theme - Timeless Sophistication */
+/* Ultra-refined monochromatic palette with subtle grey variations */
+:root {
+    --theme-primary: #1f2937;
+    --theme-secondary: #374151;
+    --theme-text: #111827;
+    --theme-text-light: #6b7280;
+    --theme-background: #ffffff;
+    --theme-surface: #fafafa;
+    --theme-surface-alt: #f5f5f5;
+    --theme-border: #e5e7eb;
+    --theme-code-text: #111827;
+    --theme-code-bg: #f3f4f6;
+}
+
+/* Explicit styling for minimal theme */
+body {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #111827 !important;
+}
+
+p, li {
+    color: #111827 !important;
+}
+
+blockquote {
+    background: #fafafa !important;
+    color: #6b7280 !important;
+    border-left-color: #1f2937 !important;
+}
+
+/* Inline code styling */
+code:not(pre code) {
+    background: #f5f5f5 !important;
+    color: #111827 !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 4px !important;
+    font-size: 0.9em !important;
+}
+
+.codehilite {
+    background: #f3f4f6 !important;
+}
+
+pre {
+    background: #f3f4f6 !important;
+}
+
+pre code {
+    color: #111827 !important;
+    background: none !important;
+    border: none !important;
+}
+
+/* Table styling for minimal theme */
+th {
+    background: #1f2937 !important;
+    color: #ffffff !important;
+    border-bottom-color: #1f2937 !important;
+}
+
+tr:nth-child(even) td {
+    background: #fafafa !important;
+    color: #111827 !important;
+}
+
+tr:nth-child(odd) td {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+tr:hover td {
+    background: #f5f5f5 !important;
+    color: #111827 !important;
+}

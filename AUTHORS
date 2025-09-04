@@ -1,0 +1,21 @@
+# Authors
+
+This file lists contributors to the MD2PDF project.
+
+## Core Contributors
+
+* Original Author - Initial development and core functionality
+
+## Contributors
+
+Contributions are welcome! Please see CONTRIBUTING.md for guidelines.
+
+## Recognition
+
+Special thanks to:
+- Google Fonts team for providing open source fonts
+- Twitter/X team for Twemoji emoji graphics  
+- WeasyPrint project for excellent PDF generation
+- Python community for the ecosystem of libraries
+
+To add yourself to this list, please include your name in your pull request.

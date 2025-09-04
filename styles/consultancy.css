@@ -1,70 +1,13 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
 /* Consultancy Style - Professional biotech consulting layout and typography */
 
 /* Font Definitions - Professional Typography */
 /* Open Sans - Clean body typography */
-@font-face {
-    font-family: 'Open Sans';
-    src: url('assets/fonts/sans-serif/Open_Sans/Open_Sans-variant0.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    src: url('assets/fonts/sans-serif/Open_Sans/Open_Sans-variant1.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    src: url('assets/fonts/sans-serif/Open_Sans/Open_Sans-variant2.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    src: url('assets/fonts/sans-serif/Open_Sans/Open_Sans-variant3.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    src: url('assets/fonts/sans-serif/Open_Sans/Open_Sans-variant4.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Open Sans';
-    src: url('assets/fonts/sans-serif/Open_Sans/Open_Sans-variant5.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
-}
 
 /* Palatino - Professional serif headings */
-@font-face {
-    font-family: 'Palatino';
-    src: url('assets/fonts/serif/Palatino/Palatino.ttc') format('truetype-collection');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Palatino';
-    src: url('assets/fonts/serif/Palatino/Palatino.ttc') format('truetype-collection');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    src: url('assets/fonts/monospace/JetBrains_Mono/JetBrains_Mono-variant0.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
 
 /* CSS Custom Properties - Professional Color Palette */
 :root {
@@ -80,12 +23,12 @@
     --border: var(--theme-border, #717B87);                /* Stone Grey */
     --code-text: var(--theme-code-text, #ffffff);
     --code-bg: var(--theme-code-bg, #003C71);              /* Midnight Sky Blue for code blocks */
-    
+
     /* Typography - Professional Fonts */
     --font-body: 'Open Sans', 'Calibri', sans-serif;  /* Clean sans-serif body text */
     --font-heading: 'Palatino', 'Playfair Display', serif;  /* Elegant serif headings */
     --font-code: 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
-    
+
     /* Layout - Professional consulting document format */
     --max-width: 950px;
     --base-font-size: 16px;

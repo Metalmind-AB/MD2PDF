@@ -1,46 +1,37 @@
-# Font Library Inventory
+# Core Font Library
 
-This directory contains locally downloaded fonts for PDF generation.
+This directory contains only the essential fonts actually used by MD2PDF styles.
 
-## Serif
+## Serif (25 files)
 
-- **Cormorant Garamond** (5 files - .ttf)
-- **Crimson Text** (3 files - .ttf)
-- **EB Garamond** (5 files - .ttf)
-- **Libre Baskerville** (2 files - .ttf)
-- **Literata** (8 files - .ttf)
-- **Lora** (4 files - .ttf)
-- **Merriweather** (4 files - .ttf)
-- **Playfair Display** (6 files - .ttf)
-- **Source Serif 4** (8 files - .ttf)
-- **Spectral** (7 files - .ttf)
+- **Crimson Text** (3 files) - Used in story style
+- **Lora** (4 files) - Used in academic style
+- **Merriweather** (4 files) - Used in academic style
+- **Playfair Display** (6 files) - Used in story style
+- **Source Serif 4** (8 files) - Used in whitepaper style
 
-## Sans-Serif
+## Sans-Serif (23 files)
 
-- **Atkinson Hyperlegible** (2 files - .ttf)
-- **Inter** (5 files - .ttf)
-- **Lexend** (5 files - .ttf)
-- **Nunito Sans** (6 files - .ttf)
-- **Outfit** (7 files - .ttf)
-- **Plus Jakarta Sans** (6 files - .ttf)
-- **Source Sans 3** (8 files - .ttf)
-- **Work Sans** (6 files - .ttf)
+- **Inter** (9 files) - Used in futuristic, modern, technical styles
+- **Open Sans** (6 files) - Used in consultancy style
+- **Source Sans 3** (8 files) - Used in whitepaper style
 
-## Monospace
+## Monospace (16 files)
 
-- **Fira Code** (4 files - .ttf)
-- **IBM Plex Mono** (4 files - .ttf)
-- **Inconsolata** (4 files - .ttf)
-- **JetBrains Mono** (4 files - .ttf)
-- **Roboto Mono** (4 files - .ttf)
-- **Source Code Pro** (5 files - .ttf)
-- **Space Mono** (2 files - .ttf)
+- **IBM Plex Mono** (4 files) - Used in whitepaper style
+- **Inconsolata** (4 files) - Used in story style
+- **JetBrains Mono** (4 files) - Used in multiple styles
+- **Roboto Mono** (4 files) - Used in academic style
 
 ## Display
 
-- **Abril Fatface** (1 files - .ttf)
-- **Archivo Black** (1 files - .ttf)
-- **Bebas Neue** (1 files - .ttf)
-- **Bungee** (1 files - .ttf)
-- **Righteous** (1 files - .ttf)
+(No display fonts needed - removed decorative fonts)
 
+## Total
+
+- **64 font files** (reduced from 151)
+- **~12MB total** (reduced from 27MB)
+- **12 font families** (reduced from 30+)
+
+All fonts are licensed under SIL Open Font License 1.1 or Apache 2.0.
+See LICENSE file for full attribution.

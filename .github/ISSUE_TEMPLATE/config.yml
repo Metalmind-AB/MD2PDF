@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://md2pdf.readthedocs.io
+    about: Check our comprehensive documentation for usage guides and examples
+
+  - name: 💬 Discussions
+    url: https://github.com/mps-metalmind/md2pdf/discussions
+    about: Ask questions, share ideas, and discuss md2pdf with the community
+
+  - name: 🆘 Support
+    url: https://github.com/mps-metalmind/md2pdf/discussions/categories/q-a
+    about: Get help with using md2pdf or troubleshooting issues
+
+  - name: 📧 Direct Contact
+    url: mailto:info@metalmind.se
+    about: Contact the maintainers directly for sensitive issues or business inquiries
