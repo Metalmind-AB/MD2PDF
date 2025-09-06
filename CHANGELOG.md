@@ -5,6 +5,27 @@ All notable changes to MD2PDF will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2025-09-06
+
+### Fixed
+- Fixed CLI to show help when no command is provided instead of auto-converting
+- Fixed all docstring violations for better code documentation
+- Fixed all security vulnerabilities (CVE-2022-40897, CVE-2025-47273)
+- Fixed test mock imports and assertions for 100% test pass rate
+- Fixed BaseConverter missing public process_markdown() method
+- Fixed theme name mismatches (ocean→oceanic, lavender→elegant)
+- Fixed integration test CLI command syntax
+
+### Changed
+- Dropped Python 3.8 support (minimum version now 3.9)
+- Removed Windows from CI test matrix (focus on Linux/macOS)
+- Made WeasyPrint import failures graceful with helpful error messages
+- Improved cross-platform CI configuration for macOS and Linux
+
+### Security
+- Removed setuptools version constraint to avoid CVE vulnerabilities
+- Updated all dependencies to secure versions
+
 ## [1.1.0] - 2025-09-06
 
 ### Added
