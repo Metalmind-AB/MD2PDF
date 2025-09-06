@@ -13,7 +13,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(project_root))
 
-from md2pdf import MD2PDFConverter
+from md2pdf import MD2PDFConverter  # noqa: E402
 
 
 def main():
@@ -72,7 +72,7 @@ Converting markdown to beautiful PDFs has never been easier!
         # Perform the conversion
         converter.convert(str(input_file), str(output_file))
 
-        print(f"✅ Conversion successful!")
+        print("✅ Conversion successful!")
         print(f"📄 PDF created: {output_file}")
 
         # Check output file size

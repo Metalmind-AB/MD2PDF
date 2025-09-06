@@ -6,7 +6,7 @@ This script demonstrates MD2PDF's batch processing capabilities
 with multiple files, different styles, and comprehensive error handling.
 """
 
-import glob
+# import glob  # Unused import
 import sys
 import time
 from pathlib import Path
@@ -15,7 +15,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(project_root))
 
-from md2pdf import MD2PDFConverter
+from md2pdf import MD2PDFConverter  # noqa: E402
 
 
 def create_sample_documents():
