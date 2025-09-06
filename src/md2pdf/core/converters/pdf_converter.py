@@ -10,7 +10,13 @@ Inherits from BaseConverter and provides PDF-specific functionality.
 
 from pathlib import Path
 
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+
+    WEASYPRINT_AVAILABLE = True
+except ImportError:
+    HTML = None
+    WEASYPRINT_AVAILABLE = False
 
 from md2pdf.core.converters.base_converter import BaseConverter
 
@@ -30,6 +36,12 @@ class PDFConverter(BaseConverter):
 
     def convert(self) -> bool:
         """Convert Markdown file to PDF."""
+        if not WEASYPRINT_AVAILABLE:
+            print("Error: WeasyPrint is not installed.")
+            print("Please install it to convert to PDF:")
+            print("  pip install weasyprint")
+            return False
+
         try:
             # Ensure output path has .pdf extension
             self.output_file: Path = self._ensure_pdf_extension(self.output_file)
