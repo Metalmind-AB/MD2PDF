@@ -13,7 +13,14 @@ import pytest
 from click.testing import CliRunner
 
 from md2pdf.cli import cli
-from md2pdf.core.converters.pdf_converter import PDFConverter
+
+try:
+    from md2pdf.core.converters.pdf_converter import PDFConverter
+
+    WEASYPRINT_AVAILABLE = True
+except ImportError:
+    PDFConverter = None
+    WEASYPRINT_AVAILABLE = False
 from md2pdf.core.converters.word_converter import WordConverter
 
 
@@ -22,6 +29,7 @@ class TestEndToEndWorkflows:
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_complete_pdf_workflow(self, temp_dir):
         """Test complete workflow from markdown to PDF."""
         # Create test markdown file
@@ -100,6 +108,7 @@ Content for section 2 with **bold** and *italic*.
             mock_doc_instance.save.assert_called_once()
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_batch_processing_workflow(self, temp_dir):
         """Test batch processing of multiple files."""
         # Create multiple markdown files
@@ -125,6 +134,7 @@ Content for section 2 with **bold** and *italic*.
         assert len(results) == 5
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_cli_workflow(self, temp_dir):
         """Test complete CLI workflow."""
         runner = CliRunner()
@@ -152,6 +162,7 @@ Content for section 2 with **bold** and *italic*.
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_style_switching_workflow(self, temp_dir):
         """Test workflow with different styles."""
         md_file = temp_dir / "style_test.md"
@@ -181,6 +192,7 @@ This document will be converted with different styles.
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_theme_switching_workflow(self, temp_dir):
         """Test workflow with different themes."""
         md_file = temp_dir / "theme_test.md"
@@ -209,6 +221,7 @@ This document will be converted with different color themes.
                 assert result is True, f"Conversion with theme '{theme}' failed"
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_complex_document_workflow(self, temp_dir):
         """Test workflow with complex document from fixtures."""
         # Use the complex fixture file
@@ -232,6 +245,7 @@ This document will be converted with different color themes.
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_performance_workflow(self, temp_dir):
         """Test performance with large document."""
         # Create large document
@@ -258,6 +272,7 @@ This document will be converted with different color themes.
         ), f"Processing took {processing_time}s, should be < 10s"
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_error_recovery_workflow(self, temp_dir):
         """Test error recovery in conversion workflow."""
         # Create markdown with potential issues
@@ -295,6 +310,7 @@ This content should still be processed.
         reason="Emoji support is now optional - requires separate download"
     )
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_unicode_workflow(self, temp_dir):
         """Test workflow with Unicode and special characters."""
         unicode_content = """# Unicode Test 🌍
@@ -333,6 +349,7 @@ Greek: Γεια σου κόσμος
         assert "مرحبا" in html or "&#" in html  # Arabic might be encoded
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_format_switching_workflow(self, temp_dir):
         """Test switching between PDF and Word formats."""
         md_file = temp_dir / "format_test.md"
@@ -363,6 +380,7 @@ Testing conversion to different formats.
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_concurrent_conversions(self, temp_dir):
         """Test multiple concurrent conversions."""
         import concurrent.futures

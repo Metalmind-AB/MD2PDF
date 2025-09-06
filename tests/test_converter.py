@@ -10,7 +10,14 @@ from unittest.mock import Mock, patch
 import pytest
 
 from md2pdf.core.converters.base_converter import BaseConverter
-from md2pdf.core.converters.pdf_converter import PDFConverter
+
+try:
+    from md2pdf.core.converters.pdf_converter import PDFConverter
+
+    WEASYPRINT_AVAILABLE = True
+except ImportError:
+    PDFConverter = None
+    WEASYPRINT_AVAILABLE = False
 from md2pdf.core.converters.word_converter import WordConverter
 
 
@@ -75,6 +82,7 @@ class TestBaseConverter:
         assert len(html) > 100  # Ensure substantial HTML output
 
 
+@pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
 class TestPDFConverter:
     """Test the PDF converter functionality."""
 
@@ -281,6 +289,7 @@ class TestConverterIntegration:
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_batch_conversion(self, multiple_markdown_files, temp_dir):
         """Test batch conversion of multiple files."""
         results = []
@@ -299,6 +308,7 @@ class TestConverterIntegration:
         assert len(results) == len(multiple_markdown_files)
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_complex_markdown_conversion(self, temp_dir, complex_markdown):
         """Test conversion of complex markdown content."""
         md_file = temp_dir / "complex.md"
@@ -316,6 +326,7 @@ class TestConverterIntegration:
         assert "footnote" in html.lower()  # Footnotes
 
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_invalid_markdown_handling(self, temp_dir, invalid_markdown):
         """Test handling of invalid/malformed markdown."""
         md_file = temp_dir / "invalid.md"
@@ -334,6 +345,7 @@ class TestConverterIntegration:
     @pytest.mark.parametrize(
         "style", ["technical", "academic", "story", "modern", "consultancy"]
     )
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_different_styles(self, sample_markdown_file, temp_dir, style):
         """Test conversion with different style templates."""
         output_file = temp_dir / f"test_{style}.pdf"
@@ -351,6 +363,7 @@ class TestConverterIntegration:
     @pytest.mark.parametrize(
         "theme", ["default", "dark", "oceanic", "forest", "elegant"]
     )
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_different_themes(self, sample_markdown_file, temp_dir, theme):
         """Test conversion with different color themes."""
         output_file = temp_dir / f"test_{theme}.pdf"
@@ -368,6 +381,7 @@ class TestConverterIntegration:
         reason="Emoji support is now optional - requires separate download"
     )
     @pytest.mark.integration
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_unicode_and_emoji_support(self, temp_dir):
         """Test Unicode and emoji support in conversion."""
         content = """# Unicode Test 🚀
@@ -394,6 +408,7 @@ class TestConverterIntegration:
 
     @pytest.mark.integration
     @pytest.mark.slow
+    @pytest.mark.skipif(not WEASYPRINT_AVAILABLE, reason="WeasyPrint not available")
     def test_large_file_performance(self, temp_dir):
         """Test conversion performance with large files."""
         # Create a large markdown file
