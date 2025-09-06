@@ -34,7 +34,7 @@ class PDFConverter(BaseConverter):
         """Convert Markdown file to PDF."""
         try:
             # Ensure output path has .pdf extension
-            self.output_file = self._ensure_pdf_extension(self.output_file)
+            self.output_file: Path = self._ensure_pdf_extension(self.output_file)
 
             # Read the markdown file
             markdown_content = self._read_markdown_content()

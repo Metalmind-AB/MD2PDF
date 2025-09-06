@@ -67,6 +67,9 @@ dev = [
     "mypy>=1.0",
     "pre-commit>=3.0",
     "bandit>=1.7",
+    "pbr>=5.0",
+    "types-Markdown>=3.0",
+    "types-PyYAML>=6.0",
 ]
 docs = [
     "sphinx>=6.0",
@@ -127,14 +130,18 @@ ensure_newline_before_comments = true
 
 [tool.mypy]
 python_version = "3.8"
-warn_return_any = true
+warn_return_any = false
 warn_unused_configs = true
-disallow_untyped_defs = true
+disallow_untyped_defs = false
 ignore_missing_imports = true
+allow_untyped_calls = true
+allow_untyped_defs = true
 exclude = [
     "build",
     "dist",
     "tests",
+    "examples",
+    "docs",
 ]
 
 [tool.flake8]

@@ -12,8 +12,9 @@ Inherits from BaseConverter and provides Word-specific functionality.
 
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from docx import Document
+from docx.text.paragraph import Paragraph
 
 from md2pdf.core.converters.base_converter import BaseConverter
 
@@ -31,7 +32,9 @@ class WordConverter(BaseConverter):
             return output_path.with_suffix(".docx")
         return output_path
 
-    def _apply_style_to_paragraph(self, paragraph, element, style_name):
+    def _apply_style_to_paragraph(
+        self, paragraph: Paragraph, element: Tag, style_name: str
+    ) -> None:
         """Apply style to paragraph based on HTML element."""
         if element.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
             level = int(element.name[1])
@@ -110,7 +113,7 @@ class WordConverter(BaseConverter):
         """Convert Markdown file to Word document."""
         try:
             # Ensure output path has .docx extension
-            self.output_file = self._ensure_docx_extension(self.output_file)
+            self.output_file: Path = self._ensure_docx_extension(self.output_file)
 
             # Read the markdown file
             markdown_content = self._read_markdown_content()
