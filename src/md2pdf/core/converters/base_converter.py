@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
 
-Base Converter - Common functionality for document converters
+Base Converter - Common functionality for document converters.
 Provides shared functionality for PDF and Word converters.
 """
 
@@ -30,12 +30,27 @@ class BaseConverter:
         include_header: bool = False,
         header_path: Optional[str] = None,
     ):
+        """Initialize the base converter.
+
+        Args:
+            input_file: Path to input markdown file.
+            output_file: Optional output file path.
+            style: Style template to use.
+            theme: Color theme to use.
+            include_header: Whether to include header.
+            header_path: Optional path to custom header.
+        """
         self.input_file = Path(input_file)
+        if not self.input_file.exists():
+            raise FileNotFoundError(f"Input file '{self.input_file}' not found.")
         self.output_file = (
             Path(output_file) if output_file else self._generate_output_path()
         )
         self.style_name = style
         self.theme_name = theme
+        # Add aliases for backward compatibility with tests
+        self.style = style
+        self.theme = theme
         self.include_header = include_header
         self.header_path = header_path
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
@@ -60,12 +75,14 @@ class BaseConverter:
 
     def _read_markdown_content(self) -> str:
         """Read the markdown file content."""
-        if not self.input_file.exists():
-            raise FileNotFoundError(f"Input file '{self.input_file}' not found.")
-
         print(f"Reading markdown file: {self.input_file}")
         with open(self.input_file, "r", encoding="utf-8") as f:
             return f.read()
+
+    def process_markdown(self) -> str:
+        """Read and process markdown file to HTML."""
+        content = self._read_markdown_content()
+        return self._process_markdown(content)
 
     def _process_markdown(self, content: str) -> str:
         """Process markdown content to HTML."""

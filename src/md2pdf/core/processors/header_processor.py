@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
 
-Header Processor - Handles header content and styling
+Header Processor - Handles header content and styling.
 Processes logo and text content from the header folder.
 """
 
@@ -20,6 +20,11 @@ class HeaderProcessor:
     """Handles header content processing and CSS generation."""
 
     def __init__(self, header_path: Optional[str] = None):
+        """Initialize the header processor.
+
+        Args:
+            header_path: Optional path to header directory or file.
+        """
         # Get the project root directory (2 levels up from this file)
         project_root = Path(__file__).parent.parent.parent
 

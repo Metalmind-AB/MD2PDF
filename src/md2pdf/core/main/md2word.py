@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
-MD2Word - Beautiful Markdown to Word Converter
-
+MD2Word - Beautiful Markdown to Word Converter.
 Standalone script for markdown to Word conversion - legacy compatibility.
 Beautiful markdown to Word converter with custom styling and responsive layout.
 """

@@ -29,8 +29,8 @@ def cli(ctx: click.Context) -> None:
     and themes.
     """
     if ctx.invoked_subcommand is None:
-        # If no subcommand, run the default convert command
-        ctx.invoke(convert)
+        # Show help when no command is provided
+        console.print(ctx.get_help())
 
 
 def get_available_styles() -> List[str]:

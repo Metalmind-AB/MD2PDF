@@ -133,7 +133,9 @@ Content for section 2 with **bold** and *italic*.
         md_file = temp_dir / "cli_workflow.md"
         md_file.write_text("# CLI Test\n\nTesting CLI workflow.")
 
-        with patch("md2pdf.cli.PDFConverter") as mock_converter:
+        with patch(
+            "md2pdf.core.converters.pdf_converter.PDFConverter"
+        ) as mock_converter:
             mock_instance = Mock()
             mock_converter.return_value = mock_instance
             mock_instance.convert.return_value = True
@@ -162,7 +164,7 @@ This document will be converted with different styles.
 """
         )
 
-        styles = ["technical", "academic", "creative", "simple", "professional"]
+        styles = ["technical", "academic", "story", "modern", "consultancy"]
 
         for style in styles:
             output_file = temp_dir / f"style_{style}.pdf"
@@ -191,7 +193,7 @@ This document will be converted with different color themes.
 """
         )
 
-        themes = ["default", "dark", "ocean", "forest", "lavender"]
+        themes = ["default", "dark", "oceanic", "forest", "elegant"]
 
         for theme in themes:
             output_file = temp_dir / f"theme_{theme}.pdf"

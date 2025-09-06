@@ -1,10 +1,8 @@
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
 Dynamic Style and Theme Loader
 Automatically discovers styles and themes from their respective folders.
 """
@@ -18,6 +16,12 @@ class StyleLoader:
     """Dynamic loader for styles and themes."""
 
     def __init__(self, styles_dir: str = "styles", themes_dir: str = "themes"):
+        """Initialize the StyleLoader with specified directories.
+
+        Args:
+            styles_dir: Directory name containing style templates
+            themes_dir: Directory name containing theme files
+        """
         # Get the md2pdf package directory (3 levels up from this file)
         package_root = Path(__file__).parent.parent.parent
         self.styles_dir = package_root / styles_dir / "templates"

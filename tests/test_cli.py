@@ -74,7 +74,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_single_file(self, mock_converter, runner, sample_markdown_file):
         """Test converting a single markdown file."""
         # Setup mock
@@ -91,7 +91,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_with_output(
         self, mock_converter, runner, sample_markdown_file, temp_dir
     ):
@@ -115,7 +115,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_with_style(self, mock_converter, runner, sample_markdown_file):
         """Test converting with specified style."""
         # Setup mock
@@ -135,7 +135,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_with_theme(self, mock_converter, runner, sample_markdown_file):
         """Test converting with specified theme."""
         # Setup mock
@@ -155,7 +155,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.WordConverter")
+    @patch("md2pdf.core.converters.word_converter.WordConverter")
     def test_convert_to_word(self, mock_converter, runner, sample_markdown_file):
         """Test converting to Word format."""
         # Setup mock
@@ -173,7 +173,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_multiple_files(
         self, mock_converter, runner, multiple_markdown_files
     ):
@@ -201,7 +201,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_failure_handling(
         self, mock_converter, runner, sample_markdown_file
     ):
@@ -219,7 +219,7 @@ class TestCLIConvert:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_convert_verbose_mode(self, mock_converter, runner, sample_markdown_file):
         """Test verbose output mode."""
         # Setup mock
@@ -255,7 +255,7 @@ class TestCLIBatch:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_batch_directory(
         self, mock_converter, runner, temp_dir, multiple_markdown_files
     ):
@@ -274,7 +274,7 @@ class TestCLIBatch:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_batch_recursive(self, mock_converter, runner, temp_dir):
         """Test recursive batch conversion."""
         # Create nested structure
@@ -297,7 +297,7 @@ class TestCLIBatch:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_batch_output_directory(
         self, mock_converter, runner, temp_dir, multiple_markdown_files
     ):
@@ -328,13 +328,18 @@ class TestCLIOptions:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.style_loader")
+    @patch("md2pdf.core.utils.style_loader.style_loader")
     def test_list_styles(self, mock_style_loader, runner):
         """Test listing available styles."""
-        mock_style_loader.list_styles.return_value = [
+        mock_style_loader.list_available_styles.return_value = [
             "technical",
             "academic",
             "creative",
+        ]
+        mock_style_loader.list_available_themes.return_value = [
+            "default",
+            "dark",
+            "oceanic",
         ]
 
         result = runner.invoke(cli, ["list-styles"])
@@ -346,21 +351,26 @@ class TestCLIOptions:
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.style_loader")
+    @patch("md2pdf.core.utils.style_loader.style_loader")
     def test_list_themes(self, mock_style_loader, runner):
         """Test listing available themes."""
-        mock_style_loader.list_themes.return_value = ["default", "dark", "ocean"]
+        mock_style_loader.list_available_themes.return_value = [
+            "default",
+            "dark",
+            "oceanic",
+        ]
+        mock_style_loader.list_available_styles.return_value = ["technical", "academic"]
 
-        result = runner.invoke(cli, ["list-themes"])
+        result = runner.invoke(cli, ["list-styles"])
 
         assert result.exit_code == 0
         assert "default" in result.output
         assert "dark" in result.output
-        assert "ocean" in result.output
+        assert "oceanic" in result.output
 
     @pytest.mark.unit
     @pytest.mark.cli
-    @patch("md2pdf.cli.PDFConverter")
+    @patch("md2pdf.core.converters.pdf_converter.PDFConverter")
     def test_combined_options(
         self, mock_converter, runner, sample_markdown_file, temp_dir
     ):
@@ -383,7 +393,7 @@ class TestCLIOptions:
                 "--style",
                 "academic",
                 "--theme",
-                "ocean",
+                "oceanic",
                 "--verbose",
             ],
         )
@@ -396,7 +406,9 @@ class TestCLIOptions:
         """Test CLI integration with actual conversion."""
         output_file = temp_dir / "integration_test.pdf"
 
-        with patch("md2pdf.cli.PDFConverter") as mock_converter:
+        with patch(
+            "md2pdf.core.converters.pdf_converter.PDFConverter"
+        ) as mock_converter:
             mock_instance = Mock()
             mock_converter.return_value = mock_instance
             mock_instance.convert.return_value = True

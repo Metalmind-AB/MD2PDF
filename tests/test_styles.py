@@ -27,7 +27,7 @@ class TestStyleLoader:
     @pytest.mark.style
     def test_list_available_styles(self):
         """Test listing available style templates."""
-        styles = style_loader.list_styles()
+        styles = style_loader.list_available_styles()
 
         assert isinstance(styles, list)
         assert len(styles) > 0
@@ -35,9 +35,9 @@ class TestStyleLoader:
         expected_styles = [
             "technical",
             "academic",
-            "creative",
-            "simple",
-            "professional",
+            "story",
+            "modern",
+            "consultancy",
         ]
         for style in expected_styles:
             assert style in styles, f"Style '{style}' not found"
@@ -46,12 +46,12 @@ class TestStyleLoader:
     @pytest.mark.style
     def test_list_available_themes(self):
         """Test listing available color themes."""
-        themes = style_loader.list_themes()
+        themes = style_loader.list_available_themes()
 
         assert isinstance(themes, list)
         assert len(themes) > 0
         # Check for expected default themes
-        expected_themes = ["default", "dark", "ocean", "forest", "lavender"]
+        expected_themes = ["default", "dark", "oceanic", "forest", "sepia"]
         for theme in expected_themes:
             assert theme in themes, f"Theme '{theme}' not found"
 
@@ -69,7 +69,7 @@ class TestStyleLoader:
     @pytest.mark.unit
     @pytest.mark.style
     @pytest.mark.parametrize(
-        "style", ["technical", "academic", "creative", "simple", "professional"]
+        "style", ["technical", "academic", "story", "modern", "consultancy"]
     )
     def test_get_css_different_styles(self, style):
         """Test getting CSS for different style templates."""
@@ -87,7 +87,7 @@ class TestStyleLoader:
     @pytest.mark.unit
     @pytest.mark.style
     @pytest.mark.parametrize(
-        "theme", ["default", "dark", "ocean", "forest", "lavender"]
+        "theme", ["default", "dark", "oceanic", "forest", "elegant"]
     )
     def test_get_css_different_themes(self, theme):
         """Test getting CSS for different color themes."""
@@ -99,7 +99,7 @@ class TestStyleLoader:
         if theme == "dark":
             # Dark themes should have dark backgrounds
             assert "#1" in css or "#2" in css or "#3" in css or "rgb" in css
-        elif theme == "ocean":
+        elif theme == "oceanic":
             # Ocean theme might have blue colors
             assert "#" in css  # At least has color definitions
 
@@ -167,7 +167,7 @@ class TestStyleLoader:
     @pytest.mark.style
     def test_theme_css_file_existence(self):
         """Test that actual CSS files exist for each theme."""
-        themes = style_loader.list_themes()
+        themes = style_loader.list_available_themes()
 
         for theme in themes:
             css = style_loader.get_css(style="technical", theme=theme)
@@ -203,7 +203,7 @@ class TestStyleLoader:
     def test_style_theme_combinations(self):
         """Test all style and theme combinations."""
         styles = style_loader.list_styles()
-        themes = style_loader.list_themes()
+        themes = style_loader.list_available_themes()
 
         for style in styles:
             for theme in themes:
@@ -256,7 +256,7 @@ class TestStyleLoader:
     @pytest.mark.style
     def test_css_blockquote_styling(self):
         """Test that CSS includes blockquote styling."""
-        css = style_loader.get_css(style="creative", theme="ocean")
+        css = style_loader.get_css(style="creative", theme="oceanic")
 
         # Check for blockquote styling
         assert "blockquote" in css or "quote" in css

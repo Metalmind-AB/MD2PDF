@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
-PDF Converter - Converts Markdown to PDF using WeasyPrint
+PDF Converter - Converts Markdown to PDF using WeasyPrint.
 Inherits from BaseConverter and provides PDF-specific functionality.
 """
 

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
 MD2PDF Entry Point
 Calls the main md2pdf script from the src/main directory.
 """

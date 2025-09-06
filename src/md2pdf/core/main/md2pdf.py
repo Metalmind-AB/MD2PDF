@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
 MD2PDF - Beautiful Markdown to PDF Converter (Refactored)
 A comprehensive tool that converts Markdown files to impeccably beautiful PDFs
 with professional styling, syntax highlighting, and responsive layout.

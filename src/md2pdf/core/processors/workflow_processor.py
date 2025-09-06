@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
-Workflow Processor - Handles batch processing workflow
+Workflow Processor - Handles batch processing workflow.
 Manages input/output/processed folders and batch file processing.
 """
 
@@ -19,6 +17,7 @@ class WorkflowProcessor:
     """Handles batch processing workflow."""
 
     def __init__(self) -> None:
+        """Initialize the workflow processor with default paths."""
         # Get the project root directory (2 levels up from this file)
         project_root = Path(__file__).parent.parent.parent
         self.input_folder = project_root / "data" / "input"

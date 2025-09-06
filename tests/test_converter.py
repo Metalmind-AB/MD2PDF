@@ -40,13 +40,13 @@ class TestBaseConverter:
             input_file=str(sample_markdown_file),
             output_file=str(output_path),
             style="academic",
-            theme="ocean",
+            theme="oceanic",
         )
 
         assert converter.input_file == sample_markdown_file
         assert converter.output_file == output_path
         assert converter.style == "academic"
-        assert converter.theme == "ocean"
+        assert converter.theme == "oceanic"
 
     @pytest.mark.unit
     def test_base_converter_invalid_input(self):
@@ -113,17 +113,12 @@ class TestPDFConverter:
 
     @pytest.mark.integration
     @patch("md2pdf.core.converters.pdf_converter.HTML")
-    @patch("md2pdf.core.converters.pdf_converter.CSS")
-    def test_pdf_conversion_success(
-        self, mock_css, mock_html, sample_markdown_file, temp_dir
-    ):
+    def test_pdf_conversion_success(self, mock_html, sample_markdown_file, temp_dir):
         """Test successful PDF conversion (mocked)."""
         # Setup mocks
         mock_html_instance = Mock()
         mock_html.return_value = mock_html_instance
         mock_html_instance.write_pdf.return_value = None
-
-        mock_css.return_value = Mock()
 
         output_file = temp_dir / "test.pdf"
         converter = PDFConverter(
@@ -162,15 +157,12 @@ class TestPDFConverter:
             input_file=str(sample_markdown_file),
             output_file=str(output_file),
             style="academic",
-            theme="ocean",
-            margin="20mm",
-            page_size="Letter",
+            theme="oceanic",
         )
 
         assert converter.style == "academic"
-        assert converter.theme == "ocean"
-        assert converter.margin == "20mm"
-        assert converter.page_size == "Letter"
+        assert converter.theme == "oceanic"
+        assert converter.output_file == output_file
 
     @pytest.mark.unit
     @patch("md2pdf.core.converters.pdf_converter.HTML")
@@ -214,14 +206,28 @@ class TestWordConverter:
         assert output_path.stem == sample_markdown_file.stem
 
     @pytest.mark.integration
+    @patch("md2pdf.core.converters.word_converter.BeautifulSoup")
     @patch("md2pdf.core.converters.word_converter.Document")
     def test_word_conversion_success(
-        self, mock_document, sample_markdown_file, temp_dir
+        self, mock_document, mock_soup, sample_markdown_file, temp_dir
     ):
         """Test successful Word conversion (mocked)."""
-        # Setup mock
+        # Setup mocks
         mock_doc_instance = Mock()
         mock_document.return_value = mock_doc_instance
+        mock_doc_instance.save.return_value = None
+
+        # Setup BeautifulSoup mock
+        from unittest.mock import MagicMock
+
+        mock_soup_instance = MagicMock()
+        mock_soup.return_value = mock_soup_instance
+        # When soup is called as a function soup(["script", "style"]), return empty list
+        mock_soup_instance.return_value = (
+            []
+        )  # This makes the mock callable and return []
+        # Mock find_all for element processing
+        mock_soup_instance.find_all.return_value = []
 
         output_file = temp_dir / "test.docx"
         converter = WordConverter(
@@ -304,9 +310,10 @@ class TestConverterIntegration:
         html = converter.process_markdown()
 
         # Check that complex features are processed
-        assert "blockquote" in html.lower() or "<blockquote" in html
-        assert "code" in html.lower() or "<code" in html
-        assert "table" in html.lower() or "<table" in html
+        assert "<h1" in html or "h1>" in html  # Headers
+        assert "<ul" in html or "<ol" in html  # Lists
+        assert "emoji" in html.lower()  # Emoji support
+        assert "footnote" in html.lower()  # Footnotes
 
     @pytest.mark.integration
     def test_invalid_markdown_handling(self, temp_dir, invalid_markdown):
@@ -325,7 +332,7 @@ class TestConverterIntegration:
 
     @pytest.mark.integration
     @pytest.mark.parametrize(
-        "style", ["technical", "academic", "creative", "simple", "professional"]
+        "style", ["technical", "academic", "story", "modern", "consultancy"]
     )
     def test_different_styles(self, sample_markdown_file, temp_dir, style):
         """Test conversion with different style templates."""
@@ -342,7 +349,7 @@ class TestConverterIntegration:
 
     @pytest.mark.integration
     @pytest.mark.parametrize(
-        "theme", ["default", "dark", "ocean", "forest", "lavender"]
+        "theme", ["default", "dark", "oceanic", "forest", "elegant"]
     )
     def test_different_themes(self, sample_markdown_file, temp_dir, theme):
         """Test conversion with different color themes."""

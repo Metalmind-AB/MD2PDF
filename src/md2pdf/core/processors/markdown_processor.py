@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Markdown to PDF Converter
+"""MD2PDF - Markdown to PDF Converter.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
-Markdown Processor - Core markdown processing functionality
+Markdown Processor - Core markdown processing functionality.
 Handles markdown conversion, syntax highlighting, and emoji replacement.
 """
 
@@ -24,6 +22,7 @@ class MarkdownProcessor:
     """Core markdown processing functionality."""
 
     def __init__(self) -> None:
+        """Initialize the markdown processor with extensions and configuration."""
         self.extensions = [
             "markdown.extensions.tables",
             "markdown.extensions.fenced_code",
@@ -94,8 +93,7 @@ class MarkdownProcessor:
         )
 
     def _replace_emojis_with_images(self, html_content: str) -> str:
-        """Replace emoji grapheme clusters with Twemoji SVG images
-        for robust rendering."""
+        """Replace emoji grapheme clusters with Twemoji SVG images."""
         from html import escape
 
         try:
