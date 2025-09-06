@@ -135,7 +135,7 @@ jobs:
         # Test CLI command
         echo "# Test Document" > test.md
         echo "This is a test." >> test.md
-        md2pdf test.md test.pdf
+        md2pdf convert test.md test.pdf
 
         # Verify PDF was created
         if [ -f "test.pdf" ]; then
