@@ -44,8 +44,16 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install cairo pango gdk-pixbuf libffi glib gobject-introspection
-        # Export paths for gobject libraries
-        echo "export DYLD_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
+        # Set library paths for both Intel and ARM Macs
+        if [[ -d "/opt/homebrew" ]]; then
+          # ARM Mac (M1/M2)
+          echo "DYLD_LIBRARY_PATH=/opt/homebrew/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+        else
+          # Intel Mac
+          echo "DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+        fi
 
     - name: Install WeasyPrint dependencies (Windows)
       if: runner.os == 'Windows'
@@ -81,13 +89,7 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        pytest tests/ \
-          --cov=md2pdf \
-          --cov-report=xml \
-          --cov-report=term-missing \
-          --junitxml=test-results-${{ matrix.os }}-py${{ matrix.python-version }}.xml \
-          -v \
-          || (echo "Tests failed on ${{ matrix.os }} with Python ${{ matrix.python-version }}" && exit 1)
+        pytest tests/ --cov=md2pdf --cov-report=xml --cov-report=term-missing --junitxml=test-results-${{ matrix.os }}-py${{ matrix.python-version }}.xml -v || (echo "Tests failed on ${{ matrix.os }} with Python ${{ matrix.python-version }}" && exit 1)
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
