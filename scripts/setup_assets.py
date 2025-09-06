@@ -18,6 +18,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlparse
 
 # Twemoji release information
 TWEMOJI_VERSION = "14.1.2"  # Latest stable version
@@ -25,6 +26,15 @@ TWEMOJI_ZIP_URL = (
     f"https://github.com/twitter/twemoji/archive/refs/tags/v{TWEMOJI_VERSION}.zip"
 )
 TWEMOJI_CDN_BASE = "https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/"
+
+
+def validate_url(url: str) -> bool:
+    """Validate URL scheme for security - only allow https."""
+    parsed = urlparse(url)
+    return parsed.scheme in ["https"] and parsed.netloc in [
+        "github.com",
+        "cdn.jsdelivr.net",
+    ]
 
 
 class AssetSetup:
@@ -76,7 +86,11 @@ class AssetSetup:
 
             def download_with_progress(url: str, dest: Path) -> None:
                 """Download with progress indicator."""
-                response = urllib.request.urlopen(url)
+                if not validate_url(url):  # nosec B310 - URL validation added
+                    raise ValueError(f"Invalid URL scheme or domain: {url}")
+                response = urllib.request.urlopen(
+                    url
+                )  # nosec B310 - URL validated above
                 total_size = int(response.headers.get("Content-Length", 0))
 
                 with open(dest, "wb") as f:
@@ -206,7 +220,11 @@ class AssetSetup:
             dest = self.twemoji_dir / f"{emoji_code}.svg"
 
             try:
-                urllib.request.urlretrieve(url, dest)
+                if not validate_url(url):  # nosec B310 - URL validation added
+                    raise ValueError(f"Invalid URL scheme or domain: {url}")
+                urllib.request.urlretrieve(
+                    url, dest
+                )  # nosec B310 - URL validated above
                 downloaded += 1
                 print(
                     f"\r   Downloaded: {downloaded}/{len(common_emojis)} emojis", end=""

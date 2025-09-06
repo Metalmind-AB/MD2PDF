@@ -73,7 +73,6 @@ napoleon_use_rtype = True
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "markdown": ("https://python-markdown.github.io/", None),
-    "weasyprint": ("https://weasyprint.readthedocs.io/en/stable/", None),
 }
 
 # -- Options for autosummary -------------------------------------------------

@@ -20,8 +20,8 @@ from md2pdf.core.processors.workflow_processor import WorkflowProcessor
 from md2pdf.core.utils.style_loader import style_loader
 
 
-def main():
-    """Main function to handle command line arguments and run conversion."""
+def _create_argument_parser() -> argparse.ArgumentParser:
+    """Create and configure the argument parser."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
@@ -31,7 +31,6 @@ Examples:
   python md2pdf_refactored.py document.md --style whitepaper
   python md2pdf_refactored.py *.md --style story
   python md2pdf_refactored.py --list-styles
-
         """,
     )
 
@@ -40,48 +39,41 @@ Examples:
         nargs="?",
         help="Input markdown files or directory (default: current directory)",
     )
-
     parser.add_argument("-o", "--output", help="Output PDF file path (optional)")
-
     parser.add_argument(
         "-s",
         "--style",
         default="technical",
         help="Style template to use (discovered from styles/ folder)",
     )
-
     parser.add_argument("-t", "--theme", default="default", help="Color theme to use")
-
     parser.add_argument(
         "--paper-size",
         default="A4",
         help="Paper size (A4, Letter, Legal) - only for PDF format",
     )
-
     parser.add_argument(
         "--header",
         choices=["yes", "no"],
         default="no",
         help="Include header with logo and text from header/ folder (default: no)",
     )
-
     parser.add_argument(
         "--list-styles", action="store_true", help="List all available style templates"
     )
-
     parser.add_argument(
         "--list-themes", action="store_true", help="List all available color themes"
     )
-
     parser.add_argument(
         "--list-combinations",
         action="store_true",
         help="List all available style + theme combinations",
     )
+    return parser
 
-    args = parser.parse_args()
 
-    # Handle list options
+def _handle_list_commands(args) -> bool:
+    """Handle list commands and return True if handled."""
     if args.list_styles:
         print("🎨 Available Style Templates:")
         print("=" * 60)
@@ -89,7 +81,7 @@ Examples:
             print(f"📝 {name:12} - {style_name}")
             print(f"    {description}")
             print()
-        return
+        return True
 
     if args.list_themes:
         print("🎨 Available Color Themes:")
@@ -98,7 +90,7 @@ Examples:
             print(f"🎨 {name:12} - {theme_name}")
             print(f"    {description}")
             print()
-        return
+        return True
 
     if args.list_combinations:
         print("🎨 Available Style + Theme Combinations:")
@@ -106,32 +98,29 @@ Examples:
         for style_name, theme_name in style_loader.get_available_combinations():
             print(f"📝 {style_name:12} + {theme_name:12}")
         print()
-        return
+        return True
 
-    # Initialize workflow processor
-    workflow = WorkflowProcessor()
-    workflow.ensure_folders_exist()
+    return False
 
-    # Parse header argument
+
+def _process_default_workflow(args, workflow) -> None:
+    """Process default workflow when no input is provided."""
+    print("🚀 Starting default workflow...")
+    print("Processing all markdown files in input/ folder")
+
+    def pdf_converter_factory(input_file, output_file, style, theme, include_header):
+        return PDFConverter(input_file, output_file, style, theme, include_header)
+
+    success_count = workflow.process_files(
+        args.style, args.theme, args.header == "yes", pdf_converter_factory
+    )
+    if success_count == 0:
+        sys.exit(1)
+
+
+def _process_input_files(args) -> None:
+    """Process specified input files."""
     include_header = args.header == "yes"
-
-    # Check if input is provided
-    if not args.input:
-        # Default workflow: process all files in input folder
-        print("🚀 Starting default workflow...")
-        print("Processing all markdown files in input/ folder")
-
-        def pdf_converter_factory(
-            input_file, output_file, style, theme, include_header
-        ):
-            return PDFConverter(input_file, output_file, style, theme, include_header)
-
-        success_count = workflow.process_files(
-            args.style, args.theme, include_header, pdf_converter_factory
-        )
-        if success_count == 0:
-            sys.exit(1)
-        return
 
     # Handle glob patterns
     input_files = (
@@ -143,7 +132,6 @@ Examples:
         sys.exit(1)
 
     success_count = 0
-    # total_count = len(input_files)  # For future progress tracking
 
     for input_file in input_files:
         if not input_file.exists():
@@ -174,6 +162,27 @@ Examples:
 
     if success_count == 0:
         sys.exit(1)
+
+
+def main():
+    """Main function to handle command line arguments and run conversion."""
+    parser = _create_argument_parser()
+    args = parser.parse_args()
+
+    # Handle list options
+    if _handle_list_commands(args):
+        return
+
+    # Initialize workflow processor
+    workflow = WorkflowProcessor()
+    workflow.ensure_folders_exist()
+
+    # Check if input is provided
+    if not args.input:
+        _process_default_workflow(args, workflow)
+        return
+
+    _process_input_files(args)
 
 
 if __name__ == "__main__":

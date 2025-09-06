@@ -80,6 +80,10 @@ class WordConverter(BaseConverter):
                 "code",
             ]
         ):
+            # Skip non-Tag elements (NavigableString, PageElement)
+            if not isinstance(element, Tag) or not element.name:
+                continue
+
             if element.name in ["h1", "h2", "h3", "h4", "h5", "h6", "p"]:
                 paragraph = doc.add_paragraph()
                 paragraph.text = element.get_text()
@@ -87,12 +91,13 @@ class WordConverter(BaseConverter):
 
             elif element.name in ["ul", "ol"]:
                 for li in element.find_all("li", recursive=False):
-                    paragraph = doc.add_paragraph()
-                    paragraph.text = li.get_text()
-                    if element.name == "ul":
-                        paragraph.style = "List Bullet"
-                    else:
-                        paragraph.style = "List Number"
+                    if isinstance(li, Tag):  # Type guard for li elements
+                        paragraph = doc.add_paragraph()
+                        paragraph.text = li.get_text()
+                        if element.name == "ul":
+                            paragraph.style = "List Bullet"
+                        else:
+                            paragraph.style = "List Number"
 
             elif element.name == "blockquote":
                 paragraph = doc.add_paragraph()

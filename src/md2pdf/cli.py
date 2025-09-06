@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Command Line Interface
+"""MD2PDF - Command Line Interface.
+
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
 """
@@ -94,40 +94,11 @@ def convert(
     verbose: bool,
 ) -> None:
     """Convert Markdown files to PDF or Word documents."""
-
-    # Lazy imports to avoid loading heavy dependencies
-    from md2pdf.core.converters.pdf_converter import PDFConverter
-    from md2pdf.core.converters.word_converter import WordConverter
     from md2pdf.core.processors.workflow_processor import WorkflowProcessor
-    from md2pdf.core.utils.style_loader import style_loader
 
-    # Validate style and theme
-    available_styles = style_loader.list_available_styles()
-    available_themes = style_loader.list_available_themes()
-
-    if style not in available_styles:
-        console.print(f"[red]Error:[/red] Style '{style}' not found.")
-        console.print(f"Available styles: {', '.join(available_styles)}")
-        sys.exit(1)
-
-    if theme not in available_themes:
-        console.print(f"[red]Error:[/red] Theme '{theme}' not found.")
-        console.print(f"Available themes: {', '.join(available_themes)}")
-        sys.exit(1)
-
-    # If no input files specified, process all markdown files in current directory
-    if not input_files:
-        input_path = Path(".")
-        markdown_files = list(input_path.glob("*.md"))
-        if not markdown_files:
-            console.print(
-                "[red]Error:[/red] No markdown files found in current directory"
-            )
-            sys.exit(1)
-        input_files = [str(f) for f in markdown_files]
-
-    # Convert to Path objects
-    input_paths = [Path(f) for f in input_files]
+    # Validate inputs
+    _validate_style_and_theme(style, theme)
+    input_paths = _get_input_files(input_files)
 
     # Check for single file with output option
     if output and len(input_paths) > 1:
@@ -136,18 +107,11 @@ def convert(
         )
         output = None
 
-    # Initialize workflow processor
+    # Initialize workflow processor and get converter
     WorkflowProcessor()
+    ConverterClass, default_ext = _get_converter_class(format)
 
-    # Select converter based on format
-    if format == "pdf":
-        ConverterClass = PDFConverter
-        default_ext = ".pdf"
-    else:
-        ConverterClass = WordConverter
-        default_ext = ".docx"
-
-    # Process files
+    # Process files with progress tracking
     successful = 0
     failed = 0
 
@@ -165,39 +129,23 @@ def convert(
 
         for input_path in input_paths:
             try:
-                # Determine output path
-                if output and len(input_paths) == 1:
-                    output_path = Path(output)
-                else:
-                    output_path = input_path.with_suffix(default_ext)
-
                 progress.update(
                     task, description=f"[cyan]Converting {input_path.name}..."
                 )
 
-                # Initialize converter
-                converter = ConverterClass(
-                    input_file=str(input_path),
-                    output_file=str(output_path),
-                    style=style,
-                    theme=theme,
-                    include_header=bool(header),
-                    header_path=header if header else None,
-                )
-
-                # Convert file
-                success = converter.convert()
-
-                if success:
+                if _process_single_file(
+                    input_path,
+                    output if len(input_paths) == 1 else None,
+                    default_ext,
+                    ConverterClass,
+                    style,
+                    theme,
+                    header,
+                    verbose,
+                ):
                     successful += 1
-                    if verbose:
-                        console.print(
-                            f"✅ [green]Success:[/green] "
-                            f"{input_path.name} → {output_path.name}"
-                        )
                 else:
                     failed += 1
-                    console.print(f"❌ [red]Failed:[/red] {input_path.name}")
 
             except Exception as e:
                 failed += 1
@@ -215,6 +163,91 @@ def convert(
         console.print(f"[red]❌ Failed to convert {failed} file(s)[/red]")
 
     sys.exit(0 if failed == 0 else 1)
+
+
+def _validate_style_and_theme(style: str, theme: str) -> None:
+    """Validate style and theme parameters."""
+    from md2pdf.core.utils.style_loader import style_loader
+
+    available_styles = style_loader.list_available_styles()
+    available_themes = style_loader.list_available_themes()
+
+    if style not in available_styles:
+        console.print(f"[red]Error:[/red] Style '{style}' not found.")
+        console.print(f"Available styles: {', '.join(available_styles)}")
+        sys.exit(1)
+
+    if theme not in available_themes:
+        console.print(f"[red]Error:[/red] Theme '{theme}' not found.")
+        console.print(f"Available themes: {', '.join(available_themes)}")
+        sys.exit(1)
+
+
+def _get_input_files(input_files: Tuple[str, ...]) -> List[Path]:
+    """Get and validate input files, discover markdown files if none provided."""
+    if not input_files:
+        input_path = Path(".")
+        markdown_files = list(input_path.glob("*.md"))
+        if not markdown_files:
+            console.print(
+                "[red]Error:[/red] No markdown files found in current directory"
+            )
+            sys.exit(1)
+        return markdown_files
+
+    return [Path(f) for f in input_files]
+
+
+def _get_converter_class(format: str):
+    """Get the appropriate converter class and file extension."""
+    from md2pdf.core.converters.pdf_converter import PDFConverter
+    from md2pdf.core.converters.word_converter import WordConverter
+
+    if format == "pdf":
+        return PDFConverter, ".pdf"
+    else:
+        return WordConverter, ".docx"
+
+
+def _process_single_file(
+    input_path: Path,
+    output: Optional[str],
+    default_ext: str,
+    ConverterClass,
+    style: str,
+    theme: str,
+    header: Optional[str],
+    verbose: bool,
+) -> bool:
+    """Process a single file conversion."""
+    # Determine output path
+    if output:
+        output_path = Path(output)
+    else:
+        output_path = input_path.with_suffix(default_ext)
+
+    # Initialize converter
+    converter = ConverterClass(
+        input_file=str(input_path),
+        output_file=str(output_path),
+        style=style,
+        theme=theme,
+        include_header=bool(header),
+        header_path=header if header else None,
+    )
+
+    # Convert file
+    success = converter.convert()
+
+    if success:
+        if verbose:
+            console.print(
+                f"✅ [green]Success:[/green] " f"{input_path.name} → {output_path.name}"
+            )
+        return True
+    else:
+        console.print(f"❌ [red]Failed:[/red] {input_path.name}")
+        return False
 
 
 @cli.command("list-styles")
@@ -338,7 +371,7 @@ def batch(
     ctx = click.get_current_context()
     ctx.invoke(
         convert,
-        input_files=[str(f) for f in markdown_files],
+        input_files=tuple(str(f) for f in markdown_files),
         output=None,
         style=style,
         theme=theme,

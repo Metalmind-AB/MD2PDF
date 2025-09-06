@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, Tuple
 
-import markdown
+import markdown  # type: ignore[import-untyped]
 
 
 class HeaderProcessor:
@@ -22,6 +22,9 @@ class HeaderProcessor:
     def __init__(self, header_path: Optional[str] = None):
         # Get the project root directory (2 levels up from this file)
         project_root = Path(__file__).parent.parent.parent
+
+        self.header_dir: Path
+        self.header_file: Optional[Path]
 
         if header_path:
             # Use custom header path - can be a file or directory
@@ -71,6 +74,7 @@ class HeaderProcessor:
                 break
 
         # Check for text content
+        text_file: Optional[Path]
         if self.header_file and self.header_file.suffix == ".md":
             # Use the specific header file if provided
             text_file = self.header_file

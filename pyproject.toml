@@ -75,6 +75,7 @@ docs = [
     "sphinx>=6.0",
     "sphinx-rtd-theme>=1.2",
     "sphinx-autodoc-typehints>=1.20",
+    "sphinxcontrib-jquery>=4.0",
 ]
 test = [
     "pytest>=7.0",
