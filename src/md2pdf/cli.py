@@ -7,6 +7,7 @@ Licensed under the MIT License (see LICENSE file)
 
 import sys
 from pathlib import Path
+from typing import List, Optional, Tuple
 
 import click
 from rich.console import Console
@@ -21,15 +22,30 @@ console = Console()
 @click.group(invoke_without_command=True)
 @click.pass_context
 @click.version_option(version=__version__, prog_name="md2pdf")
-def cli(ctx):
+def cli(ctx: click.Context) -> None:
     """
     MD2PDF - Beautiful Markdown to PDF Converter
 
-    Convert Markdown files to professionally styled PDFs with various templates and themes.
+    Convert Markdown files to professionally styled PDFs with various templates
+    and themes.
     """
     if ctx.invoked_subcommand is None:
         # If no subcommand, run the default convert command
         ctx.invoke(convert)
+
+
+def get_available_styles() -> List[str]:
+    """Get dynamically loaded styles."""
+    from md2pdf.core.utils.style_loader import style_loader
+
+    return style_loader.list_available_styles()
+
+
+def get_available_themes() -> List[str]:
+    """Get dynamically loaded themes."""
+    from md2pdf.core.utils.style_loader import style_loader
+
+    return style_loader.list_available_themes()
 
 
 @cli.command()
@@ -41,46 +57,24 @@ def cli(ctx):
     "-s",
     "--style",
     default="technical",
-    type=click.Choice(
-        [
-            "technical",
-            "academic",
-            "story",
-            "modern",
-            "whitepaper",
-            "consultancy",
-            "futuristic",
-        ],
-        case_sensitive=False,
-    ),
-    help="Style template to use",
+    help="Style template to use. Run 'md2pdf list-styles' to see all available styles",
 )
 @click.option(
     "-t",
     "--theme",
     default="default",
-    type=click.Choice(
-        [
-            "default",
-            "dark",
-            "forest",
-            "oceanic",
-            "solarized",
-            "violet",
-            "warm",
-            "cool",
-            "elegant",
-            "sepia",
-        ],
-        case_sensitive=False,
-    ),
-    help="Color theme to use",
+    help="Color theme to use. Run 'md2pdf list-styles' to see all available themes",
 )
 @click.option(
     "--batch/--no-batch", default=False, help="Process multiple files in batch mode"
 )
 @click.option(
-    "--header", type=click.Path(exists=True), help="Optional header template file"
+    "--header",
+    type=click.Path(exists=True),
+    help=(
+        "Path to header markdown file or directory containing "
+        "header content (logo images and/or .md files)"
+    ),
 )
 @click.option(
     "--format",
@@ -89,13 +83,37 @@ def cli(ctx):
     help="Output format (PDF or Word)",
 )
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
-def convert(input_files, output, style, theme, batch, header, format, verbose):
+def convert(
+    input_files: Tuple[str, ...],
+    output: Optional[str],
+    style: str,
+    theme: str,
+    batch: bool,
+    header: Optional[str],
+    format: str,
+    verbose: bool,
+) -> None:
     """Convert Markdown files to PDF or Word documents."""
 
     # Lazy imports to avoid loading heavy dependencies
     from md2pdf.core.converters.pdf_converter import PDFConverter
     from md2pdf.core.converters.word_converter import WordConverter
     from md2pdf.core.processors.workflow_processor import WorkflowProcessor
+    from md2pdf.core.utils.style_loader import style_loader
+
+    # Validate style and theme
+    available_styles = style_loader.list_available_styles()
+    available_themes = style_loader.list_available_themes()
+
+    if style not in available_styles:
+        console.print(f"[red]Error:[/red] Style '{style}' not found.")
+        console.print(f"Available styles: {', '.join(available_styles)}")
+        sys.exit(1)
+
+    if theme not in available_themes:
+        console.print(f"[red]Error:[/red] Theme '{theme}' not found.")
+        console.print(f"Available themes: {', '.join(available_themes)}")
+        sys.exit(1)
 
     # If no input files specified, process all markdown files in current directory
     if not input_files:
@@ -164,6 +182,7 @@ def convert(input_files, output, style, theme, batch, header, format, verbose):
                     style=style,
                     theme=theme,
                     include_header=bool(header),
+                    header_path=header if header else None,
                 )
 
                 # Convert file
@@ -173,7 +192,8 @@ def convert(input_files, output, style, theme, batch, header, format, verbose):
                     successful += 1
                     if verbose:
                         console.print(
-                            f"✅ [green]Success:[/green] {input_path.name} → {output_path.name}"
+                            f"✅ [green]Success:[/green] "
+                            f"{input_path.name} → {output_path.name}"
                         )
                 else:
                     failed += 1
@@ -198,7 +218,7 @@ def convert(input_files, output, style, theme, batch, header, format, verbose):
 
 
 @cli.command("list-styles")
-def list_styles():
+def list_styles() -> None:
     """List all available style templates."""
     from md2pdf.core.utils.style_loader import style_loader
 
@@ -263,8 +283,18 @@ def list_styles():
     type=click.Path(file_okay=False, dir_okay=True),
     help="Output directory for converted files",
 )
-@click.option("-s", "--style", default="technical", help="Style template to use")
-@click.option("-t", "--theme", default="default", help="Color theme to use")
+@click.option(
+    "-s",
+    "--style",
+    default="technical",
+    help="Style template to use. Run 'md2pdf list-styles' to see all available styles",
+)
+@click.option(
+    "-t",
+    "--theme",
+    default="default",
+    help="Color theme to use. Run 'md2pdf list-styles' to see all available themes",
+)
 @click.option(
     "--format",
     type=click.Choice(["pdf", "word"], case_sensitive=False),
@@ -274,7 +304,14 @@ def list_styles():
 @click.option(
     "--recursive", "-r", is_flag=True, help="Process subdirectories recursively"
 )
-def batch(input_directory, output_directory, style, theme, format, recursive):
+def batch(
+    input_directory: str,
+    output_directory: Optional[str],
+    style: str,
+    theme: str,
+    format: str,
+    recursive: bool,
+) -> None:
     """Batch convert all Markdown files in a directory."""
     input_path = Path(input_directory)
 
@@ -313,7 +350,7 @@ def batch(input_directory, output_directory, style, theme, format, recursive):
 
 
 @cli.command()
-def setup():
+def setup() -> None:
     """Download optional assets (emojis, extra fonts)."""
     console.print("[cyan]Setting up MD2PDF assets...[/cyan]")
 
@@ -333,12 +370,13 @@ def setup():
             setup_main()
         except ImportError:
             console.print(
-                "[red]Error:[/red] Setup script not found. Please run scripts/setup_assets.py manually."
+                "[red]Error:[/red] Setup script not found. "
+                "Please run scripts/setup_assets.py manually."
             )
             sys.exit(1)
 
 
-def main():
+def main() -> None:
     """Main entry point for the CLI."""
     try:
         cli()

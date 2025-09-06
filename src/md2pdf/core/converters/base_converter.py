@@ -3,9 +3,7 @@
 MD2PDF - Markdown to PDF Converter
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
 Base Converter - Common functionality for document converters
 Provides shared functionality for PDF and Word converters.
 """
@@ -30,6 +28,7 @@ class BaseConverter:
         style: str = "technical",
         theme: str = "default",
         include_header: bool = False,
+        header_path: Optional[str] = None,
     ):
         self.input_file = Path(input_file)
         self.output_file = (
@@ -38,13 +37,14 @@ class BaseConverter:
         self.style_name = style
         self.theme_name = theme
         self.include_header = include_header
+        self.header_path = header_path
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
 
         # Initialize processors
         self.markdown_processor = MarkdownProcessor()
-        self.header_processor = HeaderProcessor()
+        self.header_processor = HeaderProcessor(header_path=header_path)
 
-        # Include Pygments CSS so class-based highlighting renders consistently across themes
+        # Include Pygments CSS for consistent highlighting across themes
         try:
             self.pygments_css = HtmlFormatter(style="default").get_style_defs(
                 ".codehilite"

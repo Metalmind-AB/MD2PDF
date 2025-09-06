@@ -6,8 +6,8 @@ A comprehensive Python tool that converts Markdown files to impeccably beautiful
 
 ## ✨ Features
 
-🎨 **Dynamic Style System**: 5 beautiful typography templates with automatic discovery
-🌈 **Color Theme Engine**: 9 sophisticated color themes with CSS custom properties
+🎨 **Dynamic Style System**: Beautiful typography templates with automatic discovery from CSS files
+🌈 **Color Theme Engine**: Sophisticated color themes dynamically loaded from theme files
 📝 **Advanced Markdown Support**: Full syntax highlighting, tables, TOC, footnotes
 📄 **Professional Layout**: Optimized for A4 paper with proper margins and page breaks
 🔄 **Batch Processing**: Default workflow for processing entire folders
@@ -82,14 +82,16 @@ md2pdf document.md
 md2pdf document.md --style modern --theme elegant
 md2pdf document.md --output custom_output.pdf
 
+# With custom header
+md2pdf document.md --header header.md
+md2pdf document.md --header /path/to/header/directory/
+
 # Batch processing
 md2pdf *.md --style technical --theme dark
 md2pdf "docs/*.md" --style story --theme sepia
 
-# List available options
-md2pdf --list-styles
-md2pdf --list-themes
-md2pdf --list-combinations
+# List available options (dynamically discovered)
+md2pdf list-styles
 ```
 
 **Python API:**
@@ -141,16 +143,19 @@ MD2PDF/
 │   ├── input/             # Source markdown files (workflow)
 │   ├── output/            # Generated documents (workflow)
 │   ├── processed/         # Processed files (workflow)
-│   └── header/            # Header assets
+│   └── header/            # Default header assets (can be overridden with --header option)
 ├──
 ├── assets/                # Static assets (fonts, emojis)
 ├── styles/                # Style templates (CSS)
-│   ├── technical.css      # Technical documentation
-│   ├── modern.css         # Modern, sophisticated
-│   ├── whitepaper.css     # Academic, authoritative
-│   ├── story.css          # Literary, elegant
-│   └── academic.css       # Formal, scholarly
-├── themes/                # Color themes (CSS)
+│   └── templates/         # Style CSS files (dynamically discovered)
+│       ├── technical.css  # Technical documentation
+│       ├── modern.css     # Modern, sophisticated
+│       ├── whitepaper.css # Academic, authoritative
+│       ├── story.css      # Literary, elegant
+│       ├── academic.css   # Formal, scholarly
+│       ├── consultancy.css # Business consulting
+│       └── futuristic.css # Bold futuristic design
+├── themes/                # Color themes (dynamically discovered)
 │   ├── default.css        # Clean and professional
 │   ├── minimal.css        # Sophisticated, timeless
 │   ├── sophisticated.css  # Refined light design
@@ -159,7 +164,8 @@ MD2PDF/
 │   ├── midnight.css       # Dark containers with contrast
 │   ├── oceanic.css        # Cool, calming blue tones
 │   ├── forest.css         # Natural, earthy green palette
-│   └── sepia.css          # Warm, vintage colors
+│   ├── sepia.css          # Warm, vintage colors
+│   └── agile.css          # Agile/Scrum themed colors
 ├──
 ├── scripts/               # Utility scripts
 │   ├── example.py         # Usage examples
@@ -176,13 +182,19 @@ MD2PDF/
 
 ### Available Styles
 
+Styles are dynamically discovered from CSS files in the `styles/templates/` directory. Run `md2pdf list-styles` to see all currently available styles.
+
+Common styles include:
+
 | Style | Description | Best For |
 |-------|-------------|----------|
 | **Technical** | Clean, professional, code-friendly | Technical documentation, APIs, guides |
 | **Modern** | Sophisticated, elegant, contemporary | Premium documentation, presentations |
-| **White Paper** | Elegant, academic, authoritative | Research papers, business documents |
+| **Whitepaper** | Elegant, academic, authoritative | Research papers, business documents |
 | **Story** | Literary, elegant, readable | Creative writing, narratives |
 | **Academic** | Formal, scholarly, citation-friendly | Research papers, theses |
+| **Consultancy** | Business consulting presentation style | Business reports, consulting docs |
+| **Futuristic** | Bold futuristic design | Modern tech docs, presentations |
 
 ### Style Features
 
@@ -196,6 +208,10 @@ MD2PDF/
 
 ### Available Themes
 
+Themes are dynamically discovered from CSS files in the `themes/` directory. Run `md2pdf list-styles` to see all currently available themes.
+
+Common themes include:
+
 | Theme | Type | Description |
 |-------|------|-------------|
 | **Default** | Light | Clean and professional |
@@ -207,6 +223,7 @@ MD2PDF/
 | **Oceanic** | Light | Cool, calming blue tones |
 | **Forest** | Light | Natural, earthy green palette |
 | **Sepia** | Light | Warm, vintage book-like colors |
+| **Agile** | Light | Agile/Scrum themed colors |
 
 ### Theme Features
 
@@ -259,14 +276,17 @@ Arguments:
 
 Options:
   -o, --output PATH       Output PDF file or directory
-  -s, --style STYLE       Style template (default: technical)
-  -t, --theme THEME       Color theme (default: default)
+  -s, --style STYLE       Style template (default: technical, run 'md2pdf list-styles' to see all)
+  -t, --theme THEME       Color theme (default: default, run 'md2pdf list-styles' to see all)
+  --header PATH           Path to header markdown file or directory with header content
   --output-dir PATH       Output directory for batch processing
-  --list-styles          List all available style templates
-  --list-themes          List all available color themes
-  --list-combinations    List all style + theme combinations
   --verbose              Enable verbose output
   --help                 Show help message
+
+Commands:
+  convert                Convert markdown files (default command)
+  list-styles            List all available styles and themes
+  batch                  Batch convert files in a directory
 ```
 
 ### Python API Reference
@@ -329,10 +349,10 @@ style_manager.load_custom_style('path/to/custom.css')
 
 ### Adding New Styles
 
-1. Create a new CSS file in `styles/` folder
+1. Create a new CSS file in `styles/templates/` folder
 2. Add descriptive comment at the top: `/* Style Name - Description */`
 3. Define CSS variables for theming
-4. Style will be automatically discovered
+4. Style will be automatically discovered and available in the CLI
 
 Example:
 ```css
@@ -485,7 +505,8 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ### Adding Custom Styles and Themes
 
 - **Styles**: Add CSS files to `src/md2pdf/styles/templates/`
-- **Themes**: Add CSS files to `src/md2pdf/styles/themes/`
+- **Themes**: Add CSS files to `src/md2pdf/themes/`
+- Files are automatically discovered - no registration needed
 - Follow the existing naming conventions and documentation standards
 - Include descriptive comments at the top of each file
 

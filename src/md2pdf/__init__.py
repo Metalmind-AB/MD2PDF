@@ -5,7 +5,7 @@ Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
 """
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __author__ = "MPS Metalmind AB"
 __license__ = "MIT"
 __email__ = "info@metalmind.se"
@@ -14,7 +14,9 @@ __email__ = "info@metalmind.se"
 __all__ = ["MD2PDFConverter", "main", "__version__", "__author__", "__license__"]
 
 
-def __getattr__(name):
+from typing import Any
+
+def __getattr__(name: str) -> Any:
     """Lazy loading of main components."""
     if name == "MD2PDFConverter":
         from .core.md2pdf import MD2PDFConverter

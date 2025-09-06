@@ -5,7 +5,24 @@ All notable changes to MD2PDF will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-01-04
+## [1.1.0] - 2025-09-06
+
+### Added
+- Dynamic CSS file loading for themes and styles - no more hardcoded lists
+- Programmatic header file assignment via `--header` option accepts both files and directories
+- Support for custom header markdown files and header directories
+
+### Changed
+- Styles and themes are now dynamically discovered from CSS files
+- CLI no longer uses hardcoded choice lists for styles and themes
+- Improved error messages showing available styles/themes when invalid option is provided
+
+### Fixed
+- Fixed inconsistency between `list-styles` command output and accepted theme values
+- "agile" theme and other dynamically added themes now work correctly
+- CLI help text now accurately reflects dynamic discovery behavior
+
+## [1.0.0] - 2025-09-04
 
 ### Added
 - Initial public release of MD2PDF

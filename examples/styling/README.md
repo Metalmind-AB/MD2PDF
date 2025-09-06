@@ -13,7 +13,9 @@ This directory demonstrates MD2PDF's powerful styling capabilities, including bu
 
 ## Built-in Styles
 
-MD2PDF includes 7 professional styles:
+MD2PDF dynamically discovers styles from CSS files in the `styles/templates/` directory. Run `md2pdf list-styles` to see all currently available styles.
+
+Common built-in styles include:
 
 ### Technical
 - **Purpose**: Technical documentation, API guides, developer docs
@@ -59,7 +61,9 @@ MD2PDF includes 7 professional styles:
 
 ## Color Themes
 
-MD2PDF provides 10 sophisticated color themes:
+MD2PDF dynamically discovers themes from CSS files in the `themes/` directory. Run `md2pdf list-styles` to see all currently available themes.
+
+Common built-in themes include:
 
 ### Light Themes
 - **Default**: Clean, professional standard colors

@@ -3,9 +3,7 @@
 MD2PDF - Markdown to PDF Converter
 Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
-"""
 
-"""
 Header Processor - Handles header content and styling
 Processes logo and text content from the header folder.
 """
@@ -21,10 +19,25 @@ import markdown
 class HeaderProcessor:
     """Handles header content processing and CSS generation."""
 
-    def __init__(self):
+    def __init__(self, header_path: Optional[str] = None):
         # Get the project root directory (2 levels up from this file)
         project_root = Path(__file__).parent.parent.parent
-        self.header_dir = project_root / "data" / "header"
+
+        if header_path:
+            # Use custom header path - can be a file or directory
+            self.header_path = Path(header_path)
+            if self.header_path.is_file():
+                # If it's a file, use its parent directory
+                self.header_dir = self.header_path.parent
+                self.header_file = self.header_path
+            else:
+                # If it's a directory, use it as the header directory
+                self.header_dir = self.header_path
+                self.header_file = None
+        else:
+            # Default to data/header directory
+            self.header_dir = project_root / "data" / "header"
+            self.header_file = None
 
     def process_header_content(self) -> Tuple[Optional[str], Optional[str]]:
         """Process header folder for logo and text content."""
@@ -51,13 +64,22 @@ class HeaderProcessor:
                         ".gif": "image/gif",
                     }[logo_file.suffix.lower()]
                     logo_base64 = base64.b64encode(logo_data).decode("utf-8")
-                    logo_html = f'<img src="data:{mime_type};base64,{logo_base64}" class="header-logo" alt="Logo">'
+                    logo_html = (
+                        f'<img src="data:{mime_type};base64,{logo_base64}" '
+                        'class="header-logo" alt="Logo">'
+                    )
                 break
 
         # Check for text content
-        text_files = list(self.header_dir.glob("*.md"))
-        if text_files:
-            text_file = text_files[0]  # Use first found markdown file
+        if self.header_file and self.header_file.suffix == ".md":
+            # Use the specific header file if provided
+            text_file = self.header_file
+        else:
+            # Look for markdown files in the header directory
+            text_files = list(self.header_dir.glob("*.md"))
+            text_file = text_files[0] if text_files else None
+
+        if text_file and text_file.exists():
             with open(text_file, "r", encoding="utf-8") as f:
                 text_content = f.read()
                 # Replace #date# placeholder with current date
@@ -73,7 +95,8 @@ class HeaderProcessor:
         return """
         /* Adjust page setup for header - increase top margin */
         @page {
-            margin-top: 3.5cm !important;  /* Increase from 2.5cm to make room for header */
+            /* Increase from 2.5cm to make room for header */
+            margin-top: 3.5cm !important;
         }
 
         /* Header wrapper that becomes a running element */
