@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Utilities Module
+"""MD2PDF - Utilities Module.
+
 Copyright (c) 2025 MPS Metalmind AB
-Licensed under the MIT License (see LICENSE file)
+Licensed under the MIT License (see LICENSE file).
 """
 
 # Re-export commonly used utilities

@@ -59,10 +59,20 @@ class WordConverter(BaseConverter):
         doc = Document()
 
         # Remove script and style elements
+        self._clean_soup(soup)
+
+        # Process content
+        self._process_elements(doc, soup)
+
+        return doc
+
+    def _clean_soup(self, soup: BeautifulSoup) -> None:
+        """Remove script and style elements from soup."""
         for script in soup(["script", "style"]):
             script.decompose()
 
-        # Process content
+    def _process_elements(self, doc: Document, soup: BeautifulSoup) -> None:
+        """Process HTML elements and add to Word document."""
         for element in soup.find_all(
             [
                 "h1",
@@ -80,39 +90,54 @@ class WordConverter(BaseConverter):
                 "code",
             ]
         ):
-            # Skip non-Tag elements (NavigableString, PageElement)
             if not isinstance(element, Tag) or not element.name:
                 continue
 
-            if element.name in ["h1", "h2", "h3", "h4", "h5", "h6", "p"]:
+            self._process_single_element(doc, element)
+
+    def _process_single_element(self, doc: Document, element: Tag) -> None:
+        """Process a single HTML element."""
+        element_name = element.name
+
+        if element_name in ["h1", "h2", "h3", "h4", "h5", "h6", "p"]:
+            self._add_text_paragraph(doc, element)
+        elif element_name in ["ul", "ol"]:
+            self._add_list_elements(doc, element)
+        elif element_name == "blockquote":
+            self._add_blockquote(doc, element)
+        elif element_name in ["pre", "code"]:
+            self._add_code_block(doc, element)
+
+    def _add_text_paragraph(self, doc: Document, element: Tag) -> None:
+        """Add text paragraph (headings, paragraphs) to document."""
+        paragraph = doc.add_paragraph()
+        paragraph.text = element.get_text()
+        self._apply_style_to_paragraph(paragraph, element, element.name)
+
+    def _add_list_elements(self, doc: Document, element: Tag) -> None:
+        """Add list elements to document."""
+        list_style = "List Bullet" if element.name == "ul" else "List Number"
+
+        for li in element.find_all("li", recursive=False):
+            if isinstance(li, Tag):
                 paragraph = doc.add_paragraph()
-                paragraph.text = element.get_text()
-                self._apply_style_to_paragraph(paragraph, element, element.name)
+                paragraph.text = li.get_text()
+                paragraph.style = list_style
 
-            elif element.name in ["ul", "ol"]:
-                for li in element.find_all("li", recursive=False):
-                    if isinstance(li, Tag):  # Type guard for li elements
-                        paragraph = doc.add_paragraph()
-                        paragraph.text = li.get_text()
-                        if element.name == "ul":
-                            paragraph.style = "List Bullet"
-                        else:
-                            paragraph.style = "List Number"
+    def _add_blockquote(self, doc: Document, element: Tag) -> None:
+        """Add blockquote element to document."""
+        paragraph = doc.add_paragraph()
+        paragraph.text = element.get_text()
+        paragraph.style = "Quote"
 
-            elif element.name == "blockquote":
-                paragraph = doc.add_paragraph()
-                paragraph.text = element.get_text()
-                paragraph.style = "Quote"
-
-            elif element.name in ["pre", "code"]:
-                paragraph = doc.add_paragraph()
-                paragraph.text = element.get_text()
-                paragraph.style = "No Spacing"
-                # Apply monospace font
-                for run in paragraph.runs:
-                    run.font.name = "Courier New"
-
-        return doc
+    def _add_code_block(self, doc: Document, element: Tag) -> None:
+        """Add code block element to document."""
+        paragraph = doc.add_paragraph()
+        paragraph.text = element.get_text()
+        paragraph.style = "No Spacing"
+        # Apply monospace font
+        for run in paragraph.runs:
+            run.font.name = "Courier New"
 
     def convert(self) -> bool:
         """Convert Markdown file to Word document."""

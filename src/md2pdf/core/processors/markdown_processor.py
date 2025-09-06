@@ -98,7 +98,11 @@ class MarkdownProcessor:
         for robust rendering."""
         from html import escape
 
-        import emoji
+        try:
+            import emoji
+        except ImportError:
+            # Emoji is optional - if not available, return content unchanged
+            return html_content
 
         def to_twemoji_codepoints(grapheme: str) -> str:
             """Return hyphen-joined lowercase hex codepoints for a grapheme cluster."""

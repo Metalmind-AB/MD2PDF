@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""
-MD2PDF - Styles Module
+"""MD2PDF - Styles Module.
+
 Copyright (c) 2025 MPS Metalmind AB
-Licensed under the MIT License (see LICENSE file)
+Licensed under the MIT License (see LICENSE file).
 """
 
 from pathlib import Path

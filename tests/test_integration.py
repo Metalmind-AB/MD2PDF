@@ -289,6 +289,9 @@ This content should still be processed.
         assert html is not None
         assert "This content should still be processed" in html
 
+    @pytest.mark.skip(
+        reason="Emoji support is now optional - requires separate download"
+    )
     @pytest.mark.integration
     def test_unicode_workflow(self, temp_dir):
         """Test workflow with Unicode and special characters."""

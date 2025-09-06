@@ -23,8 +23,7 @@ console = Console()
 @click.pass_context
 @click.version_option(version=__version__, prog_name="md2pdf")
 def cli(ctx: click.Context) -> None:
-    """
-    MD2PDF - Beautiful Markdown to PDF Converter
+    """MD2PDF - Beautiful Markdown to PDF Converter.
 
     Convert Markdown files to professionally styled PDFs with various templates
     and themes.

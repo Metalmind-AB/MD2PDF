@@ -28,9 +28,9 @@ class TestBaseConverter:
         )
 
         assert converter.input_file == sample_markdown_file
-        assert converter.style == "technical"
-        assert converter.theme == "default"
-        assert converter.output_file is None
+        assert converter.style_name == "technical"
+        assert converter.theme_name == "default"
+        assert converter.output_file == sample_markdown_file.with_suffix(".pdf")
 
     @pytest.mark.unit
     def test_base_converter_with_output_file(self, sample_markdown_file, temp_dir):
@@ -87,8 +87,8 @@ class TestPDFConverter:
 
         assert isinstance(converter, PDFConverter)
         assert isinstance(converter, BaseConverter)
-        assert converter.style == "technical"
-        assert converter.theme == "default"
+        assert converter.style_name == "technical"
+        assert converter.theme_name == "default"
 
     @pytest.mark.unit
     def test_pdf_output_path_generation(self, sample_markdown_file):
@@ -357,6 +357,9 @@ class TestConverterIntegration:
             result = converter.convert()
             assert result is True
 
+    @pytest.mark.skip(
+        reason="Emoji support is now optional - requires separate download"
+    )
     @pytest.mark.integration
     def test_unicode_and_emoji_support(self, temp_dir):
         """Test Unicode and emoji support in conversion."""

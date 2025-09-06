@@ -43,6 +43,7 @@ repos:
         additional_dependencies:
           - types-PyYAML
           - types-requests
+          - types-Markdown
         exclude: ^(tests/|docs/|scripts/)
 
   - repo: https://github.com/pycqa/bandit
