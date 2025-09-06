@@ -16,6 +16,7 @@ __all__ = ["MD2PDFConverter", "main", "__version__", "__author__", "__license__"
 
 from typing import Any
 
+
 def __getattr__(name: str) -> Any:
     """Lazy loading of main components."""
     if name == "MD2PDFConverter":

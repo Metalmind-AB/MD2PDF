@@ -168,11 +168,11 @@ class StyleLoader:
         """List all available color themes."""
         themes = self.discover_themes()
         return sorted(list(themes.keys()))
-    
+
     def list_styles(self) -> List[str]:
         """Legacy alias for list_available_styles()."""
         return self.list_available_styles()
-    
+
     def list_themes(self) -> List[str]:
         """Legacy alias for list_available_themes()."""
         return self.list_available_themes()
@@ -188,7 +188,7 @@ class StyleLoader:
                 style_css = self.get_style_css(available_styles[0])
             else:
                 return "/* No styles available */"
-                
+
         try:
             theme_css = self.get_theme_css(theme)
             return f"{style_css}\n\n/* Theme: {theme} */\n{theme_css}"
