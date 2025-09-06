@@ -133,6 +133,8 @@ jobs:
     - name: Install package dependencies
       run: |
         pip install -e .
+        # Upgrade setuptools to avoid CVE vulnerabilities
+        pip install --upgrade "setuptools>=78.1.1"
 
     - name: Run dependency security audit
       run: |
