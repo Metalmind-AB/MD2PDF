@@ -67,14 +67,6 @@ sudo apt-get install build-essential python3-dev python3-pip \
   libffi-dev shared-mime-info
 ```
 
-**Windows:**
-```bash
-# Note: PDF generation is not available on Windows by default
-# Word (.docx) conversion works perfectly on Windows
-# For PDF support on Windows, you need to install GTK3 runtime manually
-# and then install WeasyPrint separately:
-pip install md2pdf[pdf-windows]
-```
 
 ### Basic Usage
 

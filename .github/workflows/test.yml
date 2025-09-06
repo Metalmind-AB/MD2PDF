@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
@@ -55,15 +55,6 @@ jobs:
           echo "PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
         fi
 
-    - name: Install WeasyPrint dependencies (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        # Install GTK3 runtime for WeasyPrint
-        choco install -y gtk-runtime
-        # Set GTK_FOLDER environment variable
-        echo "GTK_FOLDER=C:\gtk-build\gtk\x64\release" >> $env:GITHUB_ENV
-        # Also try alternative GTK paths
-        echo "PKG_CONFIG_PATH=C:\gtk-build\gtk\x64\release\lib\pkgconfig" >> $env:GITHUB_ENV
 
     - name: Cache pip dependencies
       uses: actions/cache@v3
