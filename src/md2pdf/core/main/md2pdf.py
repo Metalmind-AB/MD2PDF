@@ -23,7 +23,6 @@ from md2pdf.core.utils.style_loader import style_loader
 def main():
     """Main function to handle command line arguments and run conversion."""
     parser = argparse.ArgumentParser(
-        description="Convert Markdown files to beautifully formatted PDFs with multiple style templates",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -32,21 +31,17 @@ Examples:
   python md2pdf_refactored.py document.md --style whitepaper
   python md2pdf_refactored.py *.md --style story
   python md2pdf_refactored.py --list-styles
-  python md2pdf_refactored.py --style modern --theme elegant  # Process all files in input/
+
         """,
     )
 
     parser.add_argument(
         "input",
         nargs="?",
-        help="Input markdown file(s) or glob pattern (optional: if not provided, processes all files in input/ folder)",
+        help="Input markdown files or directory (default: current directory)",
     )
 
-    parser.add_argument(
-        "-o",
-        "--output",
-        help="Output PDF file (optional, defaults to input filename with .pdf extension)",
-    )
+    parser.add_argument("-o", "--output", help="Output PDF file path (optional)")
 
     parser.add_argument(
         "-s",
@@ -55,11 +50,12 @@ Examples:
         help="Style template to use (discovered from styles/ folder)",
     )
 
+    parser.add_argument("-t", "--theme", default="default", help="Color theme to use")
+
     parser.add_argument(
-        "-t",
-        "--theme",
-        default="default",
-        help="Color theme to use (discovered from themes/ folder)",
+        "--paper-size",
+        default="A4",
+        help="Paper size (A4, Letter, Legal) - only for PDF format",
     )
 
     parser.add_argument(
@@ -147,7 +143,7 @@ Examples:
         sys.exit(1)
 
     success_count = 0
-    total_count = len(input_files)
+    # total_count = len(input_files)  # For future progress tracking
 
     for input_file in input_files:
         if not input_file.exists():
@@ -173,9 +169,7 @@ Examples:
             success_count += 1
 
     print(f"\n{'='*60}")
-    print(
-        f"Conversion complete: {success_count}/{total_count} files processed successfully"
-    )
+    print(f"✅ Successfully converted {success_count} file(s)")
     print(f"{'='*60}")
 
     if success_count == 0:

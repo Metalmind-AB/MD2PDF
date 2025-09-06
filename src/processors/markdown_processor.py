@@ -12,6 +12,7 @@ Handles markdown conversion, syntax highlighting, and emoji replacement.
 
 import re
 from pathlib import Path
+from typing import List
 
 import markdown
 from pygments import highlight
@@ -22,7 +23,7 @@ from pygments.lexers import TextLexer, get_lexer_by_name
 class MarkdownProcessor:
     """Core markdown processing functionality."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.extensions = [
             "markdown.extensions.tables",
             "markdown.extensions.fenced_code",
@@ -64,19 +65,20 @@ class MarkdownProcessor:
         """Apply syntax highlighting to code blocks in HTML content."""
         code_block_pattern = r'<pre><code class="language-(\w+)">(.*?)</code></pre>'
 
-        def replace_code_block(match):
+        def replace_code_block(match) -> str:
             language = match.group(1)
             code = match.group(2)
 
             try:
                 lexer = get_lexer_by_name(language, stripall=True)
-            except:
+            except Exception:
                 lexer = TextLexer()
 
             formatter = HtmlFormatter(style="default", noclasses=False)
             highlighted_code = highlight(code, lexer, formatter)
 
-            # Extract the inner <pre> content and wrap it to ensure backgrounds and spacing apply
+            # Extract the inner <pre> content and wrap it to
+            # ensure backgrounds and spacing apply
             highlighted_content = re.search(
                 r"<pre>(.*?)</pre>", highlighted_code, re.DOTALL
             )
@@ -92,7 +94,8 @@ class MarkdownProcessor:
         )
 
     def _replace_emojis_with_images(self, html_content: str) -> str:
-        """Replace emoji grapheme clusters with Twemoji SVG images for robust rendering."""
+        """Replace emoji grapheme clusters with Twemoji SVG images
+        for robust rendering."""
         from html import escape
 
         import emoji
@@ -101,11 +104,11 @@ class MarkdownProcessor:
             """Return hyphen-joined lowercase hex codepoints for a grapheme cluster."""
             return "-".join(f"{ord(ch):x}" for ch in grapheme)
 
-        def normalize_candidates(codepoints: str) -> list:
+        def normalize_candidates(codepoints: str) -> List[str]:
             """Generate plausible Twemoji filename variants for a codepoint string."""
-            candidates: list[str] = []
+            candidates: List[str] = []
 
-            def add(c: str):
+            def add(c: str) -> None:
                 if c and c not in candidates:
                     candidates.append(c)
 
@@ -137,7 +140,7 @@ class MarkdownProcessor:
 
         local_svg_root = Path("assets/twemoji/svg")
 
-        def replacement(grapheme: str, data_dict=None):
+        def replacement(grapheme: str, data_dict=None) -> str:
             base = to_twemoji_codepoints(grapheme)
             for candidate in normalize_candidates(base):
                 local_path = local_svg_root / f"{candidate}.svg"
@@ -146,10 +149,14 @@ class MarkdownProcessor:
                     break
             else:
                 # Fallback to CDN with first candidate
-                src = f"https://twemoji.maxcdn.com/v/latest/svg/{normalize_candidates(base)[0]}.svg"
+                first_candidate = normalize_candidates(base)[0]
+                src = (
+                    f"https://twemoji.maxcdn.com/v/latest/svg/" f"{first_candidate}.svg"
+                )
             return (
                 f'<img class="emoji" draggable="false" alt="{escape(grapheme)}" '
-                f'src="{src}" style="width:1em;height:1em;vertical-align:-0.15em;margin:0 0.05em;" />'
+                f'src="{src}" style="width:1em;height:1em;'
+                f'vertical-align:-0.15em;margin:0 0.05em;" />'
             )
 
         return emoji.replace_emoji(html_content, replace=replacement)

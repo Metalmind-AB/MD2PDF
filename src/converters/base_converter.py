@@ -42,7 +42,10 @@ class BaseConverter:
         self.markdown_processor = MarkdownProcessor()
         self.header_processor = HeaderProcessor()
 
-        # Include Pygments CSS so class-based highlighting renders consistently across themes
+        if not Path(self.input_file).exists():
+            raise ValueError(
+                "Input markdown file does not exist: " f"{self.input_file}"
+            )
         try:
             self.pygments_css = HtmlFormatter(style="default").get_style_defs(
                 ".codehilite"

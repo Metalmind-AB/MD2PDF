@@ -8,7 +8,7 @@ PyTest configuration and fixtures for MD2PDF tests.
 import os
 import tempfile
 from pathlib import Path
-from typing import Generator
+from typing import Generator, List
 
 import pytest
 
@@ -178,7 +178,7 @@ def sample_markdown_file(temp_dir: Path, sample_markdown: str) -> Path:
 
 
 @pytest.fixture
-def multiple_markdown_files(temp_dir: Path) -> list[Path]:
+def multiple_markdown_files(temp_dir: Path) -> List[Path]:
     """Create multiple markdown files for batch processing tests."""
     files = []
     for i in range(3):
@@ -193,8 +193,6 @@ def multiple_markdown_files(temp_dir: Path) -> list[Path]:
 def mock_css_content() -> str:
     """Return mock CSS content for style testing."""
     return """
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap');
-
 body {
     font-family: 'Inter', sans-serif;
     font-size: 11pt;

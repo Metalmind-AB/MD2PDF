@@ -45,7 +45,7 @@ class PDFConverter(BaseConverter):
 
             # Convert HTML to PDF directly
             print(f"Generating PDF: {self.output_file}")
-            # Set base_url to project root so both font and asset paths resolve correctly
+            # For future use: Path(self.input_file).parent / "exports"
             base_url = str(Path(".").resolve()) + "/"
             html = HTML(string=html_document, base_url=base_url)
             html.write_pdf(str(self.output_file))

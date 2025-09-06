@@ -74,7 +74,7 @@ class AssetSetup:
             # Download ZIP file
             zip_path = temp_dir / f"twemoji-{TWEMOJI_VERSION}.zip"
 
-            def download_with_progress(url, dest):
+            def download_with_progress(url: str, dest: Path) -> None:
                 """Download with progress indicator."""
                 response = urllib.request.urlopen(url)
                 total_size = int(response.headers.get("Content-Length", 0))
@@ -94,7 +94,8 @@ class AssetSetup:
                         if total_size > 0:
                             percent = (downloaded / total_size) * 100
                             print(
-                                f"\r   Progress: {percent:.1f}% ({downloaded:,} / {total_size:,} bytes)",
+                                f"\r   Progress: {percent:.1f}% "
+                                f"({downloaded:,} / {total_size:,} bytes)",
                                 end="",
                             )
 
@@ -210,7 +211,7 @@ class AssetSetup:
                 print(
                     f"\r   Downloaded: {downloaded}/{len(common_emojis)} emojis", end=""
                 )
-            except Exception as e:
+            except Exception:
                 failed += 1
 
         print(f"\n✅ Downloaded {downloaded} emojis ({failed} failed)")
@@ -268,7 +269,7 @@ class AssetSetup:
         return success
 
 
-def main():
+def main() -> None:
     """Main entry point for asset setup."""
     setup = AssetSetup()
 

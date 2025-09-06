@@ -204,14 +204,14 @@ class StyleLoader:
         # Combine theme variables with style CSS
         return f"{theme_css}\n\n{style_css}"
 
-    def list_styles(self) -> List[Tuple[str, str, str]]:
+    def list_styles_detailed(self) -> List[Tuple[str, str, str]]:
         """List all available styles with their descriptions."""
         styles = self.discover_styles()
         return [
             (name, info["name"], info["description"]) for name, info in styles.items()
         ]
 
-    def list_themes(self) -> List[Tuple[str, str, str]]:
+    def list_themes_detailed(self) -> List[Tuple[str, str, str]]:
         """List all available themes with their descriptions."""
         themes = self.discover_themes()
         return [

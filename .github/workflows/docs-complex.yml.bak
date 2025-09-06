@@ -142,10 +142,10 @@ jobs:
     - name: Validate documentation examples
       run: |
         echo "🔍 Validating documentation examples..."
-        
+
         # Skip example validation for now due to flake8 issues
         echo "⚠️  Skipping example validation temporarily"
-        
+
         echo "✅ Documentation validation complete"
 
     - name: Upload example outputs

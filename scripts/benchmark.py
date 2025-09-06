@@ -11,7 +11,6 @@ This script measures various performance metrics including:
 
 import gc
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -130,7 +129,8 @@ class BenchmarkSuite:
                 }
 
                 print(
-                    f"    Time: {time_results['mean']:.3f}s ± {time_results['stdev']:.3f}s"
+                    f"    Time: {time_results['mean']:.3f}s ± "
+                    f"{time_results['stdev']:.3f}s"
                 )
                 print(f"    Memory: {memory_results['peak_mb']:.1f} MB peak")
                 print(
@@ -347,10 +347,13 @@ def function_{i}():
         if "style_loading" in self.results:
             print(f"\n🎨 Style Loading:")
             print(
-                f"  - Discovery: {self.results['style_loading']['discovery']['mean']*1000:.1f} ms"
+                f"  - Discovery: "
+                f"{self.results['style_loading']['discovery']['mean']*1000:.1f} ms"
             )
             print(
-                f"  - CSS generation: {self.results['style_loading']['css_generation']['mean']*1000:.1f} ms"
+                "  - CSS generation: "
+                f"{self.results['style_loading']['css_generation']['mean']*1000:.1f} "
+                "ms"
             )
 
         if "batch_processing" in self.results:

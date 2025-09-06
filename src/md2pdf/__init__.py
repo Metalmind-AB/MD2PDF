@@ -5,7 +5,7 @@ Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
 """
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 __author__ = "MPS Metalmind AB"
 __license__ = "MIT"
 __email__ = "info@metalmind.se"
@@ -20,11 +20,11 @@ from typing import Any
 def __getattr__(name: str) -> Any:
     """Lazy loading of main components."""
     if name == "MD2PDFConverter":
-        from .core.md2pdf import MD2PDFConverter
+        from .core.converters.pdf_converter import PDFConverter as MD2PDFConverter
 
         return MD2PDFConverter
     elif name == "main":
-        from .core.main import main
+        from .core.main.md2pdf import main
 
         return main
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

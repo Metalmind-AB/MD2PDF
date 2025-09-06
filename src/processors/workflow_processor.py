@@ -18,14 +18,14 @@ from typing import Callable, List
 class WorkflowProcessor:
     """Handles batch processing workflow."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Get the project root directory (2 levels up from this file)
         project_root = Path(__file__).parent.parent.parent
         self.input_folder = project_root / "data" / "input"
         self.output_folder = project_root / "data" / "output"
         self.processed_folder = project_root / "data" / "processed"
 
-    def ensure_folders_exist(self):
+    def ensure_folders_exist(self) -> None:
         """Ensure input, output, and processed folders exist."""
         folders = [self.input_folder, self.output_folder, self.processed_folder]
         for folder in folders:
@@ -96,9 +96,7 @@ class WorkflowProcessor:
                 print(f"❌ Failed to convert: {input_file.name}")
 
         print(f"\n{'='*60}")
-        print(
-            f"Workflow complete: {success_count}/{len(markdown_files)} files processed successfully"
-        )
+        print(f"✅ Successfully converted {success_count} " f"file(s)")
         print(f"{'='*60}")
 
         return success_count

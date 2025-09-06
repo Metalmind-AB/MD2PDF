@@ -11,7 +11,7 @@ Automatically discovers styles and themes from their respective folders.
 
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 class StyleLoader:
@@ -30,7 +30,7 @@ class StyleLoader:
         if self._styles_cache is not None:
             return self._styles_cache
 
-        styles = {}
+        styles: Dict[str, Dict[str, Any]] = {}
 
         if not self.styles_dir.exists():
             return styles
@@ -47,7 +47,7 @@ class StyleLoader:
                 "fonts": style_info.get("fonts", {}),
             }
 
-        self._styles_cache = styles
+        self._styles_cache = styles  # type: ignore[assignment]
         return styles
 
     def discover_themes(self) -> Dict[str, Dict]:
@@ -55,7 +55,7 @@ class StyleLoader:
         if self._themes_cache is not None:
             return self._themes_cache
 
-        themes = {}
+        themes: Dict[str, Dict[str, Any]] = {}
 
         if not self.themes_dir.exists():
             return themes
@@ -72,7 +72,7 @@ class StyleLoader:
                 "colors": theme_info.get("colors", {}),
             }
 
-        self._themes_cache = themes
+        self._themes_cache = themes  # type: ignore[assignment]
         return themes
 
     def _extract_style_info(self, css_file: Path) -> Dict:

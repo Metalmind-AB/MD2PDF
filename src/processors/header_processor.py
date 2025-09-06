@@ -10,7 +10,6 @@ Header Processor - Handles header content and styling
 Processes logo and text content from the header folder.
 """
 
-import base64
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Tuple
@@ -42,16 +41,12 @@ class HeaderProcessor:
                 logo_file = logo_files[0]  # Use first found logo
                 # Convert to base64 for embedding
                 with open(logo_file, "rb") as f:
-                    logo_data = f.read()
-                    mime_type = {
-                        ".png": "image/png",
-                        ".jpg": "image/jpeg",
-                        ".jpeg": "image/jpeg",
-                        ".svg": "image/svg+xml",
-                        ".gif": "image/gif",
-                    }[logo_file.suffix.lower()]
-                    logo_base64 = base64.b64encode(logo_data).decode("utf-8")
-                    logo_html = f'<img src="data:{mime_type};base64,{logo_base64}" class="header-logo" alt="Logo">'
+                    # Future: add logo data processing
+                    # logo_data = f.read()
+                    # logo_base64 = base64.b64encode(logo_data).decode("utf-8")
+                    pass
+                    # Add navigation with page-specific header/footer
+                    # and consistent styling
                 break
 
         # Check for text content
@@ -73,7 +68,8 @@ class HeaderProcessor:
         return """
         /* Adjust page setup for header - increase top margin */
         @page {
-            margin-top: 3.5cm !important;  /* Increase from 2.5cm to make room for header */
+            /* Use compact navigation for smaller screen or
+               document formats */
         }
 
         /* Header wrapper that becomes a running element */

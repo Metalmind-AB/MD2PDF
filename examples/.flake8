@@ -1,7 +1,7 @@
 [flake8]
 # Relaxed rules for example files
 max-line-length = 120
-ignore = 
+ignore =
     # Allow imports after path manipulation
     E402,
     # Allow f-strings without placeholders
@@ -10,7 +10,7 @@ ignore =
     E501,
     # Allow unused imports in demos
     F401
-exclude = 
+exclude =
     __pycache__,
     .git,
     .venv,
