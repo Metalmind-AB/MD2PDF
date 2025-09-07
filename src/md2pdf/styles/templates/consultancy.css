@@ -1,5 +1,6 @@
 /* Google Fonts Imports */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 /* Consultancy Style - Professional biotech consulting layout and typography */
@@ -26,7 +27,7 @@
 
     /* Typography - Professional Fonts */
     --font-body: 'Open Sans', 'Calibri', sans-serif;  /* Clean sans-serif body text */
-    --font-heading: 'Palatino', 'Playfair Display', serif;  /* Elegant serif headings */
+    --font-heading: 'Playfair Display', 'Palatino', 'Georgia', serif;  /* Elegant serif headings */
     --font-code: 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
 
     /* Layout - Professional consulting document format */
