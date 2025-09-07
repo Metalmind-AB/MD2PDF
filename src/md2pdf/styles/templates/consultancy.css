@@ -1,28 +1,28 @@
 /* Local Font Definitions */
 @font-face {
     font-family: 'Palatino';
-    src: url('../../../../assets/fonts/serif/Palatino/Palatino.ttc') format('truetype');
+    src: url('../../assets/fonts/serif/Palatino/Palatino.ttc') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('../../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant0.ttf') format('truetype');
+    src: url('../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant0.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('../../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant2.ttf') format('truetype');
+    src: url('../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant2.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Open Sans';
-    src: url('../../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant3.ttf') format('truetype');
+    src: url('../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant3.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
