@@ -60,7 +60,7 @@ body {
     background: var(--background);
     padding: 20px 20px 30px 20px;
     border-radius: 8px;
-    border-left: 4px solid var(--primary-color);
+    /* Removed border-left that was causing the unwanted left border */
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
 }
@@ -73,10 +73,10 @@ body {
 /* Headings - Professional Typography Guidelines */
 h1 {
     font-family: var(--font-heading);
-    font-size: 3.2em;
+    font-size: 2.6em;  /* Reduced from 3.2em */
     font-weight: 700;  /* Rotis Bold */
     color: var(--primary-color);  /* Midnight Sky Blue */
-    margin: 0 0 1em 0;
+    margin: 0 0 0.7em 0;  /* Reduced bottom margin */
     line-height: 1.2;
     letter-spacing: -0.02em;
     border-bottom: 3px solid var(--accent-color);
@@ -86,10 +86,10 @@ h1 {
 
 h2 {
     font-family: var(--font-heading);
-    font-size: 2.4em;
+    font-size: 2em;  /* Reduced from 2.4em */
     font-weight: 700;  /* Rotis Bold */
     color: var(--primary-color);  /* Midnight Sky Blue */
-    margin: 1.5em 0 0.3em 0 !important;
+    margin: 1.2em 0 0.25em 0 !important;  /* Reduced margins */
     line-height: 1.1;
     letter-spacing: -0.01em;
     border-bottom: 2px solid var(--secondary-color);
@@ -99,30 +99,30 @@ h2 {
 
 h3 {
     font-family: var(--font-heading);
-    font-size: 1.8em;
+    font-size: 1.5em;  /* Reduced from 1.8em */
     font-weight: 700;  /* Rotis Bold */
     color: var(--primary-color);  /* Midnight Sky Blue */
-    margin: 1.2em 0 0.2em 0 !important;
+    margin: 1em 0 0.2em 0 !important;  /* Reduced top margin */
     line-height: 1.2;
     page-break-after: avoid;
 }
 
 h4, h5, h6 {
     font-family: var(--font-body);
-    font-size: 1.4em;
+    font-size: 1.2em;  /* Reduced from 1.4em */
     font-weight: 700;  /* Public Sans Bold */
     color: var(--primary-color);
-    margin: 1.8em 0 0.8em 0;
+    margin: 1.2em 0 0.5em 0;  /* Reduced margins */
     page-break-after: avoid;
 }
 
 /* Text - Public Sans Thin for body copy */
 p {
-    margin: 0.8em 0;
+    margin: 0.6em 0;  /* Reduced from 0.8em */
     text-align: left;
     hyphens: auto;
     font-weight: 100;  /* Public Sans Thin */
-    line-height: 1.65;
+    line-height: 1.55;  /* Reduced from 1.65 */
 }
 
 /* Reduce margin for paragraphs after headings - high specificity */
@@ -179,14 +179,14 @@ em {
 
 /* Lists - Professional spacing and alignment */
 ul, ol {
-    margin: 1.3em 0;
+    margin: 1em 0;  /* Reduced from 1.3em */
     padding-left: 0;
     text-align: left;
 }
 
 li {
-    margin: 0.6em 0;
-    line-height: 1.6;
+    margin: 0.4em 0;  /* Reduced from 0.6em */
+    line-height: 1.45;  /* Reduced from 1.6 */
     text-align: left;
     font-weight: 100;  /* Maintain thin body weight */
 }
@@ -223,8 +223,8 @@ ul > li::before {
     background: var(--code-bg);
     border: none;
     border-radius: 6px;
-    padding: 1.2em;
-    margin: 1.8em 0;
+    padding: 1em;  /* Reduced padding */
+    margin: 1.2em 0;  /* Reduced margin */
     page-break-inside: avoid;
     box-shadow: 0 2px 12px rgba(0, 60, 113, 0.15);
     overflow-x: auto;
@@ -253,8 +253,8 @@ pre:not(.codehilite pre) {
     background: var(--code-bg);
     border: none;
     border-radius: 6px;
-    padding: 1.2em;
-    margin: 1.8em 0;
+    padding: 1em;  /* Reduced padding */
+    margin: 1.2em 0;  /* Reduced margin */
     font-family: var(--font-code);
     font-size: 14px;
     line-height: 1.6;
@@ -300,14 +300,14 @@ pre code {
 blockquote {
     border-left: 4px solid var(--accent-color);  /* Sunrise Sky Yellow */
     background: rgba(242, 169, 0, 0.05);
-    padding: 1.8em 2.5em;
-    margin: 2.5em 0;
+    padding: 1.2em 1.8em;  /* Reduced padding */
+    margin: 1.8em 0;  /* Reduced margin */
     border-radius: 0 8px 8px 0;
     font-family: var(--font-heading);
     font-weight: 700;  /* Bold weight for professional emphasis */
     color: var(--primary-color);
-    font-size: 1.1em;
-    line-height: 1.6;
+    font-size: 1.05em;  /* Slightly reduced */
+    line-height: 1.5;  /* Reduced line height */
     position: relative;
 }
 
@@ -326,7 +326,7 @@ blockquote::before {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 2.5em 0;
+    margin: 1.8em 0;  /* Reduced from 2.5em */
     font-size: 0.95em;
     page-break-inside: avoid;
     border-radius: 8px;
@@ -336,7 +336,7 @@ table {
 }
 
 th, td {
-    padding: 1.3em 1.8em;
+    padding: 0.9em 1.2em;  /* Reduced padding */
     text-align: left;
     border-bottom: 1px solid rgba(113, 123, 135, 0.2);
     border-right: 1px solid rgba(113, 123, 135, 0.2);
@@ -413,7 +413,7 @@ td strong, td b {
 hr {
     border: none;
     border-top: 2px solid var(--secondary-color);  /* Ocean Blue */
-    margin: 3.5em 0;
+    margin: 2.5em 0;  /* Reduced from 3.5em */
     opacity: 0.6;
 }
 
@@ -422,7 +422,7 @@ img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
-    margin: 2.5em 0;
+    margin: 1.8em 0;  /* Reduced from 2.5em */
     box-shadow: 0 4px 16px rgba(0, 60, 113, 0.15);
     border: 1px solid rgba(113, 123, 135, 0.2);
 }
@@ -430,7 +430,7 @@ img {
 /* Professional page layout */
 @page {
     size: A4;
-    margin: 2.8cm 1.5cm 2.8cm 1.5cm;
+    margin: 1.96cm 1.5cm 1.4cm 1.5cm;  /* Top reduced by 30%, bottom by 50% */
     @top-center {
         content: string(chapter);
         font-family: var(--font-body);
@@ -451,10 +451,10 @@ img {
 
 /* Consistent top margins for professional look */
 @page :left {
-    margin-top: 2.8cm;
+    margin-top: 1.96cm;  /* Reduced by 30% */
 }
 @page :right {
-    margin-top: 2.8cm;
+    margin-top: 1.96cm;  /* Reduced by 30% */
 }
 
 /* Page breaks - Maintain readability */
