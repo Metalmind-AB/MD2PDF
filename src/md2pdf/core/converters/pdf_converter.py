@@ -12,10 +12,12 @@ from pathlib import Path
 
 try:
     from weasyprint import HTML
+    from weasyprint.text.fonts import FontConfiguration
 
     WEASYPRINT_AVAILABLE = True
 except ImportError:
     HTML = None
+    FontConfiguration = None
     WEASYPRINT_AVAILABLE = False
 
 from md2pdf.core.converters.base_converter import BaseConverter
@@ -55,12 +57,19 @@ class PDFConverter(BaseConverter):
             # Create complete HTML document
             html_document = self._create_html_document(html_content)
 
-            # Convert HTML to PDF directly
+            # Convert HTML to PDF with font configuration
             print(f"Generating PDF: {self.output_file}")
             # For future use: Path(self.input_file).parent / "exports"
             base_url = str(Path(".").resolve()) + "/"
+
+            # Create font configuration for @font-face support
+            font_config = FontConfiguration() if FontConfiguration else None
+
             html = HTML(string=html_document, base_url=base_url)
-            html.write_pdf(str(self.output_file))
+            if font_config:
+                html.write_pdf(str(self.output_file), font_config=font_config)
+            else:
+                html.write_pdf(str(self.output_file))
 
             print(f"✅ Successfully created PDF: {self.output_file}")
             return True

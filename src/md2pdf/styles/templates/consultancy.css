@@ -1,14 +1,38 @@
-/* Google Fonts Imports */
+/* Local Font Definitions */
+@font-face {
+    font-family: 'Palatino';
+    src: url('../../../../assets/fonts/serif/Palatino/Palatino.ttc') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant0.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant2.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('../../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant3.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Google Fonts Imports (as fallback) */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 /* Consultancy Style - Professional biotech consulting layout and typography */
-
-/* Font Definitions - Professional Typography */
-/* Open Sans - Clean body typography */
-
-/* Palatino - Professional serif headings */
 
 /* CSS Custom Properties - Professional Color Palette */
 :root {
@@ -27,7 +51,7 @@
 
     /* Typography - Professional Fonts */
     --font-body: 'Open Sans', 'Calibri', sans-serif;  /* Clean sans-serif body text */
-    --font-heading: 'Playfair Display', 'Palatino', 'Georgia', serif;  /* Elegant serif headings */
+    --font-heading: 'Palatino', 'Playfair Display', serif;  /* Elegant serif headings */
     --font-code: 'JetBrains Mono', 'Monaco', 'Consolas', monospace;
 
     /* Layout - Professional consulting document format */
