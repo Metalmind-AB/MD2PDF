@@ -23,8 +23,8 @@ try:
 
     PYPDF_AVAILABLE = True
 except ImportError:
-    PdfReader = None
-    PdfWriter = None
+    PdfReader = None  # type: ignore
+    PdfWriter = None  # type: ignore
     PYPDF_AVAILABLE = False
 
 from md2pdf.core.converters.base_converter import BaseConverter

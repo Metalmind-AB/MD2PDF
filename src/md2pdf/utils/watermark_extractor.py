@@ -15,7 +15,7 @@ try:
 
     PYPDF_AVAILABLE = True
 except ImportError:
-    PdfReader = None
+    PdfReader = None  # type: ignore
     PYPDF_AVAILABLE = False
 
 
@@ -44,7 +44,7 @@ def extract_watermark(pdf_path: str) -> Optional[str]:
         if reader.metadata:
             # Check for our custom watermark field
             if "/MD2PDF_Watermark" in reader.metadata:
-                return reader.metadata["/MD2PDF_Watermark"]
+                return str(reader.metadata["/MD2PDF_Watermark"])
 
         # Check XMP metadata if available
         if hasattr(reader, "xmp_metadata"):
