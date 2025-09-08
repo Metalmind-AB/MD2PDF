@@ -5,6 +5,22 @@ All notable changes to MD2PDF will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-09-08
+
+### Added
+- Invisible machine-readable watermark feature for PDFs
+- New `--watermark` CLI option to embed custom text in PDF metadata
+- New `extract-watermark` CLI command to read watermarks from PDFs
+- Python API for watermark extraction via `md2pdf.utils.watermark_extractor`
+- Watermark embedding in both PDF metadata and XMP metadata for compatibility
+
+### Changed
+- PDFConverter now supports optional watermark parameter
+- BaseConverter updated to handle watermark configuration
+
+### Dependencies
+- Added `pypdf` as a dependency for watermark functionality
+
 ## [1.1.2] - 2025-09-06
 
 ### Fixed

@@ -82,6 +82,11 @@ def get_available_themes() -> List[str]:
     help="Output format (PDF or Word)",
 )
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
+@click.option(
+    "--watermark",
+    type=str,
+    help="Add an invisible machine-readable watermark to the PDF",
+)
 def convert(
     input_files: Tuple[str, ...],
     output: Optional[str],
@@ -91,6 +96,7 @@ def convert(
     header: Optional[str],
     format: str,
     verbose: bool,
+    watermark: Optional[str],
 ) -> None:
     """Convert Markdown files to PDF or Word documents."""
     from md2pdf.core.processors.workflow_processor import WorkflowProcessor
@@ -141,6 +147,7 @@ def convert(
                     theme,
                     header,
                     verbose,
+                    watermark,
                 ):
                     successful += 1
                 else:
@@ -217,6 +224,7 @@ def _process_single_file(
     theme: str,
     header: Optional[str],
     verbose: bool,
+    watermark: Optional[str],
 ) -> bool:
     """Process a single file conversion."""
     # Determine output path
@@ -233,6 +241,7 @@ def _process_single_file(
         theme=theme,
         include_header=bool(header),
         header_path=header if header else None,
+        watermark=watermark,
     )
 
     # Convert file
@@ -379,6 +388,19 @@ def batch(
         format=format,
         verbose=True,
     )
+
+
+@cli.command("extract-watermark")
+@click.argument("pdf_file", type=click.Path(exists=True))
+def extract_watermark(pdf_file: str) -> None:
+    """Extract watermark from a PDF file."""
+    from md2pdf.utils.watermark_extractor import extract_watermark as extract
+
+    watermark = extract(pdf_file)
+    if watermark:
+        console.print(f"[green]✅ Watermark found:[/green] {watermark}")
+    else:
+        console.print("[yellow]No watermark found in PDF[/yellow]")
 
 
 @cli.command()

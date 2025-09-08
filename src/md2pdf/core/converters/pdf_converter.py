@@ -18,6 +18,15 @@ except ImportError:
     HTML = None
     WEASYPRINT_AVAILABLE = False
 
+try:
+    from pypdf import PdfReader, PdfWriter
+
+    PYPDF_AVAILABLE = True
+except ImportError:
+    PdfReader = None
+    PdfWriter = None
+    PYPDF_AVAILABLE = False
+
 from md2pdf.core.converters.base_converter import BaseConverter
 
 
@@ -64,9 +73,61 @@ class PDFConverter(BaseConverter):
             html = HTML(string=html_document, base_url=base_url)
             html.write_pdf(str(self.output_file))
 
+            # Add watermark if provided
+            if self.watermark:
+                self._embed_watermark()
+
             print(f"✅ Successfully created PDF: {self.output_file}")
             return True
 
         except Exception as e:
             print(f"❌ Error converting to PDF: {str(e)}")
             return False
+
+    def _embed_watermark(self) -> None:
+        """Embed an invisible watermark in the PDF metadata."""
+        if not PYPDF_AVAILABLE:
+            print("Warning: pypdf not available, skipping watermark")
+            return
+
+        try:
+            # Read the PDF
+            reader = PdfReader(str(self.output_file))
+            writer = PdfWriter()
+
+            # Copy all pages
+            for page in reader.pages:
+                writer.add_page(page)
+
+            # Add watermark to metadata
+            writer.add_metadata(
+                {
+                    "/Producer": "md2pdf",
+                    "/Creator": "md2pdf",
+                    "/MD2PDF_Watermark": self.watermark,
+                }
+            )
+
+            # Also embed in XMP metadata for better compatibility
+            if hasattr(writer, "add_metadata_stream"):
+                xmp_metadata = f"""<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about=""
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:md2pdf="http://md2pdf.com/ns/">
+            <md2pdf:watermark>{self.watermark}</md2pdf:watermark>
+        </rdf:Description>
+    </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>"""
+                writer.add_metadata_stream(xmp_metadata)
+
+            # Write back to file
+            with open(self.output_file, "wb") as output_pdf:
+                writer.write(output_pdf)
+
+            print(f"✅ Watermark embedded in PDF metadata")
+
+        except Exception as e:
+            print(f"Warning: Could not embed watermark: {str(e)}")

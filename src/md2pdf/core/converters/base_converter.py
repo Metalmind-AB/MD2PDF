@@ -29,6 +29,7 @@ class BaseConverter:
         theme: str = "default",
         include_header: bool = False,
         header_path: Optional[str] = None,
+        watermark: Optional[str] = None,
     ):
         """Initialize the base converter.
 
@@ -39,6 +40,7 @@ class BaseConverter:
             theme: Color theme to use.
             include_header: Whether to include header.
             header_path: Optional path to custom header.
+            watermark: Optional watermark text to embed in PDF metadata.
         """
         self.input_file = Path(input_file)
         if not self.input_file.exists():
@@ -53,6 +55,7 @@ class BaseConverter:
         self.theme = theme
         self.include_header = include_header
         self.header_path = header_path
+        self.watermark = watermark
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
 
         # Initialize processors
