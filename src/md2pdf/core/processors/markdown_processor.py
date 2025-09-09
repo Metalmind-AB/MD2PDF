@@ -33,6 +33,7 @@ class MarkdownProcessor:
             "markdown.extensions.footnotes",
             "markdown.extensions.smarty",
             "markdown.extensions.nl2br",
+            "markdown.extensions.sane_lists",
         ]
 
         self.extension_configs = {

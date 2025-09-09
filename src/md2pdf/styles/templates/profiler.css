@@ -1,0 +1,450 @@
+/* Google Fonts Imports */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+/* Profiler Style - Professional profile/resume design with tight typography */
+
+/* Local Font Definitions for Palatino */
+@font-face {
+    font-family: 'Palatino';
+    src: url('../../../assets/fonts/serif/Palatino/Palatino.ttc') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Palatino';
+    src: url('../../../assets/fonts/serif/Palatino/Palatino.ttc') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Local Font Definitions for Open Sans */
+@font-face {
+    font-family: 'Open Sans Local';
+    src: url('../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant0.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans Local';
+    src: url('../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant1.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans Local';
+    src: url('../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant2.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans Local';
+    src: url('../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant3.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Open Sans Local';
+    src: url('../../../assets/fonts/sans-serif/Open_Sans/Open_Sans-variant4.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* CSS Custom Properties for Theming */
+:root {
+    /* Colors - Professional palette */
+    --primary-color: var(--theme-primary, #003d7a);
+    --secondary-color: var(--theme-secondary, #555555);
+    --text-color: var(--theme-text, #2c2c2c);
+    --text-light: var(--theme-text-light, #666666);
+    --background: var(--theme-background, #ffffff);
+    --surface: var(--theme-surface, #f8f8f8);
+    --surface-alt: var(--theme-surface-alt, #f0f0f0);
+    --border: var(--theme-border, #d0d0d0);
+    --accent: var(--theme-accent, #0066cc);
+
+    /* Typography */
+    --font-body: 'Open Sans', 'Open Sans Local', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Palatino', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+    --font-code: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+    /* Layout */
+    --max-width: 850px;
+    --base-font-size: 11pt;
+    --line-height: 1.4;
+    --padding: 40px 30px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    line-height: var(--line-height);
+    color: var(--text-color);
+    background: var(--background);
+    font-size: var(--base-font-size);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--padding);
+    font-weight: 400;
+}
+
+/* Headings - Professional hierarchy with tight spacing */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 2.8em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0 0 0.15em 0;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 1.4em;
+    font-weight: 400;
+    color: var(--text-color);
+    margin: 0.1em 0 0.3em 0;
+    line-height: 1.2;
+    font-style: italic;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-size: 1.1em;
+    font-weight: 400;
+    color: var(--text-light);
+    margin: 0.1em 0 0.5em 0;
+    line-height: 1.2;
+    page-break-after: avoid;
+}
+
+/* Special H4 styling with horizontal line */
+h4 {
+    font-family: var(--font-heading);
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin: 1.8em 0 0.8em 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    position: relative;
+    padding-bottom: 0.3em;
+    page-break-after: avoid;
+    display: flex;
+    align-items: center;
+}
+
+/* Horizontal line after H4 text */
+h4::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    margin-left: 1em;
+}
+
+h5, h6 {
+    font-family: var(--font-body);
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 1.2em 0 0.4em 0;
+    page-break-after: avoid;
+}
+
+/* Text - Tight line spacing */
+p {
+    margin: 0.6em 0;
+    text-align: left;
+    font-weight: 400;
+}
+
+/* Reduce spacing after headings */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    margin-top: 0.3em;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+strong {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+em {
+    font-style: italic;
+    color: var(--text-color);
+}
+
+/* Lists - Compact spacing */
+ul, ol {
+    margin: 0.8em 0;
+    padding-left: 1.5em;
+    list-style-position: outside;
+}
+
+li {
+    margin: 0.3em 0;
+    line-height: 1.4;
+}
+
+/* First level bullets */
+ul > li {
+    list-style-type: disc;
+}
+
+/* Second level bullets - outline circles with significant indentation */
+ul li ul {
+    margin: 0.2em 0 0.2em 2.5em;
+    padding-left: 0;
+}
+
+ul li ul > li {
+    list-style-type: none;
+    position: relative;
+    padding-left: 1.5em;
+    font-size: 0.95em;
+}
+
+/* Custom outline circle for second level */
+ul li ul > li::before {
+    content: '○';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-size: 0.7em;
+    line-height: 1.8;
+}
+
+/* Third level bullets */
+ul ul ul {
+    margin-left: 1.5em;
+    padding-left: 0;
+}
+
+ul ul ul > li {
+    list-style-type: square;
+    font-size: 0.95em;
+}
+
+ul ul ul > li::before {
+    content: none;
+}
+
+/* Nested ordered lists */
+ol ol {
+    margin: 0.2em 0;
+    padding-left: 2em;
+}
+
+/* First level bullet styling */
+ul > li::marker {
+    color: var(--primary-color);
+}
+
+/* Code blocks */
+pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.8em;
+    margin: 1em 0;
+    font-family: var(--font-code);
+    font-size: 0.9em;
+    line-height: 1.4;
+    overflow-x: auto;
+    page-break-inside: avoid;
+}
+
+code {
+    font-family: var(--font-code);
+    background: var(--surface);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 3px solid var(--primary-color);
+    background: var(--surface);
+    padding: 0.8em 1.2em;
+    margin: 1.2em 0;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+/* Tables - Professional look */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 0.95em;
+    page-break-inside: avoid;
+    border: 1px solid var(--border);
+}
+
+th, td {
+    padding: 0.6em 0.8em;
+    text-align: left;
+    border: 1px solid var(--border);
+    vertical-align: top;
+}
+
+th {
+    background: var(--surface);
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+td {
+    background: var(--background);
+    color: var(--text-color);
+}
+
+tr:nth-child(even) td {
+    background: var(--surface);
+}
+
+/* Horizontal rules */
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5em 0;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 1em 0;
+}
+
+/* Page layout for printing */
+@page {
+    size: A4;
+    margin: 2cm 2cm 2cm 2cm;
+    @top-right {
+        content: string(name);
+        font-family: var(--font-body);
+        font-size: 9pt;
+        color: var(--text-light);
+        font-weight: 400;
+    }
+    @bottom-center {
+        content: counter(page);
+        font-family: var(--font-body);
+        font-size: 9pt;
+        color: var(--text-light);
+    }
+}
+
+/* Set document title for header */
+h1 {
+    string-set: name content();
+}
+
+/* First page special formatting */
+@page :first {
+    @top-right {
+        content: none;
+    }
+}
+
+/* Page breaks */
+h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+}
+
+pre, blockquote, table {
+    page-break-inside: avoid;
+}
+
+/* Experience section special formatting */
+.experience-item {
+    margin: 1em 0;
+    padding-left: 1em;
+}
+
+/* Date ranges - aligned right in experience sections */
+.date-range {
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 0.95em;
+}
+
+/* Skill tags or badges */
+.badge, .skill {
+    display: inline-block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.2em 0.6em;
+    margin: 0.2em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Contact info styling */
+.contact-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 0.5em 0;
+    font-size: 0.95em;
+    color: var(--text-light);
+}
+
+/* Section dividers */
+.section {
+    margin: 1.5em 0;
+}
+
+/* Compact mode for lists in experience sections */
+.compact li {
+    margin: 0.2em 0;
+    line-height: 1.3;
+}
+
+/* Professional footer styling */
+.footer {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 1px solid var(--border);
+    font-size: 0.85em;
+    color: var(--text-light);
+    text-align: center;
+}

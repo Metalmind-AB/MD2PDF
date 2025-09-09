@@ -5,7 +5,7 @@ Copyright (c) 2025 MPS Metalmind AB
 Licensed under the MIT License (see LICENSE file)
 """
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 __author__ = "MPS Metalmind AB"
 __license__ = "MIT"
 __email__ = "info@metalmind.se"

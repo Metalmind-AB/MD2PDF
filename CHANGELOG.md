@@ -5,6 +5,17 @@ All notable changes to MD2PDF will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2025-09-09
+
+### Added
+- New `profiler` style template optimized for CVs and professional profiles
+- New `athlete` color theme with energetic and dynamic colors
+- Documentation about using markdown's attr_list extension for dynamic width constraints
+- Support for inline styles via `{style="..."}` syntax in markdown (already available through attr_list extension)
+
+### Changed
+- Updated documentation to highlight existing layout control capabilities
+
 ## [1.2.0] - 2025-09-08
 
 ### Added

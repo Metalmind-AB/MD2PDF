@@ -1,0 +1,131 @@
+/* Athlete Theme - Professional Business Color Palette with Strong H4 */
+/* Based on Agile theme with midnight blue for H4 headings */
+:root {
+    --theme-primary: #003C71;           /* Midnight Sky Blue */
+    --theme-secondary: #009CCF;         /* Ocean Blue */
+    --theme-accent: #F2A900;            /* Sunrise Sky Yellow */
+    --theme-text: #000000;              /* Pitch Black */
+    --theme-text-light: #717B87;        /* Stone Grey */
+    --theme-background: #ffffff;        /* White background */
+    --theme-surface: #D6D2C4;           /* Sand Beige */
+    --theme-surface-alt: #6EBCB0;       /* Northern Lights Turquoise */
+    --theme-border: #717B87;            /* Stone Grey */
+    --theme-code-text: #003C71;         /* Midnight Sky Blue text on light code blocks */
+    --theme-code-bg: #D6D2C4;           /* Sand Beige for code backgrounds - better readability */
+}
+
+/* Explicit styling for athlete theme */
+body {
+    background: #ffffff !important;
+    color: rgba(0, 0, 0, 0.85) !important;  /* Black at 85% opacity for professional look */
+}
+
+/* Professional heading color hierarchy */
+h1 {
+    color: #003C71 !important;  /* Midnight Sky Blue for main headings */
+}
+
+h2 {
+    color: #003C71 !important;  /* Midnight Sky Blue for major sections */
+}
+
+h3 {
+    color: #009CCF !important;  /* Ocean Blue for subsections */
+}
+
+h4, h5, h6 {
+    color: #003C71 !important;  /* Midnight Sky Blue for lower headings (changed from turquoise) */
+}
+
+p, li {
+    color: rgba(0, 0, 0, 0.85) !important;  /* Black at 85% opacity */
+}
+
+/* Links using Ocean Blue */
+a {
+    color: #009CCF !important;  /* Ocean Blue */
+}
+
+a:hover {
+    color: #003C71 !important;  /* Midnight Sky Blue on hover */
+}
+
+/* Blockquotes with Northern Lights Turquoise accent */
+blockquote {
+    background: rgba(110, 188, 176, 0.08) !important;  /* Northern Lights Turquoise tint */
+    color: #003C71 !important;  /* Midnight Sky Blue text */
+    border-left-color: #6EBCB0 !important;  /* Northern Lights Turquoise border */
+}
+
+/* Inline code styling with Sand Beige background */
+code:not(pre code) {
+    background: #D6D2C4 !important;  /* Sand Beige */
+    color: #003C71 !important;  /* Midnight Sky Blue */
+    border: 1px solid #717B87 !important;  /* Stone Grey border */
+    padding: 0.2em 0.4em !important;
+    border-radius: 4px !important;
+    font-size: 0.9em !important;
+}
+
+/* Code blocks with Sand Beige background for better readability */
+.codehilite {
+    background: #D6D2C4 !important;  /* Sand Beige */
+    border: 1px solid #717B87 !important;  /* Stone Grey border */
+}
+
+/* Remove border from inner pre to avoid double borders */
+.codehilite pre {
+    background: none !important;
+    border: none !important;
+}
+
+/* Standalone pre blocks */
+pre:not(.codehilite pre) {
+    background: #D6D2C4 !important;  /* Sand Beige */
+    border: 1px solid #717B87 !important;  /* Stone Grey border */
+}
+
+pre code {
+    color: #003C71 !important;  /* Midnight Sky Blue text for better contrast */
+    background: none !important;
+    border: none !important;
+}
+
+/* Table styling with professional colors */
+th {
+    background: #009CCF !important;  /* Ocean Blue for table headers */
+    color: #ffffff !important;
+    border-bottom-color: #009CCF !important;
+}
+
+tr:nth-child(even) td {
+    background: rgba(214, 210, 196, 0.3) !important;  /* Sand Beige tint */
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+
+tr:nth-child(odd) td {
+    background: #ffffff !important;
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+
+tr:hover td {
+    background: rgba(110, 188, 176, 0.15) !important;  /* Northern Lights Turquoise tint */
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+
+/* Strong text in primary color */
+strong, b {
+    color: #003C71 !important;  /* Midnight Sky Blue for emphasis */
+}
+
+/* Horizontal rules with Sunrise Sky Yellow */
+hr {
+    border-top-color: #F2A900 !important;  /* Sunrise Sky Yellow for visual separation */
+}
+
+/* Neutralize error token styling for code blocks */
+.codehilite .err {
+    color: inherit !important;
+    background: transparent !important;
+    border: none !important;
+}

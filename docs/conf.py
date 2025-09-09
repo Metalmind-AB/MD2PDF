@@ -18,8 +18,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 project = "MD2PDF"
 copyright = "2025, MPS Metalmind AB"
 author = "MPS Metalmind AB"
-release = "1.2.0"
-version = "1.2.0"
+release = "1.2.1"
+version = "1.2.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
