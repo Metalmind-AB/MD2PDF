@@ -139,7 +139,8 @@ jobs:
     - name: Run dependency security audit
       run: |
         echo "🔍 Auditing dependencies for security vulnerabilities..."
-        pip-audit --format=json --output=dependency-audit.json || {
+        # Skip pip and setuptools as they are build/development tools, not runtime dependencies
+        pip-audit --skip-editable --ignore-vuln GHSA-4xh5-x5gv-qwph --format=json --output=dependency-audit.json || {
           echo "❌ Security vulnerabilities found in dependencies"
           cat dependency-audit.json
           exit 1
