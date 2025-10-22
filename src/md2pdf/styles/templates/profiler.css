@@ -145,15 +145,20 @@ h4 {
     page-break-after: avoid;
     display: flex;
     align-items: center;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
 /* Horizontal line after H4 text */
 h4::after {
     content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
+    flex: 1 1 auto;
+    height: 0;
+    border-top: 1px solid var(--border);
     margin-left: 1em;
+    min-width: 2em;
+    flex-shrink: 0;
 }
 
 h5, h6 {

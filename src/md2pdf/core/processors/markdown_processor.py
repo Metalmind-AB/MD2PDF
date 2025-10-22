@@ -59,6 +59,24 @@ class MarkdownProcessor:
         # Replace emojis with Twemoji images
         html = self._replace_emojis_with_images(html)
 
+        # Post-process: Replace <break/> tags with page break divs
+        # Handle various formats: <break/>, <break />, <Break/>, etc.
+        # Markdown may leave them as raw HTML or escape them
+        # First handle escaped versions
+        html = re.sub(
+            r"&lt;break\s*/?\s*&gt;",
+            '<div class="page-break" style="page-break-after: always;"></div>',
+            html,
+            flags=re.IGNORECASE,
+        )
+        # Then handle raw HTML versions (in case markdown passes them through)
+        html = re.sub(
+            r"<break\s*/?\s*>",
+            '<div class="page-break" style="page-break-after: always;"></div>',
+            html,
+            flags=re.IGNORECASE,
+        )
+
         return html
 
     def _highlight_code_blocks(self, html_content: str) -> str:
@@ -102,6 +120,14 @@ class MarkdownProcessor:
         except ImportError:
             # Emoji is optional - if not available, return content unchanged
             return html_content
+
+        # Skip common symbols that shouldn't be replaced
+        # Copyright, registered, trademark symbols are standard characters
+        symbols_to_skip = ["©", "®", "™", "℗", "℠"]
+        for symbol in symbols_to_skip:
+            if symbol in html_content:
+                # Temporarily replace with a placeholder
+                html_content = html_content.replace(symbol, f"__KEEP_{ord(symbol)}__")
 
         def to_twemoji_codepoints(grapheme: str) -> str:
             """Return hyphen-joined lowercase hex codepoints for a grapheme cluster."""
@@ -162,4 +188,11 @@ class MarkdownProcessor:
                 f'vertical-align:-0.15em;margin:0 0.05em;" />'
             )
 
-        return emoji.replace_emoji(html_content, replace=replacement)
+        # Replace emojis
+        result = emoji.replace_emoji(html_content, replace=replacement)
+
+        # Restore the preserved symbols
+        for symbol in symbols_to_skip:
+            result = result.replace(f"__KEEP_{ord(symbol)}__", symbol)
+
+        return result

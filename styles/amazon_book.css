@@ -1,0 +1,436 @@
+/* Amazon Book Publishing Style - Professional & Elegant Typography */
+
+/* No web fonts - using only system fonts for maximum compatibility with Amazon KDP */
+
+/* CSS Custom Properties for consistent theming */
+:root {
+    /* Classic book colors - KDP requires pure white backgrounds */
+    --ink-black: #000000;
+    --soft-black: #000000;
+    --chapter-gray: #4a4a4a;
+    --page-white: #ffffff;
+    --cream-white: #ffffff;
+    --accent-burgundy: #4a4a4a;  /* Changed to gray for KDP compatibility */
+    --quote-gray: #4a4a4a;
+    --rule-gray: #d0d0d0;
+
+    /* Professional typography stack - prioritize embeddable fonts */
+    --font-body: Georgia, 'Times New Roman', Times, serif;
+    --font-display: Georgia, 'Times New Roman', Times, serif;
+    --font-chapter: Georgia, 'Times New Roman', Times, serif;
+    --font-code: 'Courier New', Courier, monospace;
+
+    /* Kindle-optimized sizes */
+    --base-size: 11pt;
+    --line-height: 1.65;
+    --paragraph-spacing: 0.8em;
+
+    /* Professional margins for 6x9 trade paperback */
+    --page-width: 6in;
+    --page-height: 9in;
+    --margin-top: 0.875in;
+    --margin-bottom: 0.875in;
+    --margin-outer: 0.75in;
+    --margin-inner: 0.875in;
+}
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--base-size);
+    line-height: var(--line-height);
+    color: var(--ink-black);
+    background: var(--page-white);
+    text-rendering: optimizeLegibility;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page setup for print - Amazon 6x9 trim size */
+@page {
+    size: 152.4mm 228.6mm;
+    margin: var(--margin-top) var(--margin-outer) var(--margin-bottom) var(--margin-inner);
+
+    @top-center {
+        content: string(chapter-title);
+        font-family: var(--font-chapter);
+        font-size: 9pt;
+        font-variant: small-caps;
+        letter-spacing: 0.08em;
+        color: var(--chapter-gray);
+    }
+
+    @bottom-center {
+        content: counter(page);
+        font-family: var(--font-body);
+        font-size: 9pt;
+        color: var(--soft-black);
+    }
+}
+
+@page:first {
+    @top-center { content: none; }
+    @bottom-center { content: none; }
+}
+
+/* Chapter titles - dramatic and elegant */
+h1 {
+    font-family: var(--font-display);
+    font-size: 2.8em;
+    font-weight: 300;
+    text-align: center;
+    margin: 3em 0 1.5em 0;
+    letter-spacing: 0.02em;
+    color: var(--ink-black);
+    page-break-before: always;
+    page-break-after: avoid;
+    string-set: chapter-title content();
+}
+
+/* Optional decorative element above title */
+h1::before {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--chapter-gray), transparent);
+    margin: 0 auto 1.5em auto;
+}
+
+/* Section headings - refined and elegant */
+h2 {
+    font-family: var(--font-body);
+    font-size: 1.3em;
+    font-weight: 500;
+    margin: 2.2em 0 1em 0;
+    text-align: center;
+    color: var(--soft-black);
+    page-break-after: avoid;
+    letter-spacing: 0.01em;
+    position: relative;
+    padding-bottom: 0.5em;
+}
+
+/* Subtle underline decoration */
+h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 0.5px;
+    background: var(--chapter-gray);
+    margin: 0.8em auto 0 auto;
+    opacity: 0.6;
+}
+
+h3 {
+    font-family: var(--font-body);
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 2em 0 0.8em 0;
+    color: var(--soft-black);
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-family: var(--font-body);
+    font-size: 1.1em;
+    font-weight: 600;
+    font-style: italic;
+    margin: 1.5em 0 0.6em 0;
+    color: var(--chapter-gray);
+    page-break-after: avoid;
+}
+
+/* Body text with professional typography */
+p {
+    margin: 0 0 var(--paragraph-spacing) 0;
+    text-align: left;
+    text-indent: 1.5em;
+    hyphens: none;
+    orphans: 3;
+    widows: 3;
+}
+
+/* First paragraph after heading - no indent */
+h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p,
+blockquote + p {
+    text-indent: 0;
+}
+
+/* No indent if paragraph starts with bold text */
+p:has(> strong:first-child),
+p:has(> b:first-child) {
+    text-indent: 0;
+}
+
+/* No indent for centered text */
+p[style*="text-align: center"],
+p[style*="text-align:center"] {
+    text-indent: 0 !important;
+}
+
+/* Drop cap for chapter opening */
+h1 + p::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.5em;
+    font-weight: 400;
+    float: left;
+    line-height: 0.8;
+    margin: 0.1em 0.08em 0 0;
+    color: var(--accent-burgundy);
+}
+
+/* Links - subtle for print */
+a {
+    color: var(--soft-black);
+    text-decoration: none;
+    border-bottom: 0.5px dotted var(--chapter-gray);
+}
+
+/* Lists with proper spacing */
+ul, ol {
+    margin: var(--paragraph-spacing) 0;
+    padding-left: 2em;
+}
+
+li {
+    margin: 0.4em 0;
+    line-height: var(--line-height);
+}
+
+/* Nested lists */
+ul ul, ol ol, ul ol, ol ul {
+    margin: 0.3em 0;
+}
+
+/* Blockquotes - literary style */
+blockquote {
+    margin: 1.5em 2em;
+    padding: 0;
+    font-style: italic;
+    font-size: 1.05em;
+    color: var(--quote-gray);
+    border-left: 2px solid var(--accent-burgundy);
+    padding-left: 1.5em;
+}
+
+blockquote p {
+    text-indent: 0;
+}
+
+/* Code blocks - elegant book style */
+pre {
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    line-height: 1.5;
+    background: var(--cream-white);
+    border-left: 3px solid var(--accent-burgundy);
+    padding: 1em 1.5em;
+    margin: var(--paragraph-spacing) 0;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    page-break-inside: avoid;
+}
+
+code {
+    font-family: var(--font-body);
+    font-size: 0.95em;
+    font-style: italic;
+    background: var(--cream-white);
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    color: var(--accent-burgundy);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    font-size: 1em;
+    font-style: normal;
+    color: var(--text-color);
+}
+
+/* Override any monospace forcing from syntax highlighting */
+.codehilite, .codehilite pre {
+    font-family: var(--font-body) !important;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Tables - compact for book format */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 0.75em;
+    line-height: 1.3;
+    page-break-inside: avoid;
+}
+
+th {
+    font-family: var(--font-body) !important;
+    font-weight: 600 !important;
+    text-align: left !important;
+    padding: 0.4em 0.5em !important;
+    background: var(--cream-white) !important;
+    color: var(--soft-black) !important;
+    font-size: 0.85em !important;
+    letter-spacing: 0.02em !important;
+    text-transform: none !important;
+    border: none !important;
+    border-bottom: 1.5px solid var(--soft-black) !important;
+}
+
+td {
+    padding: 0.3em 0.5em;
+    border-bottom: 0.5px solid var(--rule-gray);
+    font-size: 0.8em;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alternating row colors for better readability */
+tr:nth-child(even) td {
+    background: var(--cream-white);
+}
+
+tr:nth-child(odd) td {
+    background: var(--page-white);
+}
+
+tr:hover td {
+    background: var(--surface-alt);
+}
+
+/* Images - centered with captions */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5em auto;
+    page-break-inside: avoid;
+}
+
+/* Figure captions */
+figcaption {
+    font-family: var(--font-body);
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: center;
+    margin: 0.5em 0 1.5em 0;
+    color: var(--chapter-gray);
+}
+
+/* Horizontal rules - decorative */
+hr {
+    border: none;
+    margin: 2.5em 0;
+    text-align: center;
+    page-break-after: avoid;
+}
+
+hr::after {
+    content: "❦";
+    font-size: 1.2em;
+    color: var(--accent-burgundy);
+    display: block;
+}
+
+/* Strong emphasis */
+strong, b {
+    font-weight: 600;
+    color: var(--ink-black);
+}
+
+em, i {
+    font-style: italic;
+}
+
+/* Page break controls */
+.page-break {
+    page-break-after: always !important;
+    page-break-before: auto !important;
+    display: block !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.no-break {
+    page-break-inside: avoid;
+}
+
+/* Footnotes */
+.footnote {
+    font-size: 0.85em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+.footnote-text {
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+    text-indent: -1.5em;
+}
+
+/* Special formatting for Kindle */
+@media screen and (max-width: 600px) {
+    :root {
+        --base-size: 1em;
+        --line-height: 1.5;
+    }
+
+    body {
+        text-align: left;
+    }
+
+    p {
+        text-align: left;
+        text-indent: 0;
+        margin-bottom: 0.5em;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin: 1.5em 0 1em 0;
+        page-break-before: auto;
+    }
+
+    h1::before {
+        content: none;
+    }
+
+    h1 + p::first-letter {
+        font-size: 1em;
+        float: none;
+        margin: 0;
+    }
+
+    blockquote {
+        margin: 1em 1.5em;
+    }
+}
+
+/* Remove counter increments since we're not using chapter numbers */
+
+/* Syntax highlighting - subtle for print */
+.codehilite .k { color: var(--soft-black); font-weight: 600; } /* Keywords */
+.codehilite .s { color: var(--accent-burgundy); } /* Strings */
+.codehilite .c { color: var(--quote-gray); font-style: italic; } /* Comments */
+.codehilite .n { color: var(--ink-black); } /* Names */
+.codehilite .o { color: var(--chapter-gray); } /* Operators */
+.codehilite .err { color: inherit; background: transparent; } /* Errors - neutralized */

@@ -69,9 +69,16 @@ class PDFConverter(BaseConverter):
             # For future use: Path(self.input_file).parent / "exports"
             base_url = str(Path(".").resolve()) + "/"
 
-            # Create HTML object and write PDF
+            # Create HTML object and write PDF with optimizations for Amazon KDP
             html = HTML(string=html_document, base_url=base_url)
-            html.write_pdf(str(self.output_file))
+
+            # Configure PDF generation for print-ready output
+            # Standard PDF without PDF/A which can cause issues with KDP
+            html.write_pdf(
+                str(self.output_file),
+                # Don't use pdf_variant as it can cause compatibility issues
+                uncompressed_pdf=False,  # Keep compressed for smaller size
+            )
 
             # Add watermark if provided
             if self.watermark:
