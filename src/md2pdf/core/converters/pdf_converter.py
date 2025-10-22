@@ -67,7 +67,8 @@ class PDFConverter(BaseConverter):
             # Convert HTML to PDF with font configuration
             print(f"Generating PDF: {self.output_file}")
             # For future use: Path(self.input_file).parent / "exports"
-            base_url = str(Path(".").resolve()) + "/"
+            # Use input file's directory as base URL for relative image paths
+            base_url = str(Path(self.input_file).parent.resolve()) + "/"
 
             # Create HTML object and write PDF with optimizations for Amazon KDP
             html = HTML(string=html_document, base_url=base_url)

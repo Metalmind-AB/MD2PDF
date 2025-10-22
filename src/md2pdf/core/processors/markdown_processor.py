@@ -51,6 +51,8 @@ class MarkdownProcessor:
         md = markdown.Markdown(
             extensions=self.extensions, extension_configs=self.extension_configs
         )
+        # Add & to escaped chars (MDXEditor escapes it, Python markdown doesn't)
+        md.ESCAPED_CHARS.append("&")
         html = md.convert(content)
 
         # Apply custom syntax highlighting
