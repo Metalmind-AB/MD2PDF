@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "md2pdf"
-version = "1.3.0"
+version = "1.3.1"
 description = "Beautiful Markdown to PDF converter with professional styling"
 readme = "README.md"
 license = "MIT"
@@ -32,18 +32,18 @@ classifiers = [
 ]
 keywords = ["markdown", "pdf", "converter", "documentation", "publishing", "typesetting"]
 dependencies = [
-    "markdown>=3.5.0,<4.0",
-    "weasyprint>=66.0,<67.0",
-    "pygments>=2.15.0,<3.0",
-    "beautifulsoup4>=4.12.0,<5.0",
-    "click>=8.0.0,<9.0",
-    "rich>=13.0.0,<14.0",
-    "pydantic>=2.0.0,<3.0",
-    "python-docx>=0.8.11,<1.0",
-    "PyYAML>=6.0,<7.0",
-    "Pillow>=10.0.0,<11.0",
-    "emoji>=2.0.0,<3.0",
-    "pypdf>=6.0.0,<7.0",
+    "markdown>=3.5",
+    "weasyprint>=60.0",
+    "pygments>=2.15",
+    "beautifulsoup4>=4.12",
+    "click>=8.0",
+    "rich>=13.0",
+    "pydantic>=2.0",
+    "python-docx>=1.0",
+    "PyYAML>=6.0",
+    "Pillow>=10.0",
+    "emoji>=2.0",
+    "pypdf>=5.0",
 ]
 requires-python = ">=3.9"
 

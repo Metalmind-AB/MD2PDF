@@ -5,6 +5,14 @@ All notable changes to MD2PDF will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-01-06
+
+### Changed
+- Relaxed dependency version constraints to reduce conflicts with host applications
+- Removed upper bounds on all dependencies (markdown, weasyprint, pygments, etc.)
+- Updated python-docx minimum version to 1.0 (was incorrectly constrained to <1.0)
+- Updated pypdf minimum version to 5.0 for broader compatibility
+
 ## [1.3.0] - 2025-11-25
 
 ### Fixed
