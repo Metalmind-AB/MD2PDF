@@ -5,7 +5,6 @@
 Tests for MD2PDF style and theme system.
 """
 
-
 import pytest
 
 from md2pdf.core.utils.style_loader import style_loader

@@ -166,14 +166,12 @@ Content for section 2 with **bold** and *italic*.
     def test_style_switching_workflow(self, temp_dir):
         """Test workflow with different styles."""
         md_file = temp_dir / "style_test.md"
-        md_file.write_text(
-            """# Style Test Document
+        md_file.write_text("""# Style Test Document
 
 ## Testing Different Styles
 
 This document will be converted with different styles.
-"""
-        )
+""")
 
         styles = ["technical", "academic", "story", "modern", "consultancy"]
 
@@ -196,14 +194,12 @@ This document will be converted with different styles.
     def test_theme_switching_workflow(self, temp_dir):
         """Test workflow with different themes."""
         md_file = temp_dir / "theme_test.md"
-        md_file.write_text(
-            """# Theme Test Document
+        md_file.write_text("""# Theme Test Document
 
 ## Testing Different Themes
 
 This document will be converted with different color themes.
-"""
-        )
+""")
 
         themes = ["default", "dark", "oceanic", "forest", "elegant"]
 
@@ -353,12 +349,10 @@ Greek: Γεια σου κόσμος
     def test_format_switching_workflow(self, temp_dir):
         """Test switching between PDF and Word formats."""
         md_file = temp_dir / "format_test.md"
-        md_file.write_text(
-            """# Format Test
+        md_file.write_text("""# Format Test
 
 Testing conversion to different formats.
-"""
-        )
+""")
 
         # Convert to PDF
         pdf_converter = PDFConverter(

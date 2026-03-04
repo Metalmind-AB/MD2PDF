@@ -215,8 +215,7 @@ class BenchmarkSuite:
             test_files = []
             for i in range(10):
                 md_file = temp_path / f"test_{i}.md"
-                md_file.write_text(
-                    f"""# Document {i}
+                md_file.write_text(f"""# Document {i}
 
 This is test document number {i}.
 
@@ -232,8 +231,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 def function_{i}():
     return {i}
 ```
-"""
-                )
+""")
                 test_files.append(md_file)
 
             # Measure sequential processing

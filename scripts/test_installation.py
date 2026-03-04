@@ -135,8 +135,7 @@ def test_installation():
         # Test conversion (create a simple markdown file)
         print("\n📄 Testing conversion...")
         test_md = temp_path / "test.md"
-        test_md.write_text(
-            """# Test Document
+        test_md.write_text("""# Test Document
 
 This is a test document for **md2pdf**.
 
@@ -154,8 +153,7 @@ def hello():
 | Column 1 | Column 2 |
 |----------|----------|
 | Cell 1   | Cell 2   |
-"""
-        )
+""")
 
         result = run_command(
             [
