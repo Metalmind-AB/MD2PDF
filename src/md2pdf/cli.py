@@ -88,6 +88,7 @@ def get_available_themes() -> List[str]:
     help="Add an invisible machine-readable watermark to the PDF",
 )
 @click.option(
+    "-O",
     "--orientation",
     type=click.Choice(["portrait", "landscape"], case_sensitive=False),
     default=None,
