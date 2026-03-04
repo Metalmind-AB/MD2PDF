@@ -61,6 +61,7 @@ class BaseConverter:
         self.header_path = header_path
         self.watermark = watermark
         self.orientation = orientation
+        self.custom_css = ""
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
 
         # Initialize processors
@@ -106,6 +107,10 @@ class BaseConverter:
             if value in ("portrait", "landscape"):
                 self.orientation = value
                 print(f"Front matter: orientation={value}")
+
+        if "css" in metadata:
+            self.custom_css = str(metadata["css"])
+            print("Front matter: custom CSS applied")
 
     def _read_markdown_content(self) -> str:
         """Read the markdown file content and process any front matter."""
@@ -153,6 +158,7 @@ class BaseConverter:
                 {self.pygments_css}
                 {header_css}
                 {orientation_css}
+                {self.custom_css}
             </style>
         </head>
         <body>
