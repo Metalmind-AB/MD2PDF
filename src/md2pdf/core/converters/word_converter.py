@@ -9,10 +9,15 @@ Inherits from BaseConverter and provides Word-specific functionality.
 """
 
 from pathlib import Path
+from typing import Any
 
 from bs4 import BeautifulSoup, Tag
 from docx import Document
 from docx.text.paragraph import Paragraph
+
+# python-docx's Document is a factory function, not a class.
+# Use Any for type annotations to satisfy mypy.
+DocType = Any
 
 from md2pdf.core.converters.base_converter import BaseConverter
 
@@ -51,7 +56,7 @@ class WordConverter(BaseConverter):
         elif element.name == "em":
             paragraph.style = "Emphasis"
 
-    def _convert_html_to_word(self, html_content: str) -> Document:
+    def _convert_html_to_word(self, html_content: str) -> DocType:
         """Convert HTML content to Word document."""
         soup = BeautifulSoup(html_content, "html.parser")
         doc = Document()
@@ -69,7 +74,7 @@ class WordConverter(BaseConverter):
         for script in soup(["script", "style"]):
             script.decompose()
 
-    def _process_elements(self, doc: Document, soup: BeautifulSoup) -> None:
+    def _process_elements(self, doc: DocType, soup: BeautifulSoup) -> None:
         """Process HTML elements and add to Word document."""
         for element in soup.find_all(
             [
@@ -93,7 +98,7 @@ class WordConverter(BaseConverter):
 
             self._process_single_element(doc, element)
 
-    def _process_single_element(self, doc: Document, element: Tag) -> None:
+    def _process_single_element(self, doc: DocType, element: Tag) -> None:
         """Process a single HTML element."""
         element_name = element.name
 
@@ -106,13 +111,13 @@ class WordConverter(BaseConverter):
         elif element_name in ["pre", "code"]:
             self._add_code_block(doc, element)
 
-    def _add_text_paragraph(self, doc: Document, element: Tag) -> None:
+    def _add_text_paragraph(self, doc: DocType, element: Tag) -> None:
         """Add text paragraph (headings, paragraphs) to document."""
         paragraph = doc.add_paragraph()
         paragraph.text = element.get_text()
         self._apply_style_to_paragraph(paragraph, element, element.name)
 
-    def _add_list_elements(self, doc: Document, element: Tag) -> None:
+    def _add_list_elements(self, doc: DocType, element: Tag) -> None:
         """Add list elements to document."""
         list_style = "List Bullet" if element.name == "ul" else "List Number"
 
@@ -122,13 +127,13 @@ class WordConverter(BaseConverter):
                 paragraph.text = li.get_text()
                 paragraph.style = list_style
 
-    def _add_blockquote(self, doc: Document, element: Tag) -> None:
+    def _add_blockquote(self, doc: DocType, element: Tag) -> None:
         """Add blockquote element to document."""
         paragraph = doc.add_paragraph()
         paragraph.text = element.get_text()
         paragraph.style = "Quote"
 
-    def _add_code_block(self, doc: Document, element: Tag) -> None:
+    def _add_code_block(self, doc: DocType, element: Tag) -> None:
         """Add code block element to document."""
         paragraph = doc.add_paragraph()
         paragraph.text = element.get_text()
