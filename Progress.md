@@ -20,8 +20,15 @@
    - `BaseConverter` accepts `orientation` parameter and injects `@page { size: A4 <orientation>; }` CSS override
    - Files modified: `cli.py`, `base_converter.py`
 
+3. **Fixed landscape tables not using extra page width**
+   - When `--orientation landscape` is used, the body `max-width` is now overridden to `100%`
+   - All style templates had a `--max-width` (650px-950px) that capped body width below the landscape usable width (~970px)
+   - The override is only applied for landscape; portrait remains unaffected
+   - File modified: `base_converter.py`
+
 ### Verification
 - All 9 CSS templates validated: `page-break-inside: auto` on table, `thead` header group, `tr` avoid break
 - `BaseConverter` orientation parameter tests pass (None, portrait, landscape)
+- Landscape override includes `body { max-width: 100%; }`; portrait and default do not
 - CLI `--help` shows `--orientation` option correctly
-- WeasyPrint GTK libraries not available in terminal session; full PDF generation test deferred
+- Package installed in editable mode (`pip install -e .`) to use local source

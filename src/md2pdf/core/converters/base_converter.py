@@ -106,6 +106,8 @@ class BaseConverter:
             orientation_css = (
                 f"@page {{ size: A4 {self.orientation.lower()}; }}"
             )
+            if self.orientation.lower() == "landscape":
+                orientation_css += "\nbody { max-width: 100%; }"
 
         return f"""
         <!DOCTYPE html>
