@@ -55,9 +55,11 @@ class AssetSetup:
         status = {
             "twemoji": {
                 "installed": self.twemoji_dir.exists(),
-                "count": len(list(self.twemoji_dir.glob("*.svg")))
-                if self.twemoji_dir.exists()
-                else 0,
+                "count": (
+                    len(list(self.twemoji_dir.glob("*.svg")))
+                    if self.twemoji_dir.exists()
+                    else 0
+                ),
                 "path": str(self.twemoji_dir),
             }
         }
