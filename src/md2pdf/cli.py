@@ -87,6 +87,12 @@ def get_available_themes() -> List[str]:
     type=str,
     help="Add an invisible machine-readable watermark to the PDF",
 )
+@click.option(
+    "--orientation",
+    type=click.Choice(["portrait", "landscape"], case_sensitive=False),
+    default=None,
+    help="Page orientation (default: portrait, as defined by the style template)",
+)
 def convert(
     input_files: Tuple[str, ...],
     output: Optional[str],
@@ -97,6 +103,7 @@ def convert(
     format: str,
     verbose: bool,
     watermark: Optional[str],
+    orientation: Optional[str],
 ) -> None:
     """Convert Markdown files to PDF or Word documents."""
     from md2pdf.core.processors.workflow_processor import WorkflowProcessor
@@ -148,6 +155,7 @@ def convert(
                     header,
                     verbose,
                     watermark,
+                    orientation,
                 ):
                     successful += 1
                 else:
@@ -225,6 +233,7 @@ def _process_single_file(
     header: Optional[str],
     verbose: bool,
     watermark: Optional[str],
+    orientation: Optional[str] = None,
 ) -> bool:
     """Process a single file conversion."""
     # Determine output path
@@ -242,6 +251,7 @@ def _process_single_file(
         include_header=bool(header),
         header_path=header if header else None,
         watermark=watermark,
+        orientation=orientation,
     )
 
     # Convert file

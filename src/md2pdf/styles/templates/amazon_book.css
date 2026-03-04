@@ -274,7 +274,6 @@ table {
     margin: 1em 0;
     font-size: 0.75em;
     line-height: 1.3;
-    page-break-inside: avoid;
 }
 
 th {
@@ -312,6 +311,18 @@ tr:nth-child(odd) td {
 
 tr:hover td {
     background: var(--surface-alt);
+}
+
+table {
+    page-break-inside: auto;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr {
+    page-break-inside: avoid;
 }
 
 /* Images - centered with captions */

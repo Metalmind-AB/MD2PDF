@@ -195,7 +195,6 @@ table {
     border-collapse: collapse;
     margin: 1.2em 0;
     font-size: 0.9em;
-    page-break-inside: avoid;
     border: none;
 }
 
@@ -330,7 +329,19 @@ h1, h2, h3 {
     page-break-after: avoid;
 }
 
-pre, blockquote, table {
+pre, blockquote {
+    page-break-inside: avoid;
+}
+
+table {
+    page-break-inside: auto;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr {
     page-break-inside: avoid;
 }
 

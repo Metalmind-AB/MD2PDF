@@ -202,7 +202,6 @@ table {
     border-collapse: collapse;
     margin: 1em 0;
     font-size: 0.9em;
-    page-break-inside: avoid;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
@@ -330,7 +329,19 @@ h1, h2, h3 {
     page-break-after: avoid;
 }
 
-pre, blockquote, table {
+pre, blockquote {
+    page-break-inside: avoid;
+}
+
+table {
+    page-break-inside: auto;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr {
     page-break-inside: avoid;
 }
 

@@ -30,6 +30,7 @@ class BaseConverter:
         include_header: bool = False,
         header_path: Optional[str] = None,
         watermark: Optional[str] = None,
+        orientation: Optional[str] = None,
     ):
         """Initialize the base converter.
 
@@ -41,6 +42,7 @@ class BaseConverter:
             include_header: Whether to include header.
             header_path: Optional path to custom header.
             watermark: Optional watermark text to embed in PDF metadata.
+            orientation: Page orientation ('portrait' or 'landscape').
         """
         self.input_file = Path(input_file)
         if not self.input_file.exists():
@@ -56,6 +58,7 @@ class BaseConverter:
         self.include_header = include_header
         self.header_path = header_path
         self.watermark = watermark
+        self.orientation = orientation
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
 
         # Initialize processors
@@ -98,6 +101,12 @@ class BaseConverter:
             self.include_header
         )
 
+        orientation_css = ""
+        if self.orientation:
+            orientation_css = (
+                f"@page {{ size: A4 {self.orientation.lower()}; }}"
+            )
+
         return f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -109,6 +118,7 @@ class BaseConverter:
                 {self.css_styles}
                 {self.pygments_css}
                 {header_css}
+                {orientation_css}
             </style>
         </head>
         <body>
