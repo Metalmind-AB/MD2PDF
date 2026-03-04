@@ -57,3 +57,14 @@ orientation: landscape
 - Landscape override includes `body { max-width: 100%; }`; portrait and default do not
 - CLI `--help` shows `--orientation` option correctly
 - Package installed in editable mode (`pip install -e .`) to use local source
+
+## 2026-03-04 13:37 - Code Review Fixes (PR #1)
+
+### Issues Fixed
+
+1. **Orientation override no longer hardcodes A4** — `_get_page_size()` extracts the `size:` value from the style's `@page` rule, preserving custom sizes like `amazon_book`'s `152.4mm 228.6mm`.
+2. **`batch` command now passes `--orientation`/`-O`** — the option was previously only on `convert`; now both commands support it.
+3. **Custom CSS sanitized** — `</style>` sequences are stripped from front matter CSS to prevent HTML injection.
+4. **Front matter regex handles EOF without trailing newline** — closing `---` at end of file now matches correctly.
+5. **Duplicate `table` selector in `amazon_book.css` consolidated** — `page-break-inside: auto` merged into the main `table` block.
+6. **18 new unit tests added** (`tests/test_formatting.py`) covering front matter parsing, orientation CSS injection, page size extraction, CSS sanitization, and CLI override precedence.

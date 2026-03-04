@@ -274,6 +274,7 @@ table {
     margin: 1em 0;
     font-size: 0.75em;
     line-height: 1.3;
+    page-break-inside: auto;
 }
 
 th {
@@ -312,10 +313,6 @@ tr:nth-child(odd) td {
 
 tr:hover td {
     background: var(--surface-alt);
-}
-
-table {
-    page-break-inside: auto;
 }
 
 thead {

@@ -90,7 +90,9 @@ class BaseConverter:
         file.  Returns the parsed metadata dict and the remaining markdown body.
         If no front matter is found, returns an empty dict and the original content.
         """
-        match = re.match(r"\A---\s*\n(.*?\n)---\s*\n", content, re.DOTALL)
+        match = re.match(
+            r"\A---\s*\n(.*?\n)---\s*(?:\n|\Z)", content, re.DOTALL
+        )
         if not match:
             return {}, content
         try:
@@ -109,11 +111,12 @@ class BaseConverter:
                 print(f"Front matter: orientation={value}")
 
         if "css" in metadata:
-            self.custom_css = str(metadata["css"])
+            raw_css = str(metadata["css"])
+            self.custom_css = raw_css.replace("</style>", "")
             print("Front matter: custom CSS applied")
 
     def _read_markdown_content(self) -> str:
-        """Read the markdown file content and process any front matter."""
+        """Read the markdown file content."""
         print(f"Reading markdown file: {self.input_file}")
         with open(self.input_file, "r", encoding="utf-8") as f:
             raw = f.read()
@@ -132,6 +135,25 @@ class BaseConverter:
         print("Converting markdown to HTML...")
         return self.markdown_processor.process_markdown(content)
 
+    def _get_page_size(self) -> str:
+        """Extract the page size from the style's @page rule.
+
+        Parses the first ``size:`` declaration inside an ``@page`` block in the
+        combined CSS and strips any existing orientation keyword so the caller
+        can append its own.  Falls back to ``A4`` if nothing is found.
+        """
+        match = re.search(
+            r"@page\s*\{[^}]*(?<![a-zA-Z-])size:\s*([^;]+);",
+            self.css_styles,
+            re.DOTALL,
+        )
+        if match:
+            size_value = match.group(1).strip()
+            size_value = re.sub(r"\b(portrait|landscape)\b", "", size_value).strip()
+            if size_value:
+                return size_value
+        return "A4"
+
     def _create_html_document(self, html_content: str) -> str:
         """Create a complete HTML document with proper structure."""
         header_html, header_css = self.header_processor.create_header_html(
@@ -140,8 +162,9 @@ class BaseConverter:
 
         orientation_css = ""
         if self.orientation:
+            page_size = self._get_page_size()
             orientation_css = (
-                f"@page {{ size: A4 {self.orientation.lower()}; }}"
+                f"@page {{ size: {page_size} {self.orientation.lower()}; }}"
             )
             if self.orientation.lower() == "landscape":
                 orientation_css += "\nbody { max-width: 100%; }"

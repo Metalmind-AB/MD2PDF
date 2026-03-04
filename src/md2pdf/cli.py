@@ -356,6 +356,13 @@ def list_styles() -> None:
 @click.option(
     "--recursive", "-r", is_flag=True, help="Process subdirectories recursively"
 )
+@click.option(
+    "-O",
+    "--orientation",
+    type=click.Choice(["portrait", "landscape"], case_sensitive=False),
+    default=None,
+    help="Page orientation (default: portrait, as defined by the style template)",
+)
 def batch(
     input_directory: str,
     output_directory: Optional[str],
@@ -363,6 +370,7 @@ def batch(
     theme: str,
     format: str,
     recursive: bool,
+    orientation: Optional[str],
 ) -> None:
     """Batch convert all Markdown files in a directory."""
     input_path = Path(input_directory)
@@ -398,6 +406,7 @@ def batch(
         header=None,
         format=format,
         verbose=True,
+        orientation=orientation,
     )
 
 
