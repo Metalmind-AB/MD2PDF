@@ -8,9 +8,11 @@ Base Converter - Common functionality for document converters.
 Provides shared functionality for PDF and Word converters.
 """
 
+import re
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple
 
+import yaml
 from pygments.formatters import HtmlFormatter
 
 from md2pdf.core.processors.header_processor import HeaderProcessor
@@ -79,11 +81,41 @@ class BaseConverter:
             ".pdf"
         )  # Default to PDF, override in subclasses
 
+    @staticmethod
+    def _extract_front_matter(content: str) -> Tuple[Dict[str, Any], str]:
+        """Extract YAML front matter from markdown content.
+
+        Front matter must be enclosed in ``---`` fences at the very start of the
+        file.  Returns the parsed metadata dict and the remaining markdown body.
+        If no front matter is found, returns an empty dict and the original content.
+        """
+        match = re.match(r"\A---\s*\n(.*?\n)---\s*\n", content, re.DOTALL)
+        if not match:
+            return {}, content
+        try:
+            metadata = yaml.safe_load(match.group(1)) or {}
+        except yaml.YAMLError:
+            return {}, content
+        body = content[match.end():]
+        return metadata, body
+
+    def _apply_front_matter(self, metadata: Dict[str, Any]) -> None:
+        """Apply front matter metadata as defaults (CLI flags take precedence)."""
+        if not self.orientation and "orientation" in metadata:
+            value = str(metadata["orientation"]).lower()
+            if value in ("portrait", "landscape"):
+                self.orientation = value
+                print(f"Front matter: orientation={value}")
+
     def _read_markdown_content(self) -> str:
-        """Read the markdown file content."""
+        """Read the markdown file content and process any front matter."""
         print(f"Reading markdown file: {self.input_file}")
         with open(self.input_file, "r", encoding="utf-8") as f:
-            return f.read()
+            raw = f.read()
+        metadata, body = self._extract_front_matter(raw)
+        if metadata:
+            self._apply_front_matter(metadata)
+        return body
 
     def process_markdown(self) -> str:
         """Read and process markdown file to HTML."""

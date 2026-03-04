@@ -249,6 +249,7 @@ th {
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    white-space: nowrap;
     border: none !important;
 }
 

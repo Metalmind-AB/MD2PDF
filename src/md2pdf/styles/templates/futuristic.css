@@ -275,6 +275,7 @@ th {
     font-size: 0.85em;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    white-space: nowrap;
     border-bottom: 2px solid var(--border);
 }
 

@@ -333,6 +333,7 @@ th {
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 td {

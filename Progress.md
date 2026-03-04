@@ -26,6 +26,31 @@
    - The override is only applied for landscape; portrait remains unaffected
    - File modified: `base_converter.py`
 
+## 2026-03-04 13:22 - No-wrap Headers and YAML Front Matter Support
+
+### Changes Made
+
+4. **Prevent table headers from wrapping**
+   - Added `white-space: nowrap` to `th` in all 9 style templates
+   - Ensures columns are always at least as wide as their header text (no more "N/A" splitting into "N/" and "A")
+
+5. **YAML front matter support for per-document settings**
+   - Markdown files can now include a `---` fenced YAML block at the top
+   - Currently supports `orientation: landscape` (or `portrait`)
+   - CLI flags override front matter values (front matter serves as default)
+   - Invalid YAML or unrecognised values are gracefully ignored
+   - Front matter is stripped before markdown processing
+   - File modified: `base_converter.py`
+
+### Example usage in markdown file
+```yaml
+---
+orientation: landscape
+---
+# My Document
+...
+```
+
 ### Verification
 - All 9 CSS templates validated: `page-break-inside: auto` on table, `thead` header group, `tr` avoid break
 - `BaseConverter` orientation parameter tests pass (None, portrait, landscape)

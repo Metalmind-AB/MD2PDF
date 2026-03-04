@@ -375,6 +375,7 @@ th {
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    white-space: nowrap;
     border: none;
 }
 

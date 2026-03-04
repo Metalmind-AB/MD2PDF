@@ -286,6 +286,7 @@ th {
     font-size: 0.85em !important;
     letter-spacing: 0.02em !important;
     text-transform: none !important;
+    white-space: nowrap;
     border: none !important;
     border-bottom: 1.5px solid var(--soft-black) !important;
 }
