@@ -87,6 +87,13 @@ def get_available_themes() -> List[str]:
     type=str,
     help="Add an invisible machine-readable watermark to the PDF",
 )
+@click.option(
+    "-O",
+    "--orientation",
+    type=click.Choice(["portrait", "landscape"], case_sensitive=False),
+    default=None,
+    help="Page orientation (default: portrait, as defined by the style template)",
+)
 def convert(
     input_files: Tuple[str, ...],
     output: Optional[str],
@@ -97,6 +104,7 @@ def convert(
     format: str,
     verbose: bool,
     watermark: Optional[str],
+    orientation: Optional[str],
 ) -> None:
     """Convert Markdown files to PDF or Word documents."""
     from md2pdf.core.processors.workflow_processor import WorkflowProcessor
@@ -148,6 +156,7 @@ def convert(
                     header,
                     verbose,
                     watermark,
+                    orientation,
                 ):
                     successful += 1
                 else:
@@ -225,6 +234,7 @@ def _process_single_file(
     header: Optional[str],
     verbose: bool,
     watermark: Optional[str],
+    orientation: Optional[str] = None,
 ) -> bool:
     """Process a single file conversion."""
     # Determine output path
@@ -242,6 +252,7 @@ def _process_single_file(
         include_header=bool(header),
         header_path=header if header else None,
         watermark=watermark,
+        orientation=orientation,
     )
 
     # Convert file
@@ -345,6 +356,13 @@ def list_styles() -> None:
 @click.option(
     "--recursive", "-r", is_flag=True, help="Process subdirectories recursively"
 )
+@click.option(
+    "-O",
+    "--orientation",
+    type=click.Choice(["portrait", "landscape"], case_sensitive=False),
+    default=None,
+    help="Page orientation (default: portrait, as defined by the style template)",
+)
 def batch(
     input_directory: str,
     output_directory: Optional[str],
@@ -352,6 +370,7 @@ def batch(
     theme: str,
     format: str,
     recursive: bool,
+    orientation: Optional[str],
 ) -> None:
     """Batch convert all Markdown files in a directory."""
     input_path = Path(input_directory)
@@ -387,6 +406,7 @@ def batch(
         header=None,
         format=format,
         verbose=True,
+        orientation=orientation,
     )
 
 

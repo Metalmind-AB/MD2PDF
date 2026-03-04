@@ -353,7 +353,6 @@ table {
     border-collapse: collapse;
     margin: 1.8em 0;  /* Reduced from 2.5em */
     font-size: 0.95em;
-    page-break-inside: avoid;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 60, 113, 0.1);
@@ -376,6 +375,9 @@ th {
     font-size: 0.9em;
     text-transform: uppercase;
     letter-spacing: 0.1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border: none;
 }
 
@@ -487,7 +489,19 @@ h1, h2, h3 {
     page-break-after: avoid;
 }
 
-pre, blockquote, table {
+pre, blockquote {
+    page-break-inside: avoid;
+}
+
+table {
+    page-break-inside: auto;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr {
     page-break-inside: avoid;
 }
 

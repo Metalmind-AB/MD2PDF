@@ -8,9 +8,11 @@ Base Converter - Common functionality for document converters.
 Provides shared functionality for PDF and Word converters.
 """
 
+import re
 from pathlib import Path
-from typing import Optional
+from typing import Any, Dict, Optional, Tuple
 
+import yaml
 from pygments.formatters import HtmlFormatter
 
 from md2pdf.core.processors.header_processor import HeaderProcessor
@@ -30,6 +32,7 @@ class BaseConverter:
         include_header: bool = False,
         header_path: Optional[str] = None,
         watermark: Optional[str] = None,
+        orientation: Optional[str] = None,
     ):
         """Initialize the base converter.
 
@@ -41,6 +44,7 @@ class BaseConverter:
             include_header: Whether to include header.
             header_path: Optional path to custom header.
             watermark: Optional watermark text to embed in PDF metadata.
+            orientation: Page orientation ('portrait' or 'landscape').
         """
         self.input_file = Path(input_file)
         if not self.input_file.exists():
@@ -56,6 +60,8 @@ class BaseConverter:
         self.include_header = include_header
         self.header_path = header_path
         self.watermark = watermark
+        self.orientation = orientation
+        self.custom_css = ""
         self.css_styles = style_loader.combine_style_and_theme(style, theme)
 
         # Initialize processors
@@ -76,11 +82,46 @@ class BaseConverter:
             ".pdf"
         )  # Default to PDF, override in subclasses
 
+    @staticmethod
+    def _extract_front_matter(content: str) -> Tuple[Dict[str, Any], str]:
+        """Extract YAML front matter from markdown content.
+
+        Front matter must be enclosed in ``---`` fences at the very start of the
+        file.  Returns the parsed metadata dict and the remaining markdown body.
+        If no front matter is found, returns an empty dict and the original content.
+        """
+        match = re.match(r"\A---\s*\n(.*?\n)---\s*(?:\n|\Z)", content, re.DOTALL)
+        if not match:
+            return {}, content
+        try:
+            metadata = yaml.safe_load(match.group(1)) or {}
+        except yaml.YAMLError:
+            return {}, content
+        body = content[match.end() :]
+        return metadata, body
+
+    def _apply_front_matter(self, metadata: Dict[str, Any]) -> None:
+        """Apply front matter metadata as defaults (CLI flags take precedence)."""
+        if not self.orientation and "orientation" in metadata:
+            value = str(metadata["orientation"]).lower()
+            if value in ("portrait", "landscape"):
+                self.orientation = value
+                print(f"Front matter: orientation={value}")
+
+        if "css" in metadata:
+            raw_css = str(metadata["css"])
+            self.custom_css = raw_css.replace("</style>", "")
+            print("Front matter: custom CSS applied")
+
     def _read_markdown_content(self) -> str:
         """Read the markdown file content."""
         print(f"Reading markdown file: {self.input_file}")
         with open(self.input_file, "r", encoding="utf-8") as f:
-            return f.read()
+            raw = f.read()
+        metadata, body = self._extract_front_matter(raw)
+        if metadata:
+            self._apply_front_matter(metadata)
+        return body
 
     def process_markdown(self) -> str:
         """Read and process markdown file to HTML."""
@@ -92,11 +133,81 @@ class BaseConverter:
         print("Converting markdown to HTML...")
         return self.markdown_processor.process_markdown(content)
 
+    _NAMED_PAGE_SIZES = {
+        "a3",
+        "a4",
+        "a5",
+        "b4",
+        "b5",
+        "letter",
+        "legal",
+        "ledger",
+    }
+
+    def _get_page_size(self) -> str:
+        """Extract the page size from the style's @page rule.
+
+        Parses the first ``size:`` declaration inside an ``@page`` block in the
+        combined CSS and strips any existing orientation keyword so the caller
+        can append its own.  Falls back to ``A4`` if nothing is found.
+        """
+        match = re.search(
+            r"@page\s*\{[^}]*(?<![a-zA-Z-])size:\s*([^;]+);",
+            self.css_styles,
+            re.DOTALL,
+        )
+        if match:
+            size_value = match.group(1).strip()
+            size_value = re.sub(r"\b(portrait|landscape)\b", "", size_value).strip()
+            if size_value:
+                return size_value
+        return "A4"
+
+    def _is_named_size(self, size: str) -> bool:
+        """Check if a page size is a named CSS size (e.g. A4, letter)."""
+        return size.strip().lower() in self._NAMED_PAGE_SIZES
+
+    @staticmethod
+    def _swap_dimensions(size: str) -> str:
+        """Swap width and height in a dimension-based size string.
+
+        For example, ``152.4mm 228.6mm`` becomes ``228.6mm 152.4mm``.
+        """
+        parts = size.split()
+        if len(parts) == 2:
+            return f"{parts[1]} {parts[0]}"
+        return size
+
+    def _build_orientation_css(self) -> str:
+        """Build the CSS override for page orientation."""
+        if not self.orientation:
+            return ""
+
+        page_size = self._get_page_size()
+        is_landscape = self.orientation.lower() == "landscape"
+
+        if self._is_named_size(page_size):
+            # Named sizes like A4 support the landscape keyword directly
+            size_decl = f"{page_size} {self.orientation.lower()}"
+        elif is_landscape:
+            # Custom dimensions: WeasyPrint ignores the landscape keyword,
+            # so we swap width/height to achieve landscape orientation
+            size_decl = self._swap_dimensions(page_size)
+        else:
+            size_decl = page_size
+
+        css = f"@page {{ size: {size_decl}; }}"
+        if is_landscape:
+            css += "\nbody { max-width: 100%; }"
+        return css
+
     def _create_html_document(self, html_content: str) -> str:
         """Create a complete HTML document with proper structure."""
         header_html, header_css = self.header_processor.create_header_html(
             self.include_header
         )
+
+        orientation_css = self._build_orientation_css()
 
         return f"""
         <!DOCTYPE html>
@@ -109,6 +220,8 @@ class BaseConverter:
                 {self.css_styles}
                 {self.pygments_css}
                 {header_css}
+                {orientation_css}
+                {self.custom_css}
             </style>
         </head>
         <body>
