@@ -225,6 +225,8 @@ th {
     text-transform: uppercase;
     letter-spacing: 0.07em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border: none !important;
 }
 

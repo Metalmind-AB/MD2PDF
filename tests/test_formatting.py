@@ -79,9 +79,7 @@ class TestFrontMatterExtraction:
     @pytest.mark.unit
     def test_custom_css_extraction(self, temp_dir):
         md = temp_dir / "test.md"
-        md.write_text(
-            "---\ncss: |\n  th:last-child { width: 20%; }\n---\n# Hello\n"
-        )
+        md.write_text("---\ncss: |\n  th:last-child { width: 20%; }\n---\n# Hello\n")
         conv = BaseConverter(input_file=str(md))
         conv._read_markdown_content()
         assert "width: 20%" in conv.custom_css
@@ -89,7 +87,9 @@ class TestFrontMatterExtraction:
     @pytest.mark.unit
     def test_custom_css_style_tag_sanitized(self, temp_dir):
         md = temp_dir / "test.md"
-        md.write_text("---\ncss: 'body{} </style><script>alert(1)</script>'\n---\n# X\n")
+        md.write_text(
+            "---\ncss: 'body{} </style><script>alert(1)</script>'\n---\n# X\n"
+        )
         conv = BaseConverter(input_file=str(md))
         conv._read_markdown_content()
         assert "</style>" not in conv.custom_css
@@ -100,14 +100,18 @@ class TestOrientationCSS:
 
     @pytest.mark.unit
     def test_landscape_injects_page_and_maxwidth(self, sample_markdown_file):
-        conv = BaseConverter(input_file=str(sample_markdown_file), orientation="landscape")
+        conv = BaseConverter(
+            input_file=str(sample_markdown_file), orientation="landscape"
+        )
         html = conv._create_html_document("<p>test</p>")
         assert "size: A4 landscape" in html
         assert "body { max-width: 100%; }" in html
 
     @pytest.mark.unit
     def test_portrait_injects_page_without_maxwidth(self, sample_markdown_file):
-        conv = BaseConverter(input_file=str(sample_markdown_file), orientation="portrait")
+        conv = BaseConverter(
+            input_file=str(sample_markdown_file), orientation="portrait"
+        )
         html = conv._create_html_document("<p>test</p>")
         assert "size: A4 portrait" in html
         assert "body { max-width: 100%; }" not in html
@@ -116,20 +120,34 @@ class TestOrientationCSS:
     def test_no_orientation_no_override(self, sample_markdown_file):
         conv = BaseConverter(input_file=str(sample_markdown_file))
         html = conv._create_html_document("<p>test</p>")
-        assert "@page" not in html.split("{self.css_styles}")[0] or True
+        # The orientation_css variable should be empty, so no extra @page injected
+        # beyond what the style template already defines
         assert "body { max-width: 100%; }" not in html
 
     @pytest.mark.unit
-    def test_preserves_custom_page_size(self, sample_markdown_file):
-        """Orientation override should preserve the style's page size, not hardcode A4."""
+    def test_preserves_custom_page_size_landscape(self, sample_markdown_file):
+        """Landscape with custom dims should swap w/h."""
         conv = BaseConverter(
             input_file=str(sample_markdown_file),
             style="amazon_book",
             orientation="landscape",
         )
         html = conv._create_html_document("<p>test</p>")
-        assert "152.4mm 228.6mm landscape" in html
-        assert "A4" not in html.split("</style>")[0].split("size:")[-1]
+        # Custom dims must be swapped for WeasyPrint (landscape keyword is ignored)
+        assert "228.6mm 152.4mm" in html
+        assert "body { max-width: 100%; }" in html
+
+    @pytest.mark.unit
+    def test_preserves_custom_page_size_portrait(self, sample_markdown_file):
+        """Portrait with custom dimensions should keep original order."""
+        conv = BaseConverter(
+            input_file=str(sample_markdown_file),
+            style="amazon_book",
+            orientation="portrait",
+        )
+        html = conv._create_html_document("<p>test</p>")
+        assert "152.4mm 228.6mm" in html
+        assert "body { max-width: 100%; }" not in html
 
     @pytest.mark.unit
     def test_custom_css_appears_in_html(self, temp_dir):

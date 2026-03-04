@@ -376,6 +376,8 @@ th {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border: none;
 }
 

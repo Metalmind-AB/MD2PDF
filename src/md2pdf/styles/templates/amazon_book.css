@@ -288,6 +288,8 @@ th {
     letter-spacing: 0.02em !important;
     text-transform: none !important;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border: none !important;
     border-bottom: 1.5px solid var(--soft-black) !important;
 }

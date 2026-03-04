@@ -250,6 +250,8 @@ th {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border: none !important;
 }
 

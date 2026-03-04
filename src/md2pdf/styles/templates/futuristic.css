@@ -276,6 +276,8 @@ th {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-bottom: 2px solid var(--border);
 }
 

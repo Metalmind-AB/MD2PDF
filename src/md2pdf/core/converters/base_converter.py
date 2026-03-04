@@ -90,16 +90,14 @@ class BaseConverter:
         file.  Returns the parsed metadata dict and the remaining markdown body.
         If no front matter is found, returns an empty dict and the original content.
         """
-        match = re.match(
-            r"\A---\s*\n(.*?\n)---\s*(?:\n|\Z)", content, re.DOTALL
-        )
+        match = re.match(r"\A---\s*\n(.*?\n)---\s*(?:\n|\Z)", content, re.DOTALL)
         if not match:
             return {}, content
         try:
             metadata = yaml.safe_load(match.group(1)) or {}
         except yaml.YAMLError:
             return {}, content
-        body = content[match.end():]
+        body = content[match.end() :]
         return metadata, body
 
     def _apply_front_matter(self, metadata: Dict[str, Any]) -> None:
@@ -135,6 +133,17 @@ class BaseConverter:
         print("Converting markdown to HTML...")
         return self.markdown_processor.process_markdown(content)
 
+    _NAMED_PAGE_SIZES = {
+        "a3",
+        "a4",
+        "a5",
+        "b4",
+        "b5",
+        "letter",
+        "legal",
+        "ledger",
+    }
+
     def _get_page_size(self) -> str:
         """Extract the page size from the style's @page rule.
 
@@ -154,20 +163,51 @@ class BaseConverter:
                 return size_value
         return "A4"
 
+    def _is_named_size(self, size: str) -> bool:
+        """Check if a page size is a named CSS size (e.g. A4, letter)."""
+        return size.strip().lower() in self._NAMED_PAGE_SIZES
+
+    @staticmethod
+    def _swap_dimensions(size: str) -> str:
+        """Swap width and height in a dimension-based size string.
+
+        For example, ``152.4mm 228.6mm`` becomes ``228.6mm 152.4mm``.
+        """
+        parts = size.split()
+        if len(parts) == 2:
+            return f"{parts[1]} {parts[0]}"
+        return size
+
+    def _build_orientation_css(self) -> str:
+        """Build the CSS override for page orientation."""
+        if not self.orientation:
+            return ""
+
+        page_size = self._get_page_size()
+        is_landscape = self.orientation.lower() == "landscape"
+
+        if self._is_named_size(page_size):
+            # Named sizes like A4 support the landscape keyword directly
+            size_decl = f"{page_size} {self.orientation.lower()}"
+        elif is_landscape:
+            # Custom dimensions: WeasyPrint ignores the landscape keyword,
+            # so we swap width/height to achieve landscape orientation
+            size_decl = self._swap_dimensions(page_size)
+        else:
+            size_decl = page_size
+
+        css = f"@page {{ size: {size_decl}; }}"
+        if is_landscape:
+            css += "\nbody { max-width: 100%; }"
+        return css
+
     def _create_html_document(self, html_content: str) -> str:
         """Create a complete HTML document with proper structure."""
         header_html, header_css = self.header_processor.create_header_html(
             self.include_header
         )
 
-        orientation_css = ""
-        if self.orientation:
-            page_size = self._get_page_size()
-            orientation_css = (
-                f"@page {{ size: {page_size} {self.orientation.lower()}; }}"
-            )
-            if self.orientation.lower() == "landscape":
-                orientation_css += "\nbody { max-width: 100%; }"
+        orientation_css = self._build_orientation_css()
 
         return f"""
         <!DOCTYPE html>
