@@ -169,21 +169,18 @@ class MarkdownProcessor:
 
             return candidates
 
-        local_svg_root = Path("assets/twemoji/svg")
+        package_root = Path(__file__).resolve().parents[2]
+        local_svg_root = package_root / "assets" / "twemoji" / "svg"
 
         def replacement(grapheme: str, data_dict=None) -> str:
             base = to_twemoji_codepoints(grapheme)
             for candidate in normalize_candidates(base):
                 local_path = local_svg_root / f"{candidate}.svg"
                 if local_path.exists():
-                    src = f"assets/twemoji/svg/{candidate}.svg"
+                    src = local_path.resolve().as_uri()
                     break
             else:
-                # Fallback to CDN with first candidate
-                first_candidate = normalize_candidates(base)[0]
-                src = (
-                    f"https://twemoji.maxcdn.com/v/latest/svg/" f"{first_candidate}.svg"
-                )
+                return escape(grapheme)
             return (
                 f'<img class="emoji" draggable="false" alt="{escape(grapheme)}" '
                 f'src="{src}" style="width:1em;height:1em;'

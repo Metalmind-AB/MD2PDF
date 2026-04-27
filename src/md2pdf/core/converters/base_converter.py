@@ -9,6 +9,7 @@ Provides shared functionality for PDF and Word converters.
 """
 
 import re
+from html import escape
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
@@ -109,9 +110,14 @@ class BaseConverter:
                 print(f"Front matter: orientation={value}")
 
         if "css" in metadata:
-            raw_css = str(metadata["css"])
-            self.custom_css = raw_css.replace("</style>", "")
+            self.custom_css = self._sanitize_custom_css(str(metadata["css"]))
             print("Front matter: custom CSS applied")
+
+    @staticmethod
+    def _sanitize_custom_css(raw_css: str) -> str:
+        """Keep front matter CSS inside the generated style block."""
+        css = re.sub(r"</?style\b[^>]*>", "", raw_css, flags=re.IGNORECASE)
+        return re.sub(r"@import\s+(?:url\()?[^;]+;", "", css, flags=re.IGNORECASE)
 
     def _read_markdown_content(self) -> str:
         """Read the markdown file content."""
@@ -215,7 +221,7 @@ class BaseConverter:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{self.input_file.stem}</title>
+            <title>{escape(self.input_file.stem)}</title>
             <style>
                 {self.css_styles}
                 {self.pygments_css}

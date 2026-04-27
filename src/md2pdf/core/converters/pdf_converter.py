@@ -8,14 +8,24 @@ PDF Converter - Converts Markdown to PDF using WeasyPrint.
 Inherits from BaseConverter and provides PDF-specific functionality.
 """
 
+import os
 from pathlib import Path
+from urllib.parse import unquote, urlparse
+from urllib.request import url2pathname
+from xml.sax.saxutils import escape as xml_escape
 
 try:
     from weasyprint import HTML
 
+    try:
+        from weasyprint import default_url_fetcher
+    except ImportError:
+        from weasyprint.urls import default_url_fetcher
+
     WEASYPRINT_AVAILABLE = True
 except ImportError:
     HTML = None
+    default_url_fetcher = None
     WEASYPRINT_AVAILABLE = False
 
 try:
@@ -71,7 +81,11 @@ class PDFConverter(BaseConverter):
             base_url = str(Path(self.input_file).parent.resolve()) + "/"
 
             # Create HTML object and write PDF with optimizations for Amazon KDP
-            html = HTML(string=html_document, base_url=base_url)
+            html = HTML(
+                string=html_document,
+                base_url=base_url,
+                url_fetcher=self._make_url_fetcher(),
+            )
 
             # Configure PDF generation for print-ready output
             # Standard PDF without PDF/A which can cause issues with KDP
@@ -91,6 +105,50 @@ class PDFConverter(BaseConverter):
         except Exception as e:
             print(f"❌ Error converting to PDF: {str(e)}")
             return False
+
+    def _make_url_fetcher(self):
+        """Build a WeasyPrint URL fetcher that blocks network and file escapes."""
+        if _remote_resources_allowed():
+            return default_url_fetcher
+
+        allowed_roots = self._resource_roots()
+
+        def safe_url_fetcher(url: str, *args, **kwargs):
+            parsed = urlparse(url)
+            scheme = parsed.scheme.lower()
+
+            if scheme in ("http", "https", "ftp"):
+                raise ValueError(f"Blocked remote resource: {scheme} URL")
+
+            if scheme == "data":
+                return default_url_fetcher(url, *args, **kwargs)
+
+            if scheme == "file":
+                if parsed.netloc and parsed.netloc not in ("localhost", "127.0.0.1"):
+                    raise ValueError("Blocked non-local file resource")
+                resource_path = Path(url2pathname(unquote(parsed.path))).resolve()
+                if _is_path_under_any_root(resource_path, allowed_roots):
+                    return default_url_fetcher(url, *args, **kwargs)
+                raise ValueError(f"Blocked file resource outside allowed roots: {url}")
+
+            if not scheme:
+                resource_path = Path(url).resolve()
+                if _is_path_under_any_root(resource_path, allowed_roots):
+                    return default_url_fetcher(url, *args, **kwargs)
+                raise ValueError(f"Blocked file resource outside allowed roots: {url}")
+
+            raise ValueError(f"Blocked unsupported resource scheme: {scheme}")
+
+        return safe_url_fetcher
+
+    def _resource_roots(self) -> list[Path]:
+        """Return directories WeasyPrint may read local resources from."""
+        package_root = Path(__file__).resolve().parents[2]
+        roots = [
+            Path(self.input_file).parent.resolve(),
+            (package_root / "assets").resolve(),
+        ]
+        return [root for root in roots if root.exists()]
 
     def _embed_watermark(self) -> None:
         """Embed an invisible watermark in the PDF metadata."""
@@ -118,18 +176,7 @@ class PDFConverter(BaseConverter):
 
             # Also embed in XMP metadata for better compatibility
             if hasattr(writer, "add_metadata_stream"):
-                xmp_metadata = f"""<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
-<x:xmpmeta xmlns:x="adobe:ns:meta/">
-    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-        <rdf:Description rdf:about=""
-            xmlns:dc="http://purl.org/dc/elements/1.1/"
-            xmlns:md2pdf="http://md2pdf.com/ns/">
-            <md2pdf:watermark>{self.watermark}</md2pdf:watermark>
-        </rdf:Description>
-    </rdf:RDF>
-</x:xmpmeta>
-<?xpacket end="w"?>"""
-                writer.add_metadata_stream(xmp_metadata)
+                writer.add_metadata_stream(self._build_xmp_metadata())
 
             # Write back to file
             with open(self.output_file, "wb") as output_pdf:
@@ -139,3 +186,40 @@ class PDFConverter(BaseConverter):
 
         except Exception as e:
             print(f"Warning: Could not embed watermark: {str(e)}")
+
+    def _build_xmp_metadata(self) -> str:
+        """Build escaped XMP metadata for the configured watermark."""
+        watermark = xml_escape(
+            self.watermark or "",
+            {
+                '"': "&quot;",
+                "'": "&apos;",
+            },
+        )
+        return f"""<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about=""
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:md2pdf="http://md2pdf.com/ns/">
+            <md2pdf:watermark>{watermark}</md2pdf:watermark>
+        </rdf:Description>
+    </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>"""
+
+
+def _remote_resources_allowed() -> bool:
+    value = os.getenv("MD2PDF_ALLOW_REMOTE_RESOURCES", "")
+    return value.lower() in {"1", "true", "yes", "on"}
+
+
+def _is_path_under_any_root(path: Path, roots: list[Path]) -> bool:
+    resolved = path.resolve()
+    for root in roots:
+        try:
+            resolved.relative_to(root.resolve())
+            return True
+        except ValueError:
+            continue
+    return False
