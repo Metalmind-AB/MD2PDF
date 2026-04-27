@@ -12,7 +12,6 @@ import os
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 from urllib.request import url2pathname
-from xml.sax.saxutils import escape as xml_escape
 
 try:
     from weasyprint import HTML
@@ -189,13 +188,7 @@ class PDFConverter(BaseConverter):
 
     def _build_xmp_metadata(self) -> str:
         """Build escaped XMP metadata for the configured watermark."""
-        watermark = xml_escape(
-            self.watermark or "",
-            {
-                '"': "&quot;",
-                "'": "&apos;",
-            },
-        )
+        watermark = _escape_xml_text(self.watermark or "")
         return f"""<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -212,6 +205,17 @@ class PDFConverter(BaseConverter):
 def _remote_resources_allowed() -> bool:
     value = os.getenv("MD2PDF_ALLOW_REMOTE_RESOURCES", "")
     return value.lower() in {"1", "true", "yes", "on"}
+
+
+def _escape_xml_text(value: str) -> str:
+    """Escape text for XML element content."""
+    return (
+        value.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&apos;")
+    )
 
 
 def _is_path_under_any_root(path: Path, roots: list[Path]) -> bool:
