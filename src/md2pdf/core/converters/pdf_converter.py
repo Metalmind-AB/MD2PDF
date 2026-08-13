@@ -9,6 +9,7 @@ Inherits from BaseConverter and provides PDF-specific functionality.
 """
 
 from pathlib import Path
+from typing import Any, Dict, Optional, Set
 
 try:
     from weasyprint import HTML
@@ -28,6 +29,12 @@ except ImportError:
     PYPDF_AVAILABLE = False
 
 from md2pdf.core.converters.base_converter import BaseConverter
+from md2pdf.core.utils.margin_guard import (
+    MAX_FIT_TIER,
+    build_table_fit_css,
+    describe_overflow,
+    find_overflowing_tables,
+)
 
 
 class PDFConverter(BaseConverter):
@@ -61,21 +68,19 @@ class PDFConverter(BaseConverter):
             # Convert markdown to HTML
             html_content = self._process_markdown(markdown_content)
 
-            # Create complete HTML document
-            html_document = self._create_html_document(html_content)
-
             # Convert HTML to PDF with font configuration
             print(f"Generating PDF: {self.output_file}")
             # For future use: Path(self.input_file).parent / "exports"
             # Use input file's directory as base URL for relative image paths
             base_url = str(Path(self.input_file).parent.resolve()) + "/"
 
-            # Create HTML object and write PDF with optimizations for Amazon KDP
-            html = HTML(string=html_document, base_url=base_url)
+            # Lay the document out, shrinking anything that would bleed past
+            # the page margins, then write the result
+            document = self._render_within_margins(html_content, base_url)
 
             # Configure PDF generation for print-ready output
             # Standard PDF without PDF/A which can cause issues with KDP
-            html.write_pdf(
+            document.write_pdf(
                 str(self.output_file),
                 # Don't use pdf_variant as it can cause compatibility issues
                 uncompressed_pdf=False,  # Keep compressed for smaller size
@@ -91,6 +96,56 @@ class PDFConverter(BaseConverter):
         except Exception as e:
             print(f"❌ Error converting to PDF: {str(e)}")
             return False
+
+    def _render(self, html_content: str, base_url: str, extra_css: str) -> Any:
+        """Lay out the document once with the given extra CSS applied."""
+        html_document = self._create_html_document(html_content, extra_css)
+        return HTML(string=html_document, base_url=base_url).render()
+
+    def _render_within_margins(self, html_content: str, base_url: str) -> Any:
+        """Lay out the document, re-laying it out until tables fit the margins.
+
+        A table whose columns cannot shrink below the page width is laid out
+        past the ``@page`` margin box and bleeds off the paper.  The document is
+        measured after layout and each table that overflows gets an escalating
+        relaxation — header wrapping, then word breaking, then fixed columns and
+        smaller type — until it fits.  Documents whose tables already fit are
+        laid out once and are unaffected.
+        """
+        document = self._render(html_content, base_url, "")
+        overflow = find_overflowing_tables(document)
+        tiers: Dict[int, Optional[Set[str]]] = {}
+
+        for tier in range(1, MAX_FIT_TIER + 1):
+            if overflow is not None and not overflow:
+                return document
+
+            if overflow is None:
+                print(
+                    "Warning: could not measure table widths "
+                    "(unexpected WeasyPrint layout tree); "
+                    "fitting all tables to the page margins"
+                )
+                tiers[tier] = None
+            else:
+                print(f"Fitting to page margins: {describe_overflow(overflow)}")
+                tiers[tier] = set(overflow)
+
+            global_fallback = tiers[tier] is None
+            document = self._render(
+                html_content, base_url, build_table_fit_css(tiers)
+            )
+            overflow = find_overflowing_tables(document)
+
+            if global_fallback:
+                break
+
+        if overflow:
+            print(
+                f"Warning: {describe_overflow(overflow)} still exceed the page "
+                "margins — consider --orientation landscape or fewer columns"
+            )
+        return document
 
     def _embed_watermark(self) -> None:
         """Embed an invisible watermark in the PDF metadata."""

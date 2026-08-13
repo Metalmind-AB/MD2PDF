@@ -3,7 +3,7 @@
 
 """
 Tests for formatting improvements: front matter parsing, orientation support,
-and custom CSS injection.
+custom CSS injection, and keeping content inside the page margins.
 """
 
 from pathlib import Path
@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from md2pdf.core.converters.base_converter import BaseConverter
+from md2pdf.core.utils import margin_guard
 
 
 class TestFrontMatterExtraction:
@@ -183,3 +184,249 @@ class TestPageSizeExtraction:
         conv = BaseConverter(input_file=str(sample_markdown_file))
         conv.css_styles = "body { color: red; }"
         assert conv._get_page_size() == "A4"
+
+
+WIDE_TABLE_MARKDOWN = """# Wide
+
+| FEATURE | CUSTOMER URS IMPACT | CUSTOMER TENANT CONFIGURATION CHANGE | \
+CUSTOMER-SIDE RE-TEST EVIDENCE REQUIRED | DEVIATION AWARENESS |
+|---|---|---|---|---|
+| Validation Dossier download | None. New CQD_ADMIN-only capability that does \
+not change any pre-existing user-facing behaviour. | None required at all. | \
+Configuration evidence that the CQD_ADMIN role assignment is set as intended. | \
+Documented at `RR-MM-CQD-2026-013` §5.3. |
+"""
+
+
+class TestTableTagging:
+    """Every table gets an index so the fitting pass can address it."""
+
+    @pytest.mark.unit
+    def test_tables_are_indexed(self):
+        html = "<table><tr><td>a</td></tr></table><p>x</p><table class='k'></table>"
+        tagged = margin_guard.tag_tables(html)
+        assert '<table data-md2pdf-table="0">' in tagged
+        assert '<table data-md2pdf-table="1" class=\'k\'>' in tagged
+
+    @pytest.mark.unit
+    def test_leaves_other_content_alone(self):
+        html = "<p>a &lt;tablet&gt; is not a table</p>"
+        assert margin_guard.tag_tables(html) == html
+
+    @pytest.mark.unit
+    def test_document_without_tables_unchanged(self):
+        html = "<h1>Hi</h1><p>No tables here.</p>"
+        assert margin_guard.tag_tables(html) == html
+
+    @pytest.mark.unit
+    def test_tagging_applied_in_html_document(self, temp_dir):
+        md = temp_dir / "t.md"
+        md.write_text("| A | B |\n|---|---|\n| 1 | 2 |\n")
+        conv = BaseConverter(input_file=str(md))
+        content = conv._read_markdown_content()
+        html = conv._create_html_document(conv._process_markdown(content))
+        assert 'data-md2pdf-table="0"' in html
+
+
+class TestMarginSafetyCSS:
+    """The always-on rules that keep non-table content inside the margins."""
+
+    @pytest.mark.unit
+    def test_safety_css_is_injected(self, sample_markdown_file):
+        conv = BaseConverter(input_file=str(sample_markdown_file))
+        html = conv._create_html_document("<p>x</p>")
+        assert "md2pdf margin safety" in html
+        assert "white-space: pre-wrap" in html
+
+    @pytest.mark.unit
+    def test_table_cells_opt_out_of_breaking(self, sample_markdown_file):
+        """Cells are relaxed per table by the fitter, not globally."""
+        conv = BaseConverter(input_file=str(sample_markdown_file))
+        html = conv._create_html_document("<p>x</p>")
+        assert "th, td {\n    overflow-wrap: normal;" in html
+
+    @pytest.mark.unit
+    def test_extra_css_comes_before_custom_css(self, temp_dir):
+        md = temp_dir / "t.md"
+        md.write_text("---\ncss: '.mine { color: red; }'\n---\n# H\n")
+        conv = BaseConverter(input_file=str(md))
+        conv._read_markdown_content()
+        html = conv._create_html_document("<p>x</p>", extra_css=".fit { color: blue; }")
+        assert html.index(".fit { color: blue; }") < html.index(".mine { color: red; }")
+
+
+class TestTableFitCSS:
+    """CSS generated for the tables measured to overflow."""
+
+    @pytest.mark.unit
+    def test_targets_only_the_named_tables(self):
+        css = margin_guard.build_table_fit_css({1: {"2"}})
+        assert 'table[data-md2pdf-table="2"] th' in css
+        assert 'table[data-md2pdf-table="0"]' not in css
+        assert "white-space: normal" in css
+
+    @pytest.mark.unit
+    def test_tiers_escalate_in_order(self):
+        css = margin_guard.build_table_fit_css({1: {"0"}, 2: {"0"}, 3: {"0"}})
+        assert (
+            css.index("white-space: normal")
+            < css.index("word-break: break-all")
+            < css.index("table-layout: fixed")
+        )
+
+    @pytest.mark.unit
+    def test_first_tier_only_wraps_headers(self):
+        """The gentlest tier must not start breaking words."""
+        css = margin_guard.build_table_fit_css({1: {"0"}})
+        assert "white-space: normal" in css
+        assert "word-break" not in css
+        assert "table-layout" not in css
+
+    @pytest.mark.unit
+    def test_ids_are_sorted_numerically(self):
+        css = margin_guard.build_table_fit_css({1: {"10", "2"}})
+        assert css.index('"2"') < css.index('"10"')
+
+    @pytest.mark.unit
+    def test_none_falls_back_to_every_table(self):
+        css = margin_guard.build_table_fit_css({1: None})
+        assert "table th {" in css
+        assert "data-md2pdf-table" not in css
+
+    @pytest.mark.unit
+    def test_nothing_to_fit_is_empty(self):
+        assert margin_guard.build_table_fit_css({}) == ""
+        assert margin_guard.build_table_fit_css({1: set()}) == ""
+
+
+class _FakeElement:
+    def __init__(self, table_id=None):
+        self._table_id = table_id
+
+    def get(self, name):
+        if name == margin_guard.TABLE_ID_ATTR:
+            return self._table_id
+        return None
+
+
+class _FakeBox:
+    """Minimal stand-in for a WeasyPrint layout box."""
+
+    def __init__(self, tag=None, x=0.0, width=0.0, children=(), table_id=None):
+        self.element_tag = tag
+        self.children = children
+        self.width = width
+        self._x = x
+        self.element = _FakeElement(table_id) if tag == "table" else None
+
+    def border_box_x(self):
+        return self._x
+
+    def border_width(self):
+        return self.width
+
+    def content_box_x(self):
+        return self._x
+
+
+class _FakeDocument:
+    def __init__(self, root):
+        page = type("Page", (), {"_page_box": root})()
+        self.pages = [page]
+
+
+def _page(children, x=50.0, width=500.0):
+    """A page area from x to x+width holding the given boxes."""
+    return _FakeDocument(_FakeBox(tag="page", x=x, width=width, children=children))
+
+
+class TestOverflowMeasurement:
+    """Measuring which tables stick out of the page area."""
+
+    @pytest.mark.unit
+    def test_table_inside_the_page_area(self):
+        table = _FakeBox(tag="table", x=60, width=400, table_id="0")
+        assert margin_guard.find_overflowing_tables(_page([table])) == {}
+
+    @pytest.mark.unit
+    def test_table_past_the_right_edge(self):
+        table = _FakeBox(tag="table", x=60, width=600, table_id="0")
+        overflow = margin_guard.find_overflowing_tables(_page([table]))
+        assert overflow == {"0": pytest.approx(110.0)}
+
+    @pytest.mark.unit
+    def test_cell_content_sticking_out_counts(self):
+        cell = _FakeBox(tag="td", x=500, width=200)
+        table = _FakeBox(tag="table", x=60, width=400, children=(cell,), table_id="3")
+        overflow = margin_guard.find_overflowing_tables(_page([table]))
+        assert overflow == {"3": pytest.approx(150.0)}
+
+    @pytest.mark.unit
+    def test_content_outside_tables_is_ignored(self):
+        stray = _FakeBox(tag="pre", x=60, width=900)
+        assert margin_guard.find_overflowing_tables(_page([stray])) == {}
+
+    @pytest.mark.unit
+    def test_untaggable_table_reports_unknown(self):
+        table = _FakeBox(tag="table", x=60, width=600)
+        assert margin_guard.find_overflowing_tables(_page([table])) is None
+
+    @pytest.mark.unit
+    def test_unreadable_layout_tree_reports_unknown(self):
+        document = type("Doc", (), {"pages": [object()]})()
+        assert margin_guard.find_overflowing_tables(document) is None
+
+    @pytest.mark.unit
+    def test_sub_pixel_overflow_is_ignored(self):
+        table = _FakeBox(tag="table", x=60, width=490.4, table_id="0")
+        assert margin_guard.find_overflowing_tables(_page([table])) == {}
+
+
+class TestMarginsRespected:
+    """End-to-end: a table too wide for the page is fitted onto it."""
+
+    @pytest.mark.integration
+    @pytest.mark.parametrize("style", ["technical", "consultancy", "academic"])
+    def test_wide_table_is_brought_inside_the_margins(self, temp_dir, style):
+        pytest.importorskip("weasyprint")
+        from md2pdf.core.converters.pdf_converter import PDFConverter
+
+        md = temp_dir / "wide.md"
+        md.write_text(WIDE_TABLE_MARKDOWN, encoding="utf-8")
+        conv = PDFConverter(
+            input_file=str(md), output_file=str(temp_dir / "wide.pdf"), style=style
+        )
+        body = conv._read_markdown_content()
+        html = conv._process_markdown(body)
+
+        unfitted = conv._render(html, str(temp_dir) + "/", "")
+        assert margin_guard.find_overflowing_tables(unfitted), (
+            "test fixture is no longer wide enough to overflow the page"
+        )
+
+        fitted = conv._render_within_margins(html, str(temp_dir) + "/")
+        assert margin_guard.find_overflowing_tables(fitted) == {}
+
+    @pytest.mark.integration
+    def test_narrow_table_keeps_its_no_wrap_headers(self, temp_dir):
+        pytest.importorskip("weasyprint")
+        from md2pdf.core.converters.pdf_converter import PDFConverter
+
+        md = temp_dir / "narrow.md"
+        md.write_text("| Document | Version | Status |\n|---|---|---|\n"
+                      "| Plan | 1.0 | Signed |\n", encoding="utf-8")
+        conv = PDFConverter(
+            input_file=str(md), output_file=str(temp_dir / "narrow.pdf")
+        )
+        html = conv._process_markdown(conv._read_markdown_content())
+        document = conv._render_within_margins(html, str(temp_dir) + "/")
+
+        headers = [
+            box
+            for box, _ in margin_guard._walk_tables(
+                document.pages[0]._page_box, None, False
+            )
+            if getattr(box, "element_tag", None) == "th"
+        ]
+        assert headers
+        assert all(box.style["white_space"] == "nowrap" for box in headers)
