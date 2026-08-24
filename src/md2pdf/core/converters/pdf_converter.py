@@ -179,65 +179,80 @@ class PDFConverter(BaseConverter):
         document = self._render(html_content, base_url, "")
         tiers: Dict[int, Optional[Set[str]]] = {}
         released_rows: Set[str] = set()
-        tier = 0
 
         for _ in range(MAX_FIT_PASSES):
-            overflow = find_overflowing_tables(document)
-            new_rows = (find_headerless_rows(document) or set()) - released_rows
-            fits = overflow is not None and not overflow
-
-            if fits and not new_rows:
-                return document
-
-            changed = False
-            global_fallback = False
-
-            if new_rows:
-                released_rows |= new_rows
-                count = len(new_rows)
-                noun = "row" if count == 1 else "rows"
-                print(
-                    f"Restoring table headers: {count} {noun} released to break "
-                    "across pages"
-                )
-                changed = True
-
-            if overflow is None:
-                print(
-                    "Warning: could not measure table widths "
-                    "(unexpected WeasyPrint layout tree); "
-                    "fitting all tables to the page margins"
-                )
-                tier = min(tier + 1, MAX_FIT_TIER)
-                tiers[tier] = None
-                changed = True
-                global_fallback = True
-            elif overflow and tier < MAX_FIT_TIER:
-                print(f"Fitting to page margins: {describe_overflow(overflow)}")
-                tier += 1
-                tiers[tier] = set(overflow)
-                changed = True
-
-            if not changed:
-                # Nothing left to try; report what is still out of bounds below.
+            if not self._plan_fit(document, tiers, released_rows):
                 break
-
             document = self._render(
                 html_content,
                 base_url,
                 build_table_fit_css(tiers) + build_row_fit_css(released_rows),
             )
 
-            if global_fallback:
-                break
+        self._report_remaining_overflow(document)
+        return document
 
+    def _plan_fit(
+        self,
+        document: Any,
+        tiers: Dict[int, Optional[Set[str]]],
+        released_rows: Set[str],
+    ) -> bool:
+        """Record what to relax next; False when nothing is left to try."""
+        released = self._release_headerless_rows(document, released_rows)
+        escalated = self._escalate_table_fit(document, tiers)
+        return released or escalated
+
+    @staticmethod
+    def _release_headerless_rows(document: Any, released_rows: Set[str]) -> bool:
+        """Let the rows that lost their header break across pages."""
+        new_rows = (find_headerless_rows(document) or set()) - released_rows
+        if not new_rows:
+            return False
+
+        released_rows |= new_rows
+        noun = "row" if len(new_rows) == 1 else "rows"
+        print(
+            f"Restoring table headers: {len(new_rows)} {noun} released to break "
+            "across pages"
+        )
+        return True
+
+    @staticmethod
+    def _escalate_table_fit(
+        document: Any, tiers: Dict[int, Optional[Set[str]]]
+    ) -> bool:
+        """Move the tables that still overflow to the next relaxation tier."""
+        overflow = find_overflowing_tables(document)
+        tier = max(tiers, default=0)
+
+        if overflow is None:
+            if None in tiers.values():
+                return False  # the catch-all is already applied
+            print(
+                "Warning: could not measure table widths "
+                "(unexpected WeasyPrint layout tree); "
+                "fitting all tables to the page margins"
+            )
+            tiers[min(tier + 1, MAX_FIT_TIER)] = None
+            return True
+
+        if overflow and tier < MAX_FIT_TIER:
+            print(f"Fitting to page margins: {describe_overflow(overflow)}")
+            tiers[tier + 1] = set(overflow)
+            return True
+
+        return False
+
+    @staticmethod
+    def _report_remaining_overflow(document: Any) -> None:
+        """Say so when a table could not be brought inside the margins."""
         overflow = find_overflowing_tables(document)
         if overflow:
             print(
                 f"Warning: {describe_overflow(overflow)} still exceed the page "
                 "margins — consider --orientation landscape or fewer columns"
             )
-        return document
 
     def _embed_watermark(self) -> None:
         """Embed an invisible watermark in the PDF metadata."""

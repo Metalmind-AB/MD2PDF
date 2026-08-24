@@ -256,42 +256,59 @@ def find_headerless_rows(document) -> Optional[Set[str]]:
         The indices of the rows to release, empty when every page carries its
         header, or ``None`` when the layout tree could not be inspected.
     """
-    pages: List[Dict[Optional[str], Dict[str, Any]]] = []
-    tables_with_header: Set[Optional[str]] = set()
+    pages = _table_fragments_per_page(document)
+    if pages is None:
+        return None
 
+    # A table that never shows a header anywhere has none to repeat.
+    with_header = {
+        table_id
+        for fragments in pages
+        for table_id, fragment in fragments.items()
+        if fragment["header"]
+    }
+
+    orphaned: Set[str] = set()
+    for fragments in pages:
+        for table_id, fragment in fragments.items():
+            if table_id in with_header and fragment["rows"] and not fragment["header"]:
+                orphaned |= fragment["rows"]
+    return orphaned
+
+
+def _table_fragments_per_page(document) -> Optional[List[Dict[Optional[str], Any]]]:
+    """Per page, what each table has on it: its rows, and whether its header shows."""
+    pages: List[Dict[Optional[str], Any]] = []
     try:
         for page in document.pages:
             page_box = getattr(page, "_page_box", None)
             if page_box is None:
                 return None
-
-            fragments: Dict[Optional[str], Dict[str, Any]] = {}
-            for box, table_id in _walk_tables(page_box, None, False):
-                fragment = fragments.setdefault(
-                    table_id, {"header": False, "rows": set()}
-                )
-                tag = getattr(box, "element_tag", None)
-                if tag == "th":
-                    fragment["header"] = True
-                    tables_with_header.add(table_id)
-                elif tag == "tr":
-                    element = getattr(box, "element", None)
-                    row_id = element.get(ROW_ID_ATTR) if element is not None else None
-                    if row_id is not None:
-                        fragment["rows"].add(row_id)
-            pages.append(fragments)
+            pages.append(_table_fragments(page_box))
     except (AttributeError, TypeError):
         return None
+    return pages
 
-    orphaned: Set[str] = set()
-    for fragments in pages:
-        for table_id, fragment in fragments.items():
-            # A table that never shows a header has none to repeat.
-            if table_id not in tables_with_header:
-                continue
-            if fragment["rows"] and not fragment["header"]:
-                orphaned |= fragment["rows"]
-    return orphaned
+
+def _table_fragments(page_box) -> Dict[Optional[str], Any]:
+    """Collect the table fragments laid out on one page."""
+    fragments: Dict[Optional[str], Any] = {}
+    for box, table_id in _walk_tables(page_box, None, False):
+        fragment = fragments.setdefault(table_id, {"header": False, "rows": set()})
+        tag = getattr(box, "element_tag", None)
+        if tag == "th":
+            fragment["header"] = True
+        elif tag == "tr":
+            row_id = _element_id(box, ROW_ID_ATTR)
+            if row_id is not None:
+                fragment["rows"].add(row_id)
+    return fragments
+
+
+def _element_id(box, attr: str) -> Optional[str]:
+    """Read one of the layout ids off a box's source element."""
+    element = getattr(box, "element", None)
+    return element.get(attr) if element is not None else None
 
 
 def _walk_tables(box, table_id: Optional[str], in_table: bool) -> Iterable:
@@ -303,8 +320,7 @@ def _walk_tables(box, table_id: Optional[str], in_table: bool) -> Iterable:
     """
     if not in_table and getattr(box, "element_tag", None) == "table":
         in_table = True
-        element = getattr(box, "element", None)
-        table_id = element.get(TABLE_ID_ATTR) if element is not None else None
+        table_id = _element_id(box, TABLE_ID_ATTR)
     if in_table:
         yield box, table_id
     for child in getattr(box, "children", ()) or ():
