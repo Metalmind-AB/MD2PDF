@@ -5,6 +5,23 @@ All notable changes to MD2PDF will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Tables no longer bleed past the page margins. Wide tables are measured after
+  layout and each one that overflows is relaxed just enough to fit — headers wrap
+  first, then long words break, then columns are fixed and the type is tightened.
+  Tables that already fit are laid out once and are unchanged, keeping their
+  no-wrap headers.
+- Long identifiers, URLs and code lines no longer run off the right-hand edge:
+  code blocks wrap, and any word that cannot fit the line is broken instead of
+  overflowing the page.
+- Tables no longer continue onto a page without their header row. Keeping rows
+  intact (`page-break-inside: avoid`) makes WeasyPrint drop the repeated header
+  from any page it moves a row onto, and leaves a blank page behind when a row
+  is taller than the page. Rows that lose their header this way are now released
+  to break across pages; every other row is still kept intact.
+
 ## [1.3.1] - 2026-01-06
 
 ### Changed

@@ -68,12 +68,15 @@ def test():
         with patch("md2pdf.core.converters.pdf_converter.HTML") as mock_html:
             mock_html_instance = Mock()
             mock_html.return_value = mock_html_instance
-            mock_html_instance.write_pdf.return_value = None
+            mock_document = Mock()
+            mock_html_instance.render.return_value = mock_document
+            mock_document.pages = []
+            mock_document.write_pdf.return_value = None
 
             result = converter.convert()
 
             assert result is True
-            mock_html_instance.write_pdf.assert_called_once()
+            mock_document.write_pdf.assert_called_once()
 
     @pytest.mark.integration
     @pytest.mark.slow

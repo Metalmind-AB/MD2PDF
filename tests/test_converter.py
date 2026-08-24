@@ -126,7 +126,10 @@ class TestPDFConverter:
         # Setup mocks
         mock_html_instance = Mock()
         mock_html.return_value = mock_html_instance
-        mock_html_instance.write_pdf.return_value = None
+        mock_document = Mock()
+        mock_html_instance.render.return_value = mock_document
+        mock_document.pages = []
+        mock_document.write_pdf.return_value = None
 
         output_file = temp_dir / "test.pdf"
         converter = PDFConverter(
@@ -136,7 +139,7 @@ class TestPDFConverter:
         result = converter.convert()
 
         assert result is True
-        mock_html_instance.write_pdf.assert_called_once()
+        mock_document.write_pdf.assert_called_once()
 
     @pytest.mark.integration
     def test_pdf_conversion_real(self, sample_markdown_file, temp_dir):

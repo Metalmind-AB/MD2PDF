@@ -18,6 +18,7 @@ from pygments.formatters import HtmlFormatter
 
 from md2pdf.core.processors.header_processor import HeaderProcessor
 from md2pdf.core.processors.markdown_processor import MarkdownProcessor
+from md2pdf.core.utils.margin_guard import MARGIN_SAFETY_CSS, add_layout_ids
 from md2pdf.core.utils.style_loader import style_loader
 
 
@@ -207,8 +208,14 @@ class BaseConverter:
             css += "\nbody { max-width: 100%; }"
         return css
 
-    def _create_html_document(self, html_content: str) -> str:
-        """Create a complete HTML document with proper structure."""
+    def _create_html_document(self, html_content: str, extra_css: str = "") -> str:
+        """Create a complete HTML document with proper structure.
+
+        Args:
+            html_content: The converted markdown body.
+            extra_css: Additional CSS appended after the style/theme rules, used
+                by the PDF converter to fit oversized elements onto the page.
+        """
         header_html, header_css = self.header_processor.create_header_html(
             self.include_header
         )
@@ -225,15 +232,17 @@ class BaseConverter:
             <style>
                 {self.css_styles}
                 {self.pygments_css}
+                {MARGIN_SAFETY_CSS}
                 {header_css}
                 {orientation_css}
+                {extra_css}
                 {self.custom_css}
             </style>
         </head>
         <body>
             {header_html}
             <div class="content{' has-header' if self.include_header else ''}">
-                {html_content}
+                {add_layout_ids(html_content)}
             </div>
         </body>
         </html>
