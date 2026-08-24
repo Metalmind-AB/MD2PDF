@@ -30,9 +30,12 @@ except ImportError:
 
 from md2pdf.core.converters.base_converter import BaseConverter
 from md2pdf.core.utils.margin_guard import (
+    MAX_FIT_PASSES,
     MAX_FIT_TIER,
+    build_row_fit_css,
     build_table_fit_css,
     describe_overflow,
+    find_headerless_rows,
     find_overflowing_tables,
 )
 
@@ -76,7 +79,7 @@ class PDFConverter(BaseConverter):
 
             # Lay the document out, shrinking anything that would bleed past
             # the page margins, then write the result
-            document = self._render_within_margins(html_content, base_url)
+            document = self._render_fitted(html_content, base_url)
 
             # Configure PDF generation for print-ready output
             # Standard PDF without PDF/A which can cause issues with KDP
@@ -102,23 +105,44 @@ class PDFConverter(BaseConverter):
         html_document = self._create_html_document(html_content, extra_css)
         return HTML(string=html_document, base_url=base_url).render()
 
-    def _render_within_margins(self, html_content: str, base_url: str) -> Any:
-        """Lay out the document, re-laying it out until tables fit the margins.
+    def _render_fitted(self, html_content: str, base_url: str) -> Any:
+        """Lay out the document, re-laying it out until every table fits a page.
 
-        A table whose columns cannot shrink below the page width is laid out
-        past the ``@page`` margin box and bleeds off the paper.  The document is
-        measured after layout and each table that overflows gets an escalating
-        relaxation — header wrapping, then word breaking, then fixed columns and
-        smaller type — until it fits.  Documents whose tables already fit are
+        Two things do not fit on their own.  A table whose columns cannot shrink
+        below the page width is laid out past the ``@page`` margin box and
+        bleeds off the paper; each such table gets an escalating relaxation —
+        header wrapping, then word breaking, then fixed columns and smaller type
+        — until it fits.  And a row that ``page-break-inside: avoid`` moves onto
+        a new page arrives without the table's repeated header, so the table
+        appears to start mid-page with no header; each such row is released to
+        break across pages instead.  Documents where everything already fits are
         laid out once and are unaffected.
         """
         document = self._render(html_content, base_url, "")
-        overflow = find_overflowing_tables(document)
         tiers: Dict[int, Optional[Set[str]]] = {}
+        released_rows: Set[str] = set()
+        tier = 0
 
-        for tier in range(1, MAX_FIT_TIER + 1):
-            if overflow is not None and not overflow:
+        for _ in range(MAX_FIT_PASSES):
+            overflow = find_overflowing_tables(document)
+            new_rows = (find_headerless_rows(document) or set()) - released_rows
+            fits = overflow is not None and not overflow
+
+            if fits and not new_rows:
                 return document
+
+            changed = False
+            global_fallback = False
+
+            if new_rows:
+                released_rows |= new_rows
+                count = len(new_rows)
+                noun = "row" if count == 1 else "rows"
+                print(
+                    f"Restoring table headers: {count} {noun} released to break "
+                    "across pages"
+                )
+                changed = True
 
             if overflow is None:
                 print(
@@ -126,20 +150,30 @@ class PDFConverter(BaseConverter):
                     "(unexpected WeasyPrint layout tree); "
                     "fitting all tables to the page margins"
                 )
+                tier = min(tier + 1, MAX_FIT_TIER)
                 tiers[tier] = None
-            else:
+                changed = True
+                global_fallback = True
+            elif overflow and tier < MAX_FIT_TIER:
                 print(f"Fitting to page margins: {describe_overflow(overflow)}")
+                tier += 1
                 tiers[tier] = set(overflow)
+                changed = True
 
-            global_fallback = tiers[tier] is None
+            if not changed:
+                # Nothing left to try; report what is still out of bounds below.
+                break
+
             document = self._render(
-                html_content, base_url, build_table_fit_css(tiers)
+                html_content,
+                base_url,
+                build_table_fit_css(tiers) + build_row_fit_css(released_rows),
             )
-            overflow = find_overflowing_tables(document)
 
             if global_fallback:
                 break
 
+        overflow = find_overflowing_tables(document)
         if overflow:
             print(
                 f"Warning: {describe_overflow(overflow)} still exceed the page "

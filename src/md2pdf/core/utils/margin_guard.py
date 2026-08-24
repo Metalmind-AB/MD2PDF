@@ -7,7 +7,11 @@ Margin Guard - Keeps content inside the printable area of the page.
 
 Print media has no viewport to scroll, so an element whose *minimum* width is
 larger than the page area is simply laid out past the ``@page`` margin box and
-bleeds off the paper.  The two mechanisms here work together:
+bleeds off the paper.  Table rows have a matching problem in the other
+direction: ``page-break-inside: avoid`` keeps a row intact, but a row it has to
+move onto a new page arrives there without the table's repeated header, and a
+row too tall to fit any page costs a blank page as well.  Three mechanisms work
+together:
 
 * :data:`MARGIN_SAFETY_CSS` is always applied.  It lowers the minimum width of
   the usual offenders (long identifiers, URLs, code lines, oversized images) so
@@ -18,12 +22,16 @@ bleeds off the paper.  The two mechanisms here work together:
   escalating tiers.  Table cells are left out of the always-on rules because
   breaking inside a cell changes how the column widths are distributed: this
   way a table that already fits keeps its no-wrap headers and its layout.
+* :func:`find_headerless_rows` and :func:`build_row_fit_css` release exactly the
+  rows that lost their header from ``page-break-inside: avoid``, so every other
+  row still stays intact.
 """
 
-from typing import Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Set
 
-# Attribute used to address an individual table from generated CSS.
+# Attributes used to address an individual table or row from generated CSS.
 TABLE_ID_ATTR = "data-md2pdf-table"
+ROW_ID_ATTR = "data-md2pdf-row"
 
 # Applied to every document, after the style/theme CSS.
 MARGIN_SAFETY_CSS = """
@@ -99,27 +107,46 @@ _FIT_TIERS: List[str] = [
 
 MAX_FIT_TIER = len(_FIT_TIERS)
 
+# Releasing one row can push the next one onto a page break, so fitting settles
+# over a few passes.  The cap is a backstop against a document that never does.
+MAX_FIT_PASSES = 6
+
+# Letting a row break across pages is what brings the header back with it.
+_ROW_FIT_CSS = """
+{selector} {{
+    page-break-inside: auto;
+    break-inside: auto;
+}}
+"""
+
 # Sub-pixel differences are rounding, not overflow.
 _OVERFLOW_TOLERANCE_PX = 0.5
 
 
-def tag_tables(html: str) -> str:
-    """Give every ``<table>`` in ``html`` a stable, addressable index.
+def add_layout_ids(html: str) -> str:
+    """Give every ``<table>`` and ``<tr>`` in ``html`` a stable, addressable index.
 
-    The index lets :func:`build_table_fit_css` target one specific table
-    without disturbing classes the document already carries.
+    The indices let the fitting pass target one specific table or row without
+    disturbing classes and attributes the document already carries.
     """
-    parts = html.split("<table")
+    return _tag_elements(_tag_elements(html, "table", TABLE_ID_ATTR), "tr", ROW_ID_ATTR)
+
+
+def _tag_elements(html: str, tag: str, attr: str) -> str:
+    """Number every ``<tag>`` in ``html`` with ``attr="<index>"``."""
+    parts = html.split(f"<{tag}")
     if len(parts) == 1:
         return html
     tagged = [parts[0]]
-    for index, part in enumerate(parts[1:]):
-        # Only a real tag: "<table>" or "<table ...". Anything else is text.
+    index = 0
+    for part in parts[1:]:
+        # Only a real tag: "<tr>" or "<tr ...". Anything else is text.
         if part[:1] in (">", " ", "\t", "\n", "\r", "/"):
-            tagged.append(f' {TABLE_ID_ATTR}="{index}"{part}')
+            tagged.append(f' {attr}="{index}"{part}')
+            index += 1
         else:
             tagged.append(part)
-    return "<table".join(tagged)
+    return f"<{tag}".join(tagged)
 
 
 def build_table_fit_css(tiers: Dict[int, Iterable[str]]) -> str:
@@ -149,9 +176,23 @@ def build_table_fit_css(tiers: Dict[int, Iterable[str]]) -> str:
     return "\n".join(blocks)
 
 
-def _sort_key(table_id: str):
-    """Sort numeric table ids numerically, anything else lexically."""
-    return (0, int(table_id), "") if str(table_id).isdigit() else (1, 0, str(table_id))
+def build_row_fit_css(row_ids: Iterable[str]) -> str:
+    """Build the CSS that lets the listed rows break across pages.
+
+    Returns:
+        CSS text, empty when there is no row to release.
+    """
+    ids = sorted(row_ids, key=_sort_key)
+    if not ids:
+        return ""
+    selector = ", ".join(f'tr[{ROW_ID_ATTR}="{i}"]' for i in ids)
+    return _ROW_FIT_CSS.format(selector=selector)
+
+
+def _sort_key(element_id: str):
+    """Sort numeric ids numerically, anything else lexically."""
+    text = str(element_id)
+    return (0, int(text), "") if text.isdigit() else (1, 0, text)
 
 
 def find_overflowing_tables(document) -> Optional[Dict[str, float]]:
@@ -195,6 +236,62 @@ def find_overflowing_tables(document) -> Optional[Dict[str, float]]:
     if unidentified and not overflow:
         return None
     return overflow
+
+
+def find_headerless_rows(document) -> Optional[Set[str]]:
+    """Find rows laid out on a page that does not repeat their table's header.
+
+    ``thead { display: table-header-group }`` is supposed to reprint the header
+    on every page a table covers, but WeasyPrint drops it whenever
+    ``page-break-inside: avoid`` is what moved a row onto the page — either
+    because the row did not fit in what was left of the previous page, or
+    because it is taller than a whole page and had to be split regardless.  The
+    result reads as a table that starts mid-page with no header.  Releasing just
+    those rows restores the header.
+
+    Args:
+        document: A rendered ``weasyprint.Document``.
+
+    Returns:
+        The indices of the rows to release, empty when every page carries its
+        header, or ``None`` when the layout tree could not be inspected.
+    """
+    pages: List[Dict[Optional[str], Dict[str, Any]]] = []
+    tables_with_header: Set[Optional[str]] = set()
+
+    try:
+        for page in document.pages:
+            page_box = getattr(page, "_page_box", None)
+            if page_box is None:
+                return None
+
+            fragments: Dict[Optional[str], Dict[str, Any]] = {}
+            for box, table_id in _walk_tables(page_box, None, False):
+                fragment = fragments.setdefault(
+                    table_id, {"header": False, "rows": set()}
+                )
+                tag = getattr(box, "element_tag", None)
+                if tag == "th":
+                    fragment["header"] = True
+                    tables_with_header.add(table_id)
+                elif tag == "tr":
+                    element = getattr(box, "element", None)
+                    row_id = element.get(ROW_ID_ATTR) if element is not None else None
+                    if row_id is not None:
+                        fragment["rows"].add(row_id)
+            pages.append(fragments)
+    except (AttributeError, TypeError):
+        return None
+
+    orphaned: Set[str] = set()
+    for fragments in pages:
+        for table_id, fragment in fragments.items():
+            # A table that never shows a header has none to repeat.
+            if table_id not in tables_with_header:
+                continue
+            if fragment["rows"] and not fragment["header"]:
+                orphaned |= fragment["rows"]
+    return orphaned
 
 
 def _walk_tables(box, table_id: Optional[str], in_table: bool) -> Iterable:

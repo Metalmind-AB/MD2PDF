@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Long identifiers, URLs and code lines no longer run off the right-hand edge:
   code blocks wrap, and any word that cannot fit the line is broken instead of
   overflowing the page.
+- Tables no longer continue onto a page without their header row. Keeping rows
+  intact (`page-break-inside: avoid`) makes WeasyPrint drop the repeated header
+  from any page it moves a row onto, and leaves a blank page behind when a row
+  is taller than the page. Rows that lose their header this way are now released
+  to break across pages; every other row is still kept intact.
 
 ## [1.3.1] - 2026-01-06
 

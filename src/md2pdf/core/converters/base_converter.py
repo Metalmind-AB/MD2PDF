@@ -17,7 +17,7 @@ from pygments.formatters import HtmlFormatter
 
 from md2pdf.core.processors.header_processor import HeaderProcessor
 from md2pdf.core.processors.markdown_processor import MarkdownProcessor
-from md2pdf.core.utils.margin_guard import MARGIN_SAFETY_CSS, tag_tables
+from md2pdf.core.utils.margin_guard import MARGIN_SAFETY_CSS, add_layout_ids
 from md2pdf.core.utils.style_loader import style_loader
 
 
@@ -236,7 +236,7 @@ class BaseConverter:
         <body>
             {header_html}
             <div class="content{' has-header' if self.include_header else ''}">
-                {tag_tables(html_content)}
+                {add_layout_ids(html_content)}
             </div>
         </body>
         </html>

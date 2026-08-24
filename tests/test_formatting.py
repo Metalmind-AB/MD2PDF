@@ -204,19 +204,27 @@ class TestTableTagging:
     @pytest.mark.unit
     def test_tables_are_indexed(self):
         html = "<table><tr><td>a</td></tr></table><p>x</p><table class='k'></table>"
-        tagged = margin_guard.tag_tables(html)
+        tagged = margin_guard.add_layout_ids(html)
         assert '<table data-md2pdf-table="0">' in tagged
         assert '<table data-md2pdf-table="1" class=\'k\'>' in tagged
 
     @pytest.mark.unit
     def test_leaves_other_content_alone(self):
         html = "<p>a &lt;tablet&gt; is not a table</p>"
-        assert margin_guard.tag_tables(html) == html
+        assert margin_guard.add_layout_ids(html) == html
 
     @pytest.mark.unit
     def test_document_without_tables_unchanged(self):
         html = "<h1>Hi</h1><p>No tables here.</p>"
-        assert margin_guard.tag_tables(html) == html
+        assert margin_guard.add_layout_ids(html) == html
+
+    @pytest.mark.unit
+    def test_rows_are_indexed_independently_of_tables(self):
+        html = "<table><tr><td>a</td></tr><tr><td>b</td></tr></table>"
+        tagged = margin_guard.add_layout_ids(html)
+        assert '<tr data-md2pdf-row="0">' in tagged
+        assert '<tr data-md2pdf-row="1">' in tagged
+        assert tagged.count("</tr>") == 2
 
     @pytest.mark.unit
     def test_tagging_applied_in_html_document(self, temp_dir):
@@ -300,24 +308,35 @@ class TestTableFitCSS:
 
 
 class _FakeElement:
-    def __init__(self, table_id=None):
-        self._table_id = table_id
+    def __init__(self, element_id=None, attr=None):
+        self._element_id = element_id
+        self._attr = attr
 
     def get(self, name):
-        if name == margin_guard.TABLE_ID_ATTR:
-            return self._table_id
-        return None
+        return self._element_id if name == self._attr else None
 
 
 class _FakeBox:
     """Minimal stand-in for a WeasyPrint layout box."""
 
-    def __init__(self, tag=None, x=0.0, width=0.0, children=(), table_id=None):
+    def __init__(
+        self,
+        tag=None,
+        x=0.0,
+        width=0.0,
+        children=(),
+        table_id=None,
+        row_id=None,
+    ):
         self.element_tag = tag
         self.children = children
         self.width = width
         self._x = x
-        self.element = _FakeElement(table_id) if tag == "table" else None
+        self.element = None
+        if tag == "table":
+            self.element = _FakeElement(table_id, margin_guard.TABLE_ID_ATTR)
+        elif tag == "tr":
+            self.element = _FakeElement(row_id, margin_guard.ROW_ID_ATTR)
 
     def border_box_x(self):
         return self._x
@@ -330,14 +349,23 @@ class _FakeBox:
 
 
 class _FakeDocument:
-    def __init__(self, root):
-        page = type("Page", (), {"_page_box": root})()
-        self.pages = [page]
+    def __init__(self, *roots):
+        self.pages = [type("Page", (), {"_page_box": root})() for root in roots]
 
 
 def _page(children, x=50.0, width=500.0):
     """A page area from x to x+width holding the given boxes."""
     return _FakeDocument(_FakeBox(tag="page", x=x, width=width, children=children))
+
+
+def _pages(*page_children, width=500.0):
+    """Several pages, each holding the given boxes."""
+    return _FakeDocument(
+        *[
+            _FakeBox(tag="page", x=50.0, width=width, children=children)
+            for children in page_children
+        ]
+    )
 
 
 class TestOverflowMeasurement:
@@ -382,6 +410,79 @@ class TestOverflowMeasurement:
         assert margin_guard.find_overflowing_tables(_page([table])) == {}
 
 
+class TestRowFitCSS:
+    """CSS generated for rows that cannot be kept on one page."""
+
+    @pytest.mark.unit
+    def test_releases_only_the_named_rows(self):
+        css = margin_guard.build_row_fit_css({"3"})
+        assert 'tr[data-md2pdf-row="3"]' in css
+        assert "page-break-inside: auto" in css
+        assert 'tr[data-md2pdf-row="0"]' not in css
+
+    @pytest.mark.unit
+    def test_ids_are_sorted_numerically(self):
+        css = margin_guard.build_row_fit_css({"10", "2"})
+        assert css.index('"2"') < css.index('"10"')
+
+    @pytest.mark.unit
+    def test_nothing_to_release_is_empty(self):
+        assert margin_guard.build_row_fit_css(set()) == ""
+
+
+def _table(table_id, rows, header=False):
+    """A table fragment holding the given row ids, optionally with its header."""
+    children = []
+    if header:
+        children.append(_FakeBox(tag="th"))
+    children.extend(_FakeBox(tag="tr", row_id=row_id) for row_id in rows)
+    return _FakeBox(tag="table", table_id=table_id, children=tuple(children))
+
+
+class TestHeaderlessRowMeasurement:
+    """Finding rows laid out on a page that lost the repeated table header."""
+
+    @pytest.mark.unit
+    def test_page_with_its_header_is_fine(self):
+        page = _page([_table("0", ["0", "1"], header=True)])
+        assert margin_guard.find_headerless_rows(page) == set()
+
+    @pytest.mark.unit
+    def test_continuation_page_without_the_header(self):
+        document = _pages(
+            [_table("0", ["0"], header=True)],
+            [_table("0", ["1", "2"])],
+        )
+        assert margin_guard.find_headerless_rows(document) == {"1", "2"}
+
+    @pytest.mark.unit
+    def test_table_that_never_has_a_header_is_left_alone(self):
+        """Nothing to repeat, so nothing to repair."""
+        document = _pages([_table("0", ["0"])], [_table("0", ["1"])])
+        assert margin_guard.find_headerless_rows(document) == set()
+
+    @pytest.mark.unit
+    def test_other_tables_on_the_page_do_not_confuse_it(self):
+        document = _pages(
+            [_table("0", ["0"], header=True), _table("1", ["5"], header=True)],
+            [_table("0", ["1"], header=True), _table("1", ["6"])],
+        )
+        assert margin_guard.find_headerless_rows(document) == {"6"}
+
+    @pytest.mark.unit
+    def test_untagged_row_cannot_be_released(self):
+        document = _pages(
+            [_table("0", [], header=True)],
+            [_FakeBox(tag="table", table_id="0", children=(_FakeBox(tag="tr"),))],
+        )
+        assert margin_guard.find_headerless_rows(document) == set()
+
+    @pytest.mark.unit
+    def test_unreadable_layout_tree_reports_unknown(self):
+        document = type("Doc", (), {"pages": [object()]})()
+        assert margin_guard.find_headerless_rows(document) is None
+
+
 class TestMarginsRespected:
     """End-to-end: a table too wide for the page is fitted onto it."""
 
@@ -404,7 +505,7 @@ class TestMarginsRespected:
             "test fixture is no longer wide enough to overflow the page"
         )
 
-        fitted = conv._render_within_margins(html, str(temp_dir) + "/")
+        fitted = conv._render_fitted(html, str(temp_dir) + "/")
         assert margin_guard.find_overflowing_tables(fitted) == {}
 
     @pytest.mark.integration
@@ -419,7 +520,7 @@ class TestMarginsRespected:
             input_file=str(md), output_file=str(temp_dir / "narrow.pdf")
         )
         html = conv._process_markdown(conv._read_markdown_content())
-        document = conv._render_within_margins(html, str(temp_dir) + "/")
+        document = conv._render_fitted(html, str(temp_dir) + "/")
 
         headers = [
             box
@@ -430,3 +531,72 @@ class TestMarginsRespected:
         ]
         assert headers
         assert all(box.style["white_space"] == "nowrap" for box in headers)
+
+
+class TestOversizedRowsFitThePage:
+    """A row too tall for one page must not cost a blank page or the header."""
+
+    @staticmethod
+    def _document(temp_dir, name):
+        from md2pdf.core.converters.pdf_converter import PDFConverter
+
+        md = temp_dir / f"{name}.md"
+        md.write_text(
+            "# Manifest\n\n| ID | DETAIL |\n|---|---|\n| 1 | "
+            + ("Lorem ipsum dolor sit amet, consectetur adipiscing elit. " * 200)
+            + " |\n| 2 | short |\n",
+            encoding="utf-8",
+        )
+        conv = PDFConverter(
+            input_file=str(md), output_file=str(temp_dir / f"{name}.pdf")
+        )
+        html = conv._process_markdown(conv._read_markdown_content())
+        return conv, html
+
+    @staticmethod
+    def _header_counts(document):
+        """Header cells rendered on each page."""
+        counts = []
+        for page in document.pages:
+            counts.append(
+                sum(
+                    1
+                    for box, _ in margin_guard._walk_tables(
+                        page._page_box, None, False
+                    )
+                    if getattr(box, "element_tag", None) == "th"
+                )
+            )
+        return counts
+
+    @pytest.mark.integration
+    def test_the_defect_is_present_without_the_repair(self, temp_dir):
+        pytest.importorskip("weasyprint")
+        conv, html = self._document(temp_dir, "tall")
+        unfitted = conv._render(html, str(temp_dir) + "/", "")
+        assert margin_guard.find_headerless_rows(unfitted), (
+            "test fixture no longer reproduces the dropped table header"
+        )
+
+    @pytest.mark.integration
+    def test_header_repeats_on_every_page_of_the_row(self, temp_dir):
+        pytest.importorskip("weasyprint")
+        conv, html = self._document(temp_dir, "tall")
+        document = conv._render_fitted(html, str(temp_dir) + "/")
+        counts = self._header_counts(document)
+        assert len(counts) > 1, "fixture should span several pages"
+        assert all(counts), f"a page lost the repeated table header: {counts}"
+
+    @pytest.mark.integration
+    def test_no_blank_page_before_the_row(self, temp_dir):
+        pytest.importorskip("weasyprint")
+        conv, html = self._document(temp_dir, "tall")
+        document = conv._render_fitted(html, str(temp_dir) + "/")
+        first_page_cells = [
+            box
+            for box, _ in margin_guard._walk_tables(
+                document.pages[0]._page_box, None, False
+            )
+            if getattr(box, "element_tag", None) == "td"
+        ]
+        assert first_page_cells, "the table was pushed off the page it starts on"
